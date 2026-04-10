@@ -17,7 +17,7 @@ import {
   Gamepad2,
   AlertCircle,
   CheckCircle2,
-  Library,
+  Library as LibraryIcon,
   BookOpen,
   FileText,
   ExternalLink,
@@ -26,8 +26,18 @@ import {
 
 import { World, Phoneme, GameState, PersistentData } from './types';
 import { PHONEME_DATA } from './phonemes';
+import { STORAGE_KEY, worlds, minigames, worldRules, resources } from './constants';
 
-const STORAGE_KEY = 'rum_rum_pilot_data';
+import { Taller } from './components/Taller';
+import { Semaforo } from './components/Semaforo';
+import { Pista } from './components/Pista';
+import { GranPremio } from './components/GranPremio';
+import { Library } from './components/Library';
+import { Memory } from './components/Memory';
+import { Bingo } from './components/Bingo';
+import { Lince } from './components/Lince';
+import { Domino } from './components/Domino';
+import { Dobble } from './components/Dobble';
 
 const DEFAULT_PERSISTENT_DATA: PersistentData = {
   lastPhoneme: 'R',
@@ -73,22 +83,16 @@ export default function App() {
 
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error' | 'info', message: string } | null>(null);
 
-  const currentData = PHONEME_DATA[state.phoneme] || PHONEME_DATA['R'];
-
-  const worlds = [
-    { id: 'TALLER', name: '1. Taller', icon: <Settings className="w-6 h-6" />, desc: 'Calienta motores y prepara tu lengua.' },
-    { id: 'SEMAFORO', name: '2. Semáforo', icon: <Volume2 className="w-6 h-6" />, desc: 'Entrena tu oído para detectar el sonido.' },
-    { id: 'PISTA', name: '3. Pista', icon: <Flag className="w-6 h-6" />, desc: 'Repite palabras y frases a toda velocidad.' },
-    { id: 'GRAN_PREMIO', name: '4. Gran Premio', icon: <Trophy className="w-6 h-6" />, desc: 'La carrera final por la copa de oro.' },
-  ];
-
-  const minigames = [
-    { id: 'MEMORY', name: 'Memory', icon: <Gamepad2 className="w-5 h-5" /> },
-    { id: 'BINGO', name: 'Bingo', icon: <CheckCircle2 className="w-5 h-5" /> },
-    { id: 'LINCE', name: 'Lince', icon: <AlertCircle className="w-5 h-5" /> },
-    { id: 'DOMINO', name: 'Dominó', icon: <RotateCcw className="w-5 h-5" /> },
-    { id: 'DOBBLE', name: 'Dobble', icon: <CheckCircle2 className="w-5 h-5" /> },
-  ];
+  const currentData = PHONEME_DATA[state.phoneme] || PHONEME_DATA['R'] || {
+    name: '',
+    color: 'zinc',
+    taller: [],
+    semaforoPares: [],
+    pistaEco: [],
+    gameImages: [],
+    pistaFrases: [],
+    pistaTrabalenguas: []
+  };
 
   useEffect(() => {
     if (feedback) {
@@ -109,25 +113,25 @@ export default function App() {
   };
 
   // --- MUNDO 1: TALLER ---
-  const tallerSteps = currentData.taller;
+  const tallerSteps = currentData.taller || [];
 
   // --- MUNDO 2: SEMAFORO ---
-  const semaforoPares = currentData.semaforoPares;
+  const semaforoPares = currentData.semaforoPares || [];
 
   const semaforoRadar = [
-    ...currentData.pistaEco.map(p => ({ word: p.word.toUpperCase(), hasTarget: true, img: p.img })),
+    ...(currentData.pistaEco || []).map(p => ({ word: p.word?.toUpperCase() || '', hasTarget: true, img: p.img })),
     { word: "MOTO", hasTarget: false, img: "🏍️" },
     { word: "BICI", hasTarget: state.phoneme === 'Z', img: "🚲" },
     { word: "PATO", hasTarget: false, img: "🦆" }
   ];
 
   // --- MUNDO 3: PISTA ---
-  const pistaEco = currentData.pistaEco;
-  const pistaFrases = currentData.pistaFrases;
-  const pistaTrabalenguas = currentData.pistaTrabalenguas;
+  const pistaEco = currentData.pistaEco || [];
+  const pistaFrases = currentData.pistaFrases || [];
+  const pistaTrabalenguas = currentData.pistaTrabalenguas || [];
 
   // --- MUNDO 4: GRAN PREMIO ---
-  const granPremioBoard = currentData.gameImages.map((img, i) => ({
+  const granPremioBoard = (currentData.gameImages || []).map((img, i) => ({
     id: i + 1,
     img: img.img,
     name: img.name,
@@ -135,7 +139,7 @@ export default function App() {
   }));
 
   // --- NUEVOS JUEGOS ---
-  const gameImages = currentData.gameImages;
+  const gameImages = currentData.gameImages || [];
 
   const [showRules, setShowRules] = useState(false);
   const [isWinner, setIsWinner] = useState(false);
@@ -164,21 +168,6 @@ export default function App() {
   // Dobble State
   const [dobbleCards, setDobbleCards] = useState<{ img: string, name: string }[][]>([]);
   const [dobbleTarget, setDobbleTarget] = useState<string | null>(null);
-
-  const worldRules: Record<World, string> = {
-    MENU: "Elige un mundo para empezar tu entrenamiento de piloto.",
-    TALLER: "REGLA DE ORO: La lengua siempre arriba (en el garaje). Prohibido hacer 'brrr' con los labios. ¡Si la lengua no sube, el motor se ahoga!",
-    SEMAFORO: "Escucha con atención. ¿El motor suena FUERTE (/rr/) o SUAVE (/r/)? Ayuda al radar a clasificar las palabras.",
-    PISTA: "Repite las palabras y frases con tu mejor voz de piloto. ¡Supera el trabalenguas sin salirte de la pista!",
-    GRAN_PREMIO: "Tira el dado y avanza por las casillas. Responde a las preguntas para llegar a la META y ganar la Gran Copa.",
-    MEMORY: "Encuentra las parejas de imágenes con el sonido /rr/.",
-    BINGO: "Juego para 2 pilotos. Cada uno tiene su cartón. ¡El primero en marcar todas sus imágenes gana!",
-    LINCE: "Busca rápido la imagen que te pedimos entre todas las demás.",
-    DOMINO: "Encaja las piezas: la imagen de la izquierda de tu pieza debe ser igual a la de la derecha de la cadena.",
-    DOBBLE: "¡Sé el más rápido! Encuentra la única imagen que se repite en las dos cartas circulares.",
-    PHONEME_SELECT: "Selecciona el fonema que quieres entrenar hoy.",
-    LIBRARY: "Consulta materiales, libros y guías para complementar tu entrenamiento fuera de la pista."
-  };
 
   const rollDice = () => {
     const val = Math.floor(Math.random() * 6) + 1;
@@ -225,6 +214,7 @@ export default function App() {
   };
 
   const initLince = () => {
+    if (gameImages.length === 0) return;
     const board = [...gameImages]
       .sort(() => Math.random() - 0.5)
       .map((item, index) => ({ ...item, id: index }));
@@ -234,15 +224,17 @@ export default function App() {
   };
 
   const initDomino = () => {
+    if (gameImages.length < 2) return;
     const selectedImages = [...gameImages].sort(() => Math.random() - 0.5).slice(0, 7).map(img => img.img);
     const allTiles: { left: string, right: string }[] = [];
     
-    for (let i = 0; i <= 6; i++) {
-      for (let j = i; j <= 6; j++) {
+    for (let i = 0; i < selectedImages.length; i++) {
+      for (let j = i; j < selectedImages.length; j++) {
         allTiles.push({ left: selectedImages[i], right: selectedImages[j] });
       }
     }
     
+    if (allTiles.length === 0) return;
     const shuffled = allTiles.sort(() => Math.random() - 0.5);
     const initialPiece = shuffled.pop()!;
     setDominoChain([initialPiece]);
@@ -253,6 +245,7 @@ export default function App() {
   };
 
   const initDobble = () => {
+    if (gameImages.length < 2) return;
     const shuffled = [...gameImages].sort(() => Math.random() - 0.5);
     const common = shuffled[0];
     const card1 = [common, ...shuffled.slice(1, 5)].sort(() => Math.random() - 0.5);
@@ -461,29 +454,6 @@ export default function App() {
     );
   }
 
-  const resources = [
-    {
-      title: "Guía de Articulación /R/",
-      desc: "Ejercicios prácticos para la vibrante alveolar.",
-      type: "PDF",
-      url: "#",
-      icon: <FileText className="w-6 h-6" />
-    },
-    {
-      title: "Cuentos para Rumiar",
-      desc: "Historias cortas con enfoque en fonemas específicos.",
-      type: "Libro",
-      url: "#",
-      icon: <BookOpen className="w-6 h-6" />
-    },
-    {
-      title: "Fichas de Seguimiento",
-      desc: "Imprime y anota el progreso de tus carreras.",
-      type: "Material",
-      url: "#",
-      icon: <Zap className="w-6 h-6" />
-    }
-  ];
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100 font-sans selection:bg-red-500/30">
@@ -751,704 +721,109 @@ export default function App() {
           )}
 
           {state.world === 'TALLER' && (
-            <motion.div 
-              key="taller"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="space-y-8"
-            >
-              <div className="flex items-center gap-4 mb-8">
-                <button onClick={() => goToWorld('MENU')} className="text-zinc-500 hover:text-white">
-                  <ChevronRight className="rotate-180 w-6 h-6" />
-                </button>
-                <h2 className="text-2xl font-bold italic uppercase">Mundo 1: El Taller</h2>
-              </div>
-
-              <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 space-y-6 relative overflow-hidden">
-                <div className={`absolute top-0 right-0 w-32 h-32 bg-${currentData.color}-600/5 blur-3xl rounded-full -mr-16 -mt-16`} />
-                
-                <div className="space-y-2">
-                  <h3 className={`text-${currentData.color}-500 font-bold uppercase tracking-widest text-sm`}>
-                    {tallerSteps[state.step].title}
-                  </h3>
-                  <p className="text-xl text-white">
-                    {tallerSteps[state.step].instruction}
-                  </p>
-                </div>
-
-                <div className="py-12 flex justify-center">
-                  <motion.div 
-                    animate={{ scale: [1, 1.1, 1] }}
-                    transition={{ repeat: Infinity, duration: 2 }}
-                    className={`text-6xl font-black text-white italic tracking-tighter drop-shadow-[0_0_15px_rgba(${state.phoneme === 'R' ? '239,68,68' : state.phoneme === 'S' ? '37,99,235' : '16,185,129'},0.3)]`}
-                  >
-                    {tallerSteps[state.step].sound}
-                  </motion.div>
-                </div>
-
-                <div className="bg-zinc-950/50 p-4 rounded-xl border border-zinc-800 flex gap-3 items-start">
-                  <AlertCircle className="w-5 h-5 text-yellow-500 shrink-0 mt-0.5" />
-                  <p className="text-sm text-zinc-400 italic">
-                    {tallerSteps[state.step].tip}
-                  </p>
-                </div>
-
-                <div className="flex gap-4 pt-4">
-                  <button 
-                    onClick={() => setFeedback({ type: 'success', message: "¡BRUM! Veo humo de colores saliendo del motor 💨✨" })}
-                    className="flex-1 bg-green-600 hover:bg-green-500 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-green-900/20 flex items-center justify-center gap-2"
-                  >
-                    <CheckCircle2 className="w-5 h-5" /> ¡Lo hice bien!
-                  </button>
-                  <button 
-                    onClick={() => {
-                      let msg = "¡Cuidado! Revisa la posición de tu lengua ⚠️";
-                      if (state.phoneme === 'R') msg = "¡Cuidado! Lengua arriba para que el motor no se ahogue ⚠️";
-                      if (state.phoneme === 'S') msg = "¡Cuidado! No saques la lengua, mantenla detrás de los dientes ⚠️";
-                      if (state.phoneme === 'Z') msg = "¡Cuidado! Saca un poquito la lengua entre los dientes ⚠️";
-                      setFeedback({ type: 'error', message: msg });
-                    }}
-                    className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-white font-bold py-4 rounded-xl transition-all flex items-center justify-center gap-2"
-                  >
-                    Me he equivocado
-                  </button>
-                </div>
-              </div>
-
-              {state.step < tallerSteps.length - 1 ? (
-                <button 
-                  onClick={() => { setState({ ...state, step: state.step + 1 }); setFeedback(null); }}
-                  className="w-full bg-white text-black font-black py-4 rounded-xl hover:bg-zinc-200 transition-all flex items-center justify-center gap-2 uppercase italic"
-                >
-                  Siguiente paso <ChevronRight className="w-5 h-5" />
-                </button>
-              ) : (
-                <button 
-                  onClick={() => goToWorld('MENU')}
-                  className="w-full border border-zinc-700 text-white font-bold py-4 rounded-xl hover:bg-zinc-800 transition-all uppercase italic"
-                >
-                  Terminar Entrenamiento
-                </button>
-              )}
-            </motion.div>
+            <Taller 
+              phoneme={state.phoneme}
+              step={state.step}
+              tallerSteps={tallerSteps}
+              onNext={() => { setState({ ...state, step: state.step + 1 }); setFeedback(null); }}
+              onFinish={() => goToWorld('MENU')}
+              setFeedback={setFeedback}
+            />
           )}
 
           {state.world === 'SEMAFORO' && (
-            <motion.div 
-              key="semaforo"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="space-y-8"
-            >
-              <div className="flex items-center gap-4">
-                <button onClick={() => goToWorld('MENU')} className="text-zinc-500 hover:text-white">
-                  <ChevronRight className="rotate-180 w-6 h-6" />
-                </button>
-                <h2 className="text-2xl font-bold italic uppercase">Mundo 2: El Semáforo</h2>
-              </div>
-
-              <div className="flex gap-2 mb-6">
-                <button 
-                  onClick={() => setState({ ...state, subStep: 0, step: 0 })}
-                  className={`flex-1 py-2 rounded-lg font-bold text-xs uppercase tracking-widest transition-all ${state.subStep === 0 ? 'bg-red-600 text-white' : 'bg-zinc-900 text-zinc-500'}`}
-                >
-                  Nivel A: Pares
-                </button>
-                <button 
-                  onClick={() => setState({ ...state, subStep: 1, step: 0 })}
-                  className={`flex-1 py-2 rounded-lg font-bold text-xs uppercase tracking-widest transition-all ${state.subStep === 1 ? 'bg-red-600 text-white' : 'bg-zinc-900 text-zinc-500'}`}
-                >
-                  Nivel B: Radar
-                </button>
-              </div>
-
-              {state.subStep === 0 ? (
-                <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 space-y-8">
-                  <div className="text-center space-y-4">
-                    <p className="text-zinc-400 uppercase tracking-widest text-xs font-bold">Duelo de Sonidos</p>
-                    <p className="text-lg text-white italic">¿Cuál tiene el sonido {state.phoneme === 'R' ? 'fuerte' : state.phoneme}?</p>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-6">
-                    {[1, 2].map((num) => {
-                      const pair = semaforoPares[state.step];
-                      const word = num === 1 ? pair.w1 : pair.w2;
-                      const soundLabel = num === 1 ? pair.s1 : pair.s2;
-                      const img = num === 1 ? pair.i1 : pair.i2;
-                      const isTarget = num === pair.target;
-                      
-                      return (
-                        <motion.button
-                          key={`${num}-${state.step}`}
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          onClick={() => {
-                            if (isTarget) {
-                              setFeedback({ type: 'success', message: `¡Genial! ${word} es la opción correcta ✅` });
-                            } else {
-                              setFeedback({ type: 'info', message: `¡Ups! ${word} no es lo que buscamos 🤫` });
-                            }
-                          }}
-                          className={`bg-zinc-800 border-2 rounded-2xl p-6 flex flex-col items-center gap-4 transition-all group ${isTarget ? 'hover:border-green-500' : 'hover:border-red-500'} border-zinc-700`}
-                        >
-                          <span className="text-6xl group-hover:scale-110 transition-transform">{img}</span>
-                          <div className="text-center">
-                            <span className="block text-2xl font-black text-white italic tracking-tighter">{word}</span>
-                            <span className={`text-[10px] font-bold uppercase tracking-widest ${isTarget ? 'text-green-500' : 'text-zinc-500'}`}>
-                              {soundLabel}
-                            </span>
-                          </div>
-                        </motion.button>
-                      );
-                    })}
-                  </div>
-                </div>
-              ) : (
-                <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 space-y-8">
-                  <div className="text-center space-y-2">
-                    <p className="text-zinc-400 uppercase tracking-widest text-xs font-bold">Radar de Sonidos</p>
-                    <div className="text-7xl py-4">{semaforoRadar[state.step].img}</div>
-                    <h3 className="text-5xl font-black text-white italic tracking-tighter">{semaforoRadar[state.step].word}</h3>
-                  </div>
-
-                  <p className="text-center text-lg text-zinc-300 italic">¿Tiene el sonido {state.phoneme === 'R' ? 'fuerte' : state.phoneme}?</p>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <button 
-                      onClick={() => {
-                        if(semaforoRadar[state.step].hasTarget) setFeedback({ type: 'success', message: "¡SÍ! El radar lo ha detectado 📡✅" });
-                        else setFeedback({ type: 'error', message: `¡Oh no! El radar dice que ahí no está el sonido ${state.phoneme} ❌` });
-                      }}
-                      className="bg-green-600/20 border border-green-500/30 hover:bg-green-600 text-green-400 hover:text-white p-6 rounded-2xl transition-all font-black italic text-2xl"
-                    >
-                      SÍ
-                    </button>
-                    <button 
-                      onClick={() => {
-                        if(!semaforoRadar[state.step].hasTarget) setFeedback({ type: 'success', message: "¡Correcto! Silencio total en el radar 📡🤫" });
-                        else setFeedback({ type: 'error', message: "¡Cuidado! El radar sí que oye algo ahí ❌" });
-                      }}
-                      className="bg-red-600/20 border border-red-500/30 hover:bg-red-600 text-red-400 hover:text-white p-6 rounded-2xl transition-all font-black italic text-2xl"
-                    >
-                      NO
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              <div className="flex gap-4">
-                <button 
-                  disabled={state.step === 0}
-                  onClick={() => { setState({ ...state, step: state.step - 1 }); setFeedback(null); }}
-                  className="flex-1 py-4 bg-zinc-900 border border-zinc-800 rounded-xl disabled:opacity-30"
-                >
-                  Anterior
-                </button>
-                <button 
-                  onClick={() => { 
-                    const max = state.subStep === 0 ? semaforoPares.length : semaforoRadar.length;
-                    if(state.step < max - 1) {
-                      setState({ ...state, step: state.step + 1 }); 
-                      setFeedback(null);
-                    } else {
-                      goToWorld('MENU');
-                    }
-                  }}
-                  className="flex-[2] py-4 bg-white text-black font-black rounded-xl italic uppercase"
-                >
-                  {state.step < (state.subStep === 0 ? semaforoPares.length : semaforoRadar.length) - 1 ? 'Siguiente' : 'Terminar'}
-                </button>
-              </div>
-            </motion.div>
+            <Semaforo 
+              phoneme={state.phoneme}
+              step={state.step}
+              subStep={state.subStep}
+              semaforoPares={semaforoPares}
+              semaforoRadar={semaforoRadar}
+              onSetSubStep={(ss) => setState({ ...state, subStep: ss, step: 0 })}
+              onNextStep={() => {
+                const max = state.subStep === 0 ? semaforoPares.length : semaforoRadar.length;
+                if(state.step < max - 1) {
+                  setState({ ...state, step: state.step + 1 }); 
+                  setFeedback(null);
+                } else {
+                  goToWorld('MENU');
+                }
+              }}
+              setFeedback={setFeedback}
+            />
           )}
 
           {state.world === 'PISTA' && (
-            <motion.div 
-              key="pista"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="space-y-8"
-            >
-              <div className="flex items-center gap-4">
-                <button onClick={() => goToWorld('MENU')} className="text-zinc-500 hover:text-white">
-                  <ChevronRight className="rotate-180 w-6 h-6" />
-                </button>
-                <h2 className="text-2xl font-bold italic uppercase">Mundo 3: La Pista</h2>
-              </div>
-
-              <div className="space-y-6">
-                {/* Eco Section */}
-                <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 space-y-4">
-                  <div className="flex items-center gap-2 text-red-500 font-bold uppercase tracking-widest text-xs">
-                    <Mic className="w-4 h-4" /> Modo Eco
-                  </div>
-                  <div className="flex flex-wrap gap-3">
-                    {pistaEco.map(item => (
-                      <button 
-                        key={item.word}
-                        onClick={() => setFeedback({ type: 'info', message: `¡Repite conmigo: ${item.word.toUpperCase()}! 🗣️` })}
-                        className="px-6 py-3 bg-zinc-800 hover:bg-zinc-700 rounded-full font-bold text-lg transition-all flex items-center gap-2"
-                      >
-                        <span>{item.img}</span>
-                        <span>{item.word}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Frases Section */}
-                <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 space-y-4">
-                  <div className="flex items-center gap-2 text-red-500 font-bold uppercase tracking-widest text-xs">
-                    <Flag className="w-4 h-4" /> Recta de Frases
-                  </div>
-                  <div className="space-y-3">
-                    {pistaFrases.map((frase, i) => (
-                      <button 
-                        key={i}
-                        onClick={() => setFeedback({ type: 'info', message: "¡Qué bien suena esa frase! 🏎️✨" })}
-                        className="w-full text-left p-4 bg-zinc-800 hover:bg-zinc-700 rounded-xl font-medium text-lg transition-all border-l-4 border-red-600"
-                      >
-                        "{frase}"
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Trabalenguas Section */}
-                <div className="bg-red-600/10 border border-red-500/30 rounded-3xl p-6 space-y-6">
-                  <div className="flex items-center gap-2 text-red-500 font-bold uppercase tracking-widest text-xs">
-                    <Trophy className="w-4 h-4" /> Curva Peligrosa: Trabalenguas
-                  </div>
-                  
-                  <div className="space-y-6">
-                    {pistaTrabalenguas.map((trabalenguas, i) => (
-                      <div key={i} className="space-y-4 border-b border-red-500/10 pb-6 last:border-0">
-                        <p className="text-2xl font-black italic text-white leading-tight">
-                          "{trabalenguas}"
-                        </p>
-                        <button 
-                          onClick={() => setFeedback({ type: 'success', message: `¡CAMPEÓN! Has superado el trabalenguas ${i+1} 🏆` })}
-                          className="w-full py-4 bg-red-600 hover:bg-red-500 text-white font-black rounded-xl italic uppercase shadow-lg shadow-red-900/40"
-                        >
-                          ¡Lo he conseguido!
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <button 
-                onClick={() => goToWorld('MENU')}
-                className="w-full py-4 bg-red-600 text-white font-black rounded-xl italic uppercase shadow-lg shadow-red-900/40"
-              >
-                Terminar Entrenamiento
-              </button>
-            </motion.div>
+            <Pista 
+              pistaEco={pistaEco}
+              pistaFrases={pistaFrases}
+              pistaTrabalenguas={pistaTrabalenguas}
+              onFinish={() => goToWorld('MENU')}
+              setFeedback={setFeedback}
+            />
           )}
 
           {state.world === 'GRAN_PREMIO' && (
-            <motion.div 
-              key="gran-premio"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="space-y-8"
-            >
-              <div className="flex items-center gap-4">
-                <button onClick={() => goToWorld('MENU')} className="text-zinc-500 hover:text-white">
-                  <ChevronRight className="rotate-180 w-6 h-6" />
-                </button>
-                <h2 className="text-2xl font-bold italic uppercase">Mundo 4: Gran Premio</h2>
-              </div>
-
-              <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 text-center space-y-8">
-                <div className="flex justify-center">
-                  <div className="relative">
-                    <div className="absolute inset-0 bg-red-600 blur-2xl opacity-20 animate-pulse" />
-                    <button 
-                      onClick={rollDice}
-                      className="relative w-32 h-32 bg-zinc-800 border-4 border-red-600 rounded-3xl flex items-center justify-center text-5xl font-black italic text-white shadow-2xl hover:scale-105 active:scale-95 transition-all"
-                    >
-                      {diceValue || <Gamepad2 className="w-12 h-12" />}
-                    </button>
-                  </div>
-                </div>
-                
-                <div className="space-y-2">
-                  <p className="text-zinc-500 font-bold uppercase tracking-widest text-xs">Toca el dado para avanzar</p>
-                  <h3 className="text-3xl font-black italic text-white uppercase">¡Tiro el dado!</h3>
-                </div>
-
-                {diceValue && (
-                  <motion.div 
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="bg-zinc-950 p-6 rounded-2xl border border-zinc-800 space-y-4"
-                  >
-                    <div className="text-6xl mb-2">{granPremioBoard[state.step].img}</div>
-                    <div className="space-y-1">
-                      <span className="text-red-500 font-bold text-sm uppercase tracking-widest">Casilla {granPremioBoard[state.step].id}: {granPremioBoard[state.step].name}</span>
-                      <p className="text-2xl font-bold text-white leading-tight italic">
-                        {granPremioBoard[state.step].q}
-                      </p>
-                    </div>
-                  </motion.div>
-                )}
-              </div>
-
-              <div className="grid grid-cols-6 gap-2">
-                {granPremioBoard.map((item, i) => (
-                  <div 
-                    key={item.id}
-                    className={`aspect-square rounded-lg flex items-center justify-center text-xl border-2 transition-all ${state.step === i ? 'bg-red-600 border-white scale-110 z-10 shadow-lg' : 'bg-zinc-900 border-zinc-800 opacity-50'}`}
-                  >
-                    {item.img}
-                  </div>
-                ))}
-              </div>
-
-              <div className="space-y-4 pt-8 border-t border-zinc-800">
-                <h3 className="text-lg font-bold italic uppercase text-zinc-400">Zona de Minijuegos</h3>
-                <div className="grid grid-cols-3 gap-4">
-                  <button 
-                    onClick={() => goToWorld('MEMORY')}
-                    className="p-4 bg-zinc-900 border border-zinc-800 rounded-2xl hover:bg-zinc-800 transition-all text-center space-y-2"
-                  >
-                    <Gamepad2 className="w-6 h-6 mx-auto text-red-500" />
-                    <p className="text-xs font-bold uppercase">Memory</p>
-                  </button>
-                  <button 
-                    onClick={() => goToWorld('BINGO')}
-                    className="p-4 bg-zinc-900 border border-zinc-800 rounded-2xl hover:bg-zinc-800 transition-all text-center space-y-2"
-                  >
-                    <CheckCircle2 className="w-6 h-6 mx-auto text-red-500" />
-                    <p className="text-xs font-bold uppercase">Bingo</p>
-                  </button>
-                  <button 
-                    onClick={() => goToWorld('LINCE')}
-                    className="p-4 bg-zinc-900 border border-zinc-800 rounded-2xl hover:bg-zinc-800 transition-all text-center space-y-2"
-                  >
-                    <AlertCircle className="w-6 h-6 mx-auto text-red-500" />
-                    <p className="text-xs font-bold uppercase">Lince</p>
-                  </button>
-                  <button 
-                    onClick={() => goToWorld('DOMINO')}
-                    className="p-4 bg-zinc-900 border border-zinc-800 rounded-2xl hover:bg-zinc-800 transition-all text-center space-y-2"
-                  >
-                    <RotateCcw className="w-6 h-6 mx-auto text-red-500" />
-                    <p className="text-xs font-bold uppercase">Dominó</p>
-                  </button>
-                  <button 
-                    onClick={() => goToWorld('DOBBLE')}
-                    className="p-4 bg-zinc-900 border border-zinc-800 rounded-2xl hover:bg-zinc-800 transition-all text-center space-y-2"
-                  >
-                    <CheckCircle2 className="w-6 h-6 mx-auto text-red-500" />
-                    <p className="text-xs font-bold uppercase">Dobble</p>
-                  </button>
-                </div>
-              </div>
-            </motion.div>
+            <GranPremio 
+              step={state.step}
+              diceValue={diceValue}
+              granPremioBoard={granPremioBoard}
+              onRollDice={rollDice}
+              onGoToWorld={goToWorld}
+            />
           )}
 
           {state.world === 'MEMORY' && (
-            <motion.div key="memory" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-8">
-              <div className="flex items-center gap-4">
-                <button onClick={() => goToWorld('MENU')} className="text-zinc-500 hover:text-white">
-                  <ChevronRight className="rotate-180 w-6 h-6" />
-                </button>
-                <h2 className="text-2xl font-bold italic uppercase">Juego: Memory</h2>
-              </div>
-              <div className="grid grid-cols-4 gap-4">
-                {memoryCards.map((card, i) => (
-                  <button
-                    key={card.id}
-                    onClick={() => handleMemoryClick(i)}
-                    className={`aspect-square rounded-2xl text-4xl flex items-center justify-center transition-all border-4 ${
-                      card.matched ? 'bg-green-600/20 border-green-500 scale-95 opacity-80' : 
-                      card.flipped ? 'bg-zinc-800 border-red-600' : 
-                      'bg-zinc-900 border-zinc-800 hover:border-zinc-700'
-                    }`}
-                  >
-                    {card.flipped || card.matched ? card.img : '❓'}
-                  </button>
-                ))}
-              </div>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <button onClick={initMemory} className="flex-1 py-4 bg-zinc-800 text-white font-bold rounded-xl uppercase">Reiniciar</button>
-                <button onClick={() => goToWorld('GRAN_PREMIO')} className="flex-1 py-4 bg-red-600/20 text-red-500 border border-red-500/30 font-bold rounded-xl uppercase">Volver al Gran Premio</button>
-                <button onClick={() => goToWorld('MENU')} className="flex-1 py-4 bg-white text-black font-black rounded-xl uppercase italic">Menú Principal</button>
-              </div>
-            </motion.div>
+            <Memory 
+              cards={memoryCards}
+              onFlip={handleMemoryClick}
+              onReset={initMemory}
+              onBack={() => goToWorld('GRAN_PREMIO')}
+            />
           )}
 
           {state.world === 'BINGO' && (
-            <motion.div key="bingo" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-8">
-              <div className="flex items-center gap-4">
-                <button onClick={() => goToWorld('MENU')} className="text-zinc-500 hover:text-white">
-                  <ChevronRight className="rotate-180 w-6 h-6" />
-                </button>
-                <h2 className="text-2xl font-bold italic uppercase">Bingo para Parejas</h2>
-              </div>
-              
-              <div className="bg-zinc-900 p-6 rounded-3xl text-center space-y-4 border-2 border-zinc-800 shadow-2xl relative overflow-hidden">
-                <div className={`absolute inset-0 bg-${currentData.color}-600/5 pointer-events-none`} />
-                <div className="text-7xl relative z-10">{bingoCurrent?.img || '🏁'}</div>
-                <p className="text-lg font-bold text-white uppercase tracking-widest relative z-10">{bingoCurrent?.name || '¡Pulsa para empezar!'}</p>
-                <button 
-                  onClick={nextBingoBall} 
-                  disabled={!!bingoWinner}
-                  className={`relative z-10 px-8 py-3 bg-${currentData.color}-600 text-white font-black rounded-xl uppercase italic shadow-lg hover:scale-105 transition-all disabled:opacity-50`}
-                >
-                  Siguiente Imagen
-                </button>
-              </div>
-
-              <div className="grid grid-cols-2 gap-8">
-                {/* Player 1 */}
-                <div className="space-y-4">
-                  <div className={`p-3 rounded-xl text-center font-black uppercase italic tracking-tighter border-2 ${bingoWinner === 1 ? 'bg-green-600 border-white text-white' : 'bg-zinc-900 border-zinc-800 text-zinc-500'}`}>
-                    Piloto 1 {bingoWinner === 1 && '🏆'}
-                  </div>
-                  <div className="grid grid-cols-3 gap-2">
-                    {bingoBoardP1.map((item, i) => (
-                      <button
-                        key={i}
-                        onClick={() => markBingo(1, i)}
-                        className={`aspect-square rounded-xl text-2xl flex items-center justify-center transition-all border-2 ${item.marked ? 'bg-green-600/20 border-green-500' : 'bg-zinc-900 border-zinc-800'}`}
-                      >
-                        {item.img}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Player 2 */}
-                <div className="space-y-4">
-                  <div className={`p-3 rounded-xl text-center font-black uppercase italic tracking-tighter border-2 ${bingoWinner === 2 ? 'bg-green-600 border-white text-white' : 'bg-zinc-900 border-zinc-800 text-zinc-500'}`}>
-                    Piloto 2 {bingoWinner === 2 && '🏆'}
-                  </div>
-                  <div className="grid grid-cols-3 gap-2">
-                    {bingoBoardP2.map((item, i) => (
-                      <button
-                        key={i}
-                        onClick={() => markBingo(2, i)}
-                        className={`aspect-square rounded-xl text-2xl flex items-center justify-center transition-all border-2 ${item.marked ? 'bg-green-600/20 border-green-500' : 'bg-zinc-900 border-zinc-800'}`}
-                      >
-                        {item.img}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex flex-col sm:flex-row gap-4">
-                <button onClick={initBingo} className="flex-1 py-4 bg-zinc-800 text-white font-bold rounded-xl uppercase">Nueva Carrera</button>
-                <button onClick={() => goToWorld('GRAN_PREMIO')} className="flex-1 py-4 bg-red-600/20 text-red-500 border border-red-500/30 font-bold rounded-xl uppercase">Volver al Gran Premio</button>
-                <button onClick={() => goToWorld('MENU')} className="flex-1 py-4 bg-white text-black font-black rounded-xl uppercase italic">Menú Principal</button>
-              </div>
-            </motion.div>
+            <Bingo 
+              player1Board={bingoBoardP1}
+              player2Board={bingoBoardP2}
+              onToggle={markBingo}
+              onReset={initBingo}
+              onBack={() => goToWorld('GRAN_PREMIO')}
+            />
           )}
 
           {state.world === 'LINCE' && (
-            <motion.div key="lince" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-8">
-              <div className="flex items-center gap-4">
-                <button onClick={() => goToWorld('MENU')} className="text-zinc-500 hover:text-white">
-                  <ChevronRight className="rotate-180 w-6 h-6" />
-                </button>
-                <h2 className="text-2xl font-bold italic uppercase">Juego: Lince</h2>
-              </div>
-              <div className="bg-zinc-900 p-6 rounded-3xl flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="text-5xl">{linceTarget?.img}</div>
-                  <div>
-                    <p className="text-xs text-zinc-500 font-bold uppercase">Busca el:</p>
-                    <p className="text-xl font-black text-white italic">{linceTarget?.name}</p>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <p className="text-xs text-zinc-500 font-bold uppercase">Puntos:</p>
-                  <p className={`text-3xl font-black text-${currentData.color}-600 italic`}>{linceScore}/10</p>
-                  <p className="text-[10px] text-zinc-600 font-bold uppercase">Record: {persistentData.linceHighScore}</p>
-                </div>
-              </div>
-              <div className="grid grid-cols-6 gap-2 bg-zinc-900 p-4 rounded-3xl">
-                {linceBoard.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => checkLince(item)}
-                    className="aspect-square bg-zinc-800 hover:bg-zinc-700 rounded-lg text-2xl flex items-center justify-center transition-all"
-                  >
-                    {item.img}
-                  </button>
-                ))}
-              </div>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <button onClick={initLince} className="flex-1 py-4 bg-zinc-800 text-white font-bold rounded-xl uppercase">Reiniciar</button>
-                <button onClick={() => goToWorld('GRAN_PREMIO')} className={`flex-1 py-4 bg-red-600/20 text-red-500 border border-red-500/30 font-bold rounded-xl uppercase`}>Volver al Gran Premio</button>
-                <button onClick={() => goToWorld('MENU')} className="flex-1 py-4 bg-white text-black font-black rounded-xl uppercase italic">Menú Principal</button>
-              </div>
-            </motion.div>
+            <Lince 
+              target={linceTarget}
+              images={linceBoard}
+              score={linceScore}
+              highScore={persistentData.linceHighScore}
+              onCheck={(item: any) => checkLince(item)}
+              onReset={initLince}
+              onBack={() => goToWorld('GRAN_PREMIO')}
+            />
           )}
 
           {state.world === 'DOMINO' && (
-            <motion.div key="domino" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-8">
-              <div className="flex items-center gap-4">
-                <button onClick={() => goToWorld('MENU')} className="text-zinc-500 hover:text-white">
-                  <ChevronRight className="rotate-180 w-6 h-6" />
-                </button>
-                <h2 className="text-2xl font-bold italic uppercase">Juego: Dominó RUM-RUM</h2>
-              </div>
-
-              <div className="bg-zinc-900 p-8 rounded-3xl space-y-8 overflow-x-auto">
-                <p className="text-xs text-zinc-500 font-bold uppercase tracking-widest text-center">Cadena de piezas</p>
-                <div className="flex gap-2 justify-center min-w-max pb-4">
-                  {dominoChain.map((piece, i) => (
-                    <div key={i} className="flex bg-white text-zinc-900 border-2 border-zinc-300 rounded-xl overflow-hidden shadow-xl">
-                      <div className="w-16 h-20 flex items-center justify-center text-4xl border-r border-zinc-200 bg-white">{piece.left}</div>
-                      <div className="w-16 h-20 flex items-center justify-center text-4xl bg-zinc-50">{piece.right}</div>
-                    </div>
-                  ))}
-                  <div className="w-16 h-20 border-2 border-dashed border-red-500/30 rounded-xl flex items-center justify-center text-zinc-600 animate-pulse">?</div>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <p className="text-center text-zinc-400 font-bold uppercase italic text-sm">
-                  Tus piezas ({dominoHand.length}) - Montón: {dominoPool.length}
-                </p>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                  {dominoHand.map((piece, i) => (
-                    <button
-                      key={i}
-                      onClick={() => handleDominoClick(piece, i)}
-                      className="flex bg-white text-zinc-900 border-2 border-zinc-300 rounded-2xl overflow-hidden hover:border-red-500 transition-all hover:scale-105"
-                    >
-                      <div className="flex-1 h-24 flex items-center justify-center text-4xl border-r border-zinc-200 bg-white">{piece.left}</div>
-                      <div className="flex-1 h-24 flex items-center justify-center text-4xl">{piece.right}</div>
-                    </button>
-                  ))}
-                </div>
-                <button 
-                  onClick={drawDominoPiece}
-                  className={`w-full py-3 bg-${currentData.color}-600/20 text-${currentData.color}-500 border-2 border-${currentData.color}-500/30 font-bold rounded-xl uppercase hover:bg-${currentData.color}-600/30 transition-all`}
-                >
-                  {dominoPool.length > 0 ? `Robar del montón (${dominoPool.length})` : "No puedo jugar (Terminar)"}
-                </button>
-              </div>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <button onClick={initDomino} className="flex-1 py-4 bg-zinc-800 text-white font-bold rounded-xl uppercase">Reiniciar</button>
-                <button onClick={() => goToWorld('GRAN_PREMIO')} className={`flex-1 py-4 bg-red-600/20 text-red-500 border border-red-500/30 font-bold rounded-xl uppercase`}>Volver al Gran Premio</button>
-                <button onClick={() => goToWorld('MENU')} className="flex-1 py-4 bg-white text-black font-black rounded-xl uppercase italic">Menú Principal</button>
-              </div>
-            </motion.div>
+            <Domino 
+              chain={dominoChain}
+              hand={dominoHand}
+              onPlay={(index: number) => handleDominoClick(dominoHand[index], index)}
+              onReset={initDomino}
+              onBack={() => goToWorld('GRAN_PREMIO')}
+            />
           )}
 
           {state.world === 'DOBBLE' && (
-            <motion.div key="dobble" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-8">
-              <div className="flex items-center gap-4">
-                <button onClick={() => goToWorld('MENU')} className="text-zinc-500 hover:text-white">
-                  <ChevronRight className="rotate-180 w-6 h-6" />
-                </button>
-                <h2 className="text-2xl font-bold italic uppercase">Juego: Dobble Veloz</h2>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {dobbleCards.map((card, cardIdx) => (
-                  <div key={cardIdx} className="bg-white rounded-full aspect-square p-8 shadow-2xl relative overflow-hidden flex items-center justify-center">
-                    <div className="relative w-full h-full">
-                      {card.map((item, i) => {
-                        const angle = (i * (360 / card.length)) * (Math.PI / 180);
-                        const radius = 35; // percentage
-                        const x = 50 + radius * Math.cos(angle);
-                        const y = 50 + radius * Math.sin(angle);
-                        
-                        return (
-                          <button
-                            key={i}
-                            onClick={() => handleDobbleClick(item.img)}
-                            className="absolute text-5xl hover:scale-125 transition-transform active:scale-95 -translate-x-1/2 -translate-y-1/2"
-                            style={{ 
-                              left: `${x}%`,
-                              top: `${y}%`,
-                              transform: `translate(-50%, -50%) rotate(${i * 30}deg) scale(${0.8 + (i % 3) * 0.2})`,
-                            }}
-                          >
-                            {item.img}
-                          </button>
-                        );
-                      })}
-                    </div>
-                    <div className="absolute inset-0 border-8 border-zinc-100 rounded-full pointer-events-none" />
-                  </div>
-                ))}
-              </div>
-
-              <div className="text-center space-y-2">
-                <p className={`text-${currentData.color}-500 font-black italic text-2xl uppercase tracking-tighter`}>¡Busca la imagen repetida!</p>
-                <p className="text-zinc-500 text-sm">Solo hay una imagen igual en las dos cartas. ¡Sé el más rápido!</p>
-              </div>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <button onClick={initDobble} className="flex-1 py-4 bg-zinc-800 text-white font-bold rounded-xl uppercase">Nuevas Cartas</button>
-                <button onClick={() => goToWorld('GRAN_PREMIO')} className={`flex-1 py-4 bg-red-600/20 text-red-500 border border-red-500/30 font-bold rounded-xl uppercase`}>Volver al Gran Premio</button>
-                <button onClick={() => goToWorld('MENU')} className="flex-1 py-4 bg-white text-black font-black rounded-xl uppercase italic">Menú Principal</button>
-              </div>
-            </motion.div>
+            <Dobble 
+              cards={dobbleCards}
+              onCheck={handleDobbleClick}
+              onReset={initDobble}
+              onBack={() => goToWorld('GRAN_PREMIO')}
+            />
           )}
 
           {state.world === 'LIBRARY' && (
-            <motion.div 
-              key="library"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="space-y-8"
-            >
-              <div className="flex items-center gap-4 mb-8">
-                <button onClick={() => goToWorld('MENU')} className="text-zinc-500 hover:text-white">
-                  <ChevronRight className="rotate-180 w-6 h-6" />
-                </button>
-                <h2 className="text-4xl font-black text-white italic uppercase tracking-tighter">Boxes de Lectura 📚</h2>
-              </div>
-
-              <p className="text-zinc-400 text-lg">
-                Aquí tienes materiales adicionales, libros y guías para complementar tu entrenamiento fuera de la pista.
-              </p>
-
-              <div className="grid grid-cols-1 gap-4">
-                {resources.map((res, idx) => (
-                  <div 
-                    key={idx}
-                    className="p-6 bg-zinc-900 border border-zinc-800 rounded-2xl flex items-center justify-between group hover:border-red-500/30 transition-all"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-zinc-800 rounded-xl flex items-center justify-center text-red-500 group-hover:scale-110 transition-transform">
-                        {res.icon}
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">{res.type}</span>
-                          <h4 className="text-lg font-bold text-white uppercase italic tracking-tight">{res.title}</h4>
-                        </div>
-                        <p className="text-zinc-500 text-sm">{res.desc}</p>
-                      </div>
-                    </div>
-                    <button 
-                      onClick={() => alert('Aquí se abriría el enlace al recurso: ' + res.title)}
-                      className="p-3 bg-zinc-800 hover:bg-red-600 text-white rounded-xl transition-all"
-                    >
-                      <ExternalLink className="w-5 h-5" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-
-              <div className="p-8 bg-red-600/10 border border-red-500/20 rounded-3xl space-y-4">
-                <h4 className="text-xl font-black text-red-500 uppercase italic">¿Tienes material propio?</h4>
-                <p className="text-zinc-400 text-sm leading-relaxed">
-                  Puedes enviarme tus PDFs o nombres de libros y yo los añadiré a esta sección para que siempre los tengas a mano en tu taller.
-                </p>
-              </div>
-            </motion.div>
+            <Library resources={resources} />
           )}
         </AnimatePresence>
       </main>

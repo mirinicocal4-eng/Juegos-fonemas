@@ -1,0 +1,53 @@
+import React from 'react';
+import { motion } from 'motion/react';
+
+interface DominoProps {
+  chain: { left: string, right: string }[];
+  hand: { left: string, right: string }[];
+  onPlay: (index: number) => void;
+  onReset: () => void;
+  onBack: () => void;
+}
+
+export const Domino: React.FC<DominoProps> = ({ chain, hand, onPlay, onReset, onBack }) => {
+  return (
+    <motion.div 
+      key="domino"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="space-y-8"
+    >
+      <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 overflow-x-auto">
+        <div className="flex gap-2 min-w-max pb-4">
+          {(chain || []).map((piece, i) => (
+            <div key={i} className="flex bg-zinc-800 border-2 border-zinc-700 rounded-xl overflow-hidden shadow-lg">
+              <div className="w-12 h-16 flex items-center justify-center text-2xl border-r border-zinc-700 bg-zinc-900/50">{piece.left}</div>
+              <div className="w-12 h-16 flex items-center justify-center text-2xl bg-zinc-900/50">{piece.right}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        <p className="text-zinc-500 font-bold uppercase tracking-widest text-xs text-center">Tus Piezas</p>
+        <div className="flex flex-wrap justify-center gap-4">
+          {(hand || []).map((piece, i) => (
+            <button 
+              key={i}
+              onClick={() => onPlay(i)}
+              className="flex bg-zinc-800 border-2 border-red-600/30 rounded-xl overflow-hidden hover:scale-110 hover:border-red-600 transition-all shadow-xl"
+            >
+              <div className="w-14 h-20 flex items-center justify-center text-3xl border-r border-zinc-700 bg-zinc-900/50">{piece.left}</div>
+              <div className="w-14 h-20 flex items-center justify-center text-3xl bg-zinc-900/50">{piece.right}</div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="flex gap-4">
+        <button onClick={onReset} className="flex-1 py-4 bg-zinc-800 text-white font-bold rounded-xl uppercase">Nuevas Piezas</button>
+        <button onClick={onBack} className="flex-1 py-4 bg-white text-black font-black rounded-xl uppercase italic">Volver</button>
+      </div>
+    </motion.div>
+  );
+};
