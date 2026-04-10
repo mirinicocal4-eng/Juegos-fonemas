@@ -32,7 +32,7 @@ export const Taller: React.FC<TallerProps> = ({
       <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 space-y-8">
         <div className="flex items-center justify-between">
           <div className="space-y-1">
-            <span className="text-red-500 font-bold text-xs uppercase tracking-widest">Paso {step + 1} de {tallerSteps.length}</span>
+            <span className="text-red-500 font-bold text-xs uppercase tracking-widest">Paso {step + 1} de {(tallerSteps || []).length}</span>
             <h3 className="text-3xl font-black italic text-white uppercase">{currentStep.title}</h3>
           </div>
           <div className="w-16 h-16 bg-red-600 rounded-2xl flex items-center justify-center shadow-lg shadow-red-900/40">
@@ -73,7 +73,7 @@ export const Taller: React.FC<TallerProps> = ({
         </div>
       </div>
 
-      {step < tallerSteps.length - 1 ? (
+      {step < (tallerSteps || []).length - 1 ? (
         <button 
           onClick={onNext}
           className="w-full bg-white text-black font-black py-4 rounded-xl hover:bg-zinc-200 transition-all flex items-center justify-center gap-2 uppercase italic"

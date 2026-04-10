@@ -47,9 +47,16 @@ export interface GameState {
   history: string[];
 }
 
+export interface UserResource {
+  title: string;
+  date: string;
+  data?: string; // Data URL for the file content
+}
+
 export interface PersistentData {
   lastPhoneme: Phoneme;
   linceHighScore: number;
   trophiesCount: number;
   completedPhonemes: Phoneme[];
+  userResources: UserResource[];
 }

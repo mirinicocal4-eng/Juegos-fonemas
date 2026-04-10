@@ -43,7 +43,8 @@ const DEFAULT_PERSISTENT_DATA: PersistentData = {
   lastPhoneme: 'R',
   linceHighScore: 0,
   trophiesCount: 0,
-  completedPhonemes: []
+  completedPhonemes: [],
+  userResources: []
 };
 
 export default function App() {
@@ -65,8 +66,13 @@ export default function App() {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        setPersistentData(parsed);
-        setState(prev => ({ ...prev, phoneme: parsed.lastPhoneme }));
+        setPersistentData({
+          ...DEFAULT_PERSISTENT_DATA,
+          ...parsed,
+          completedPhonemes: parsed.completedPhonemes || [],
+          userResources: parsed.userResources || []
+        });
+        setState(prev => ({ ...prev, phoneme: parsed.lastPhoneme || 'R' }));
       } catch (e) {
         console.error("Error loading pilot data", e);
       }
@@ -170,6 +176,7 @@ export default function App() {
   const [dobbleTarget, setDobbleTarget] = useState<string | null>(null);
 
   const rollDice = () => {
+    if (!granPremioBoard || granPremioBoard.length === 0) return;
     const val = Math.floor(Math.random() * 6) + 1;
     setDiceValue(val);
     const next = Math.min(state.step + val, granPremioBoard.length - 1);
@@ -178,11 +185,11 @@ export default function App() {
       setTimeout(() => {
         setIsWinner(true);
         setPersistentData(prev => {
-          const alreadyCompleted = prev.completedPhonemes.includes(state.phoneme);
+          const alreadyCompleted = (prev.completedPhonemes || []).includes(state.phoneme);
           return {
             ...prev,
             trophiesCount: alreadyCompleted ? prev.trophiesCount : prev.trophiesCount + 1,
-            completedPhonemes: alreadyCompleted ? prev.completedPhonemes : [...prev.completedPhonemes, state.phoneme]
+            completedPhonemes: alreadyCompleted ? (prev.completedPhonemes || []) : [...(prev.completedPhonemes || []), state.phoneme]
           };
         });
       }, 1500);
@@ -248,6 +255,7 @@ export default function App() {
     if (gameImages.length < 2) return;
     const shuffled = [...gameImages].sort(() => Math.random() - 0.5);
     const common = shuffled[0];
+    if (!common) return;
     const card1 = [common, ...shuffled.slice(1, 5)].sort(() => Math.random() - 0.5);
     const card2 = [common, ...shuffled.slice(5, 9)].sort(() => Math.random() - 0.5);
     setDobbleCards([card1, card2]);
@@ -349,6 +357,7 @@ export default function App() {
   };
 
   const handleDominoClick = (piece: { left: string, right: string }, index: number) => {
+    if (!dominoChain || dominoChain.length === 0) return;
     const lastPiece = dominoChain[dominoChain.length - 1];
     
     // Check both orientations
@@ -387,6 +396,7 @@ export default function App() {
 
   const drawDominoPiece = () => {
     if (dominoPool.length === 0) {
+      if (!dominoChain || dominoChain.length === 0) return;
       // Check if user is truly stuck
       const lastPiece = dominoChain[dominoChain.length - 1];
       const hasMove = dominoHand.some(p => p.left === lastPiece.right || p.right === lastPiece.right);
@@ -454,6 +464,21 @@ export default function App() {
     );
   }
 
+  const handleUpload = (resource: { title: string, date: string, data?: string }) => {
+    setPersistentData(prev => ({
+      ...prev,
+      userResources: [resource, ...(prev.userResources || [])]
+    }));
+    setFeedback({ type: 'success', message: `¡Archivo "${resource.title}" subido correctamente! 📄` });
+  };
+
+  const handleDeleteUserResource = (index: number) => {
+    setPersistentData(prev => ({
+      ...prev,
+      userResources: (prev.userResources || []).filter((_, i) => i !== index)
+    }));
+    setFeedback({ type: 'info', message: "Recurso eliminado." });
+  };
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100 font-sans selection:bg-red-500/30">
@@ -603,13 +628,13 @@ export default function App() {
                         'bg-emerald-600/10 border-emerald-600 text-emerald-500'
                       }`}
                     >
-                      {persistentData.completedPhonemes.includes(p) && (
+                      {(persistentData.completedPhonemes || []).includes(p) && (
                         <div className="absolute -top-2 -right-2 bg-yellow-500 text-black p-1 rounded-full shadow-lg">
                           <Trophy className="w-4 h-4" />
                         </div>
                       )}
                       <span className="text-5xl font-black italic">{p}</span>
-                      <p className="mt-4 font-bold uppercase tracking-widest text-[10px]">{PHONEME_DATA[p].name}</p>
+                      <p className="mt-4 font-bold uppercase tracking-widest text-[10px]">{PHONEME_DATA[p]?.name || 'Cargando...'}</p>
                     </button>
                   ))}
                   <button
@@ -629,7 +654,7 @@ export default function App() {
                         onClick={() => selectPhoneme(p)}
                         className="p-6 rounded-3xl border-4 transition-all hover:scale-105 flex flex-col items-center justify-center bg-orange-600/10 border-orange-600 text-orange-500 relative"
                       >
-                        {persistentData.completedPhonemes.includes(p) && (
+                        {(persistentData.completedPhonemes || []).includes(p) && (
                           <div className="absolute -top-2 -right-2 bg-yellow-500 text-black p-1 rounded-full shadow-lg">
                             <Trophy className="w-4 h-4" />
                           </div>
@@ -740,7 +765,9 @@ export default function App() {
               semaforoRadar={semaforoRadar}
               onSetSubStep={(ss) => setState({ ...state, subStep: ss, step: 0 })}
               onNextStep={() => {
-                const max = state.subStep === 0 ? semaforoPares.length : semaforoRadar.length;
+                const pLen = (semaforoPares || []).length;
+                const rLen = (semaforoRadar || []).length;
+                const max = state.subStep === 0 ? pLen : rLen;
                 if(state.step < max - 1) {
                   setState({ ...state, step: state.step + 1 }); 
                   setFeedback(null);
@@ -823,7 +850,12 @@ export default function App() {
           )}
 
           {state.world === 'LIBRARY' && (
-            <Library resources={resources} />
+            <Library 
+              resources={resources} 
+              userResources={persistentData.userResources || []}
+              onUpload={handleUpload}
+              onDeleteUserResource={handleDeleteUserResource}
+            />
           )}
         </AnimatePresence>
       </main>
