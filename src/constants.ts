@@ -20,6 +20,7 @@ export const worlds = [
   { id: 'SEMAFORO', name: '2. Semáforo', icon: React.createElement(Volume2, { className: "w-6 h-6" }), desc: 'Entrena tu oído para detectar el sonido.' },
   { id: 'PISTA', name: '3. Pista', icon: React.createElement(Flag, { className: "w-6 h-6" }), desc: 'Repite palabras y frases a toda velocidad.' },
   { id: 'GRAN_PREMIO', name: '4. Gran Premio', icon: React.createElement(Trophy, { className: "w-6 h-6" }), desc: 'La carrera final por la copa de oro.' },
+  { id: 'LIBRARY', name: 'Biblioteca', icon: React.createElement(BookOpen, { className: "w-6 h-6" }), desc: 'Consulta y sube tus materiales de apoyo.' },
 ];
 
 export const minigames = [

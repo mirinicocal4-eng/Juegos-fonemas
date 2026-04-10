@@ -698,7 +698,7 @@ export default function App() {
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {worlds.map((w) => (
                   <button
                     key={w.id}
@@ -715,32 +715,6 @@ export default function App() {
                     </div>
                   </button>
                 ))}
-              </div>
-
-              <div className="space-y-4 pt-4">
-                <div className="flex justify-between items-center">
-                  <h3 className="text-sm font-black text-zinc-500 uppercase tracking-[0.2em] italic">Juegos Rápidos 🎮</h3>
-                  <button 
-                    onClick={() => goToWorld('LIBRARY')}
-                    className="flex items-center gap-2 text-[10px] font-black text-red-500 uppercase tracking-widest hover:text-white transition-colors"
-                  >
-                    <Library className="w-3 h-3" /> Biblioteca
-                  </button>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-                  {minigames.map((g) => (
-                    <button
-                      key={g.id}
-                      onClick={() => goToWorld(g.id as World)}
-                      className="p-4 bg-zinc-900/50 border border-zinc-800 rounded-xl hover:bg-zinc-800 transition-all text-center space-y-2 group"
-                    >
-                      <div className="text-zinc-500 group-hover:text-red-500 transition-colors flex justify-center">
-                        {g.icon}
-                      </div>
-                      <p className="text-[10px] font-black uppercase italic tracking-tight text-zinc-400 group-hover:text-white">{g.name}</p>
-                    </button>
-                  ))}
-                </div>
               </div>
             </motion.div>
           )}

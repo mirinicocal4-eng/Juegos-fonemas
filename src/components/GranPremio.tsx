@@ -72,8 +72,10 @@ export const GranPremio: React.FC<GranPremioProps> = ({
       </div>
 
       <div className="space-y-4 pt-8 border-t border-zinc-800">
-        <h3 className="text-lg font-bold italic uppercase text-zinc-400">Zona de Minijuegos</h3>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="text-center">
+          <h3 className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em] italic">Juegos Rápidos 🏎️</h3>
+        </div>
+        <div className="grid grid-cols-3 sm:grid-cols-5 gap-4">
           <button 
             onClick={() => onGoToWorld('MEMORY')}
             className="p-4 bg-zinc-900 border border-zinc-800 rounded-2xl hover:bg-zinc-800 transition-all text-center space-y-2"
