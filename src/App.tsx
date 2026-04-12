@@ -181,6 +181,7 @@ export default function App() {
   // Lince State
   const [linceBoard, setLinceBoard] = useState<{ img: string, name: string, id: number }[]>([]);
   const [linceTarget, setLinceTarget] = useState<{ img: string, name: string } | null>(null);
+  const [lincePool, setLincePool] = useState<{ img: string, name: string }[]>([]);
   const [linceScore, setLinceScore] = useState(0);
 
   // Domino State
@@ -243,7 +244,11 @@ export default function App() {
       .sort(() => Math.random() - 0.5)
       .map((item, index) => ({ ...item, id: index }));
     setLinceBoard(board);
-    setLinceTarget(gameImages[Math.floor(Math.random() * gameImages.length)]);
+    
+    const pool = [...gameImages].sort(() => Math.random() - 0.5);
+    const firstTarget = pool.pop()!;
+    setLincePool(pool);
+    setLinceTarget(firstTarget);
     setLinceScore(0);
   };
 
@@ -356,18 +361,34 @@ export default function App() {
     }
   };
 
-  const checkLince = (item: { img: string, name: string }) => {
-    if (item.img === linceTarget?.img) {
+  const checkLince = (item: any) => {
+    const itemImg = typeof item === 'string' ? item : item?.img;
+    if (itemImg === linceTarget?.img) {
       const newScore = linceScore + 1;
       setLinceScore(newScore);
-      setFeedback({ type: 'success', message: `¡Encontrado! +1 punto 🎯` });
-      setLinceTarget(gameImages[Math.floor(Math.random() * gameImages.length)]);
       
       if (newScore > persistentData.linceHighScore) {
         setPersistentData(prev => ({ ...prev, linceHighScore: newScore }));
       }
 
-      if (newScore >= 10) setFeedback({ type: 'success', message: "¡Ojo de Lince! Has encontrado 10 imágenes 🏆" });
+      if (lincePool.length === 0) {
+        setFeedback({ 
+          type: 'success', 
+          message: `¡INCREÍBLE! Has encontrado las ${gameImages.length} imágenes. ¡Eres un lince! 🏆🏁` 
+        });
+        setLinceTarget(null);
+      } else {
+        const nextPool = [...lincePool];
+        const nextTarget = nextPool.pop()!;
+        setLincePool(nextPool);
+        setLinceTarget(nextTarget);
+        
+        if (newScore === 10 && gameImages.length > 10) {
+          setFeedback({ type: 'success', message: "¡Ojo de Lince! Llevas 10 imágenes 🏆" });
+        } else {
+          setFeedback({ type: 'success', message: `¡Encontrado! +1 punto 🎯` });
+        }
+      }
     } else {
       setFeedback({ type: 'error', message: "¡Ese no es! Sigue buscando 🧐" });
     }
@@ -553,6 +574,7 @@ export default function App() {
       <AnimatePresence>
         {showRules && (
           <motion.div 
+            key="rules-modal"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -599,6 +621,7 @@ export default function App() {
         <AnimatePresence mode="wait">
           {feedback && (
             <motion.div 
+              key="feedback-toast"
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
@@ -744,6 +767,7 @@ export default function App() {
 
           {state.world === 'TALLER' && (
             <Taller 
+              key="world-taller"
               phoneme={state.phoneme}
               step={state.step}
               tallerSteps={tallerSteps}
@@ -755,6 +779,7 @@ export default function App() {
 
           {state.world === 'SEMAFORO' && (
             <Semaforo 
+              key="world-semaforo"
               phoneme={state.phoneme}
               step={state.step}
               subStep={state.subStep}
@@ -778,6 +803,7 @@ export default function App() {
 
           {state.world === 'PISTA' && (
             <Pista 
+              key="world-pista"
               pistaEco={pistaEco}
               pistaFrases={pistaFrases}
               pistaTrabalenguas={pistaTrabalenguas}
@@ -789,6 +815,7 @@ export default function App() {
 
           {state.world === 'GRAN_PREMIO' && (
             <GranPremio 
+              key="world-gran-premio"
               step={state.step}
               diceValue={diceValue}
               granPremioBoard={granPremioBoard}
@@ -799,6 +826,7 @@ export default function App() {
 
           {state.world === 'MEMORY' && (
             <Memory 
+              key="world-memory"
               cards={memoryCards}
               onFlip={handleMemoryClick}
               onReset={initMemory}
@@ -808,6 +836,7 @@ export default function App() {
 
           {state.world === 'BINGO' && (
             <Bingo 
+              key="world-bingo"
               player1Board={bingoBoardP1}
               player2Board={bingoBoardP2}
               onToggle={markBingo}
@@ -818,6 +847,7 @@ export default function App() {
 
           {state.world === 'LINCE' && (
             <Lince 
+              key="world-lince"
               target={linceTarget}
               images={linceBoard}
               score={linceScore}
@@ -830,9 +860,12 @@ export default function App() {
 
           {state.world === 'DOMINO' && (
             <Domino 
+              key="world-domino"
               chain={dominoChain}
               hand={dominoHand}
+              poolCount={dominoPool.length}
               onPlay={(index: number) => handleDominoClick(dominoHand[index], index)}
+              onDraw={drawDominoPiece}
               onReset={initDomino}
               onBack={() => goToWorld('GRAN_PREMIO')}
             />
@@ -840,6 +873,7 @@ export default function App() {
 
           {state.world === 'DOBBLE' && (
             <Dobble 
+              key="world-dobble"
               cards={dobbleCards}
               onCheck={handleDobbleClick}
               onReset={initDobble}
@@ -849,6 +883,7 @@ export default function App() {
 
           {state.world === 'LIBRARY' && (
             <Library 
+              key="world-library"
               resources={resources} 
               userResources={persistentData.userResources || []}
               onUpload={handleUpload}
@@ -868,6 +903,7 @@ export default function App() {
       <AnimatePresence>
         {editingPhoneme && (
           <DataEditor 
+            key="data-editor-modal"
             data={currentData}
             onSave={saveCustomPhoneme}
             onClose={() => setEditingPhoneme(null)}

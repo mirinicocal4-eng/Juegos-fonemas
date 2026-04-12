@@ -374,7 +374,7 @@ export const DataEditor: React.FC<DataEditorProps> = ({ data, onSave, onClose })
                           type="text" 
                           value={step.sound} 
                           onChange={(e) => updateTallerStep(i, 'sound', e.target.value)}
-                          className="bg-zinc-900 border border-zinc-700 text-red-500 text-xs p-3 rounded-xl w-full outline-none font-black italic"
+                          className="bg-zinc-900 border border-zinc-700 text-indigo-500 text-xs p-3 rounded-xl w-full outline-none font-black italic"
                         />
                       </div>
                     </div>

@@ -43,7 +43,7 @@ export const Dobble: React.FC<DobbleProps> = ({ cards, onCheck, onReset, onBack 
       </div>
 
       <div className="text-center space-y-2">
-        <p className="text-red-500 font-black italic text-2xl uppercase tracking-tighter">¡Busca la imagen repetida!</p>
+        <p className="text-indigo-500 font-black italic text-2xl uppercase tracking-tighter">¡Busca la imagen repetida!</p>
         <p className="text-zinc-500 text-sm">Solo hay una imagen igual en las dos cartas. ¡Sé el más rápido!</p>
       </div>
 

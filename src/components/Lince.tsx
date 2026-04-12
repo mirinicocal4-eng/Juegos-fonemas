@@ -7,7 +7,7 @@ interface LinceProps {
   images: any[];
   score: number;
   highScore: number;
-  onCheck: (img: string) => void;
+  onCheck: (item: any) => void;
   onReset: () => void;
   onBack: () => void;
 }
@@ -26,21 +26,23 @@ export const Lince: React.FC<LinceProps> = ({ target, images, score, highScore, 
           <div className="text-6xl my-2 flex justify-center">
             <VisualContent content={target?.img || ''} className="w-16 h-16" />
           </div>
-          <p className="text-xl font-black text-white uppercase italic">{target?.name}</p>
+          <p className="text-xl font-black text-white uppercase italic">
+            {target ? target.name : "¡Conseguido! 🏆"}
+          </p>
         </div>
         <div className="w-px h-16 bg-zinc-800 mx-4" />
         <div className="text-right pr-4">
           <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Puntos</p>
-          <p className="text-3xl font-black text-red-500 italic">{score}</p>
+          <p className="text-3xl font-black text-indigo-500 italic">{score}</p>
           <p className="text-[8px] text-zinc-600 uppercase font-bold">Récord: {highScore}</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-5 gap-2">
+      <div className={`grid grid-cols-5 gap-2 ${!target ? 'opacity-50 pointer-events-none' : ''}`}>
         {(images || []).map((img, i) => (
           <button 
             key={`lince-${i}`}
-            onClick={() => onCheck(img.img)}
+            onClick={() => target && onCheck(img)}
             className="aspect-square bg-zinc-900 border border-zinc-800 rounded-xl flex items-center justify-center text-3xl hover:bg-zinc-800 hover:scale-110 transition-all"
           >
             <VisualContent content={img.img} className="w-10 h-10" />

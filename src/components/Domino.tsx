@@ -5,12 +5,14 @@ import { VisualContent } from './VisualContent';
 interface DominoProps {
   chain: { left: string, right: string }[];
   hand: { left: string, right: string }[];
+  poolCount: number;
   onPlay: (index: number) => void;
+  onDraw: () => void;
   onReset: () => void;
   onBack: () => void;
 }
 
-export const Domino: React.FC<DominoProps> = ({ chain, hand, onPlay, onReset, onBack }) => {
+export const Domino: React.FC<DominoProps> = ({ chain, hand, poolCount, onPlay, onDraw, onReset, onBack }) => {
   return (
     <motion.div 
       key="domino"
@@ -33,14 +35,23 @@ export const Domino: React.FC<DominoProps> = ({ chain, hand, onPlay, onReset, on
         </div>
       </div>
 
-      <div className="space-y-4">
-        <p className="text-zinc-500 font-bold uppercase tracking-widest text-xs text-center">Tus Piezas</p>
+      <div className="space-y-6">
+        <div className="flex justify-between items-center px-2">
+          <p className="text-zinc-500 font-bold uppercase tracking-widest text-xs">Tus Piezas</p>
+          <button 
+            onClick={onDraw}
+            disabled={poolCount === 0}
+            className={`px-4 py-2 rounded-lg text-xs font-black uppercase tracking-widest transition-all ${poolCount > 0 ? 'bg-indigo-600 text-white hover:bg-indigo-500' : 'bg-zinc-800 text-zinc-600 cursor-not-allowed'}`}
+          >
+            Robar ({poolCount})
+          </button>
+        </div>
         <div className="flex flex-wrap justify-center gap-4">
           {(hand || []).map((piece, i) => (
             <button 
               key={`hand-${i}`}
               onClick={() => onPlay(i)}
-              className="flex bg-zinc-800 border-2 border-red-600/30 rounded-xl overflow-hidden hover:scale-110 hover:border-red-600 transition-all shadow-xl"
+              className="flex bg-zinc-800 border-2 border-indigo-600/30 rounded-xl overflow-hidden hover:scale-110 hover:border-indigo-600 transition-all shadow-xl"
             >
               <div className="w-14 h-20 flex items-center justify-center text-3xl border-r border-zinc-700 bg-zinc-900/50">
                 <VisualContent content={piece.left} className="w-10 h-10" />

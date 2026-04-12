@@ -24,11 +24,11 @@ export const Memory: React.FC<MemoryProps> = ({ cards, onFlip, onReset, onBack }
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => onFlip(i)}
-            className={`aspect-square rounded-2xl flex items-center justify-center text-4xl shadow-xl transition-all ${card.flipped || card.matched ? 'bg-zinc-800 border-2 border-red-500' : 'bg-red-600'}`}
+            className={`aspect-square rounded-2xl flex items-center justify-center text-4xl shadow-xl transition-all ${card.flipped || card.matched ? 'bg-zinc-800 border-2 border-indigo-500' : 'bg-indigo-600'}`}
           >
             {card.flipped || card.matched ? (
               <VisualContent content={card.img} className="w-12 h-12" />
-            ) : '🏎️'}
+            ) : '✨'}
           </motion.button>
         ))}
       </div>

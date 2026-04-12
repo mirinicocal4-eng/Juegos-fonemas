@@ -26,7 +26,7 @@ export const Bingo: React.FC<BingoProps> = ({ player1Board, player2Board, onTogg
               <button 
                 key={`p1-${i}`}
                 onClick={() => onToggle(1, i)}
-                className={`aspect-square rounded-xl flex items-center justify-center text-3xl border-2 transition-all ${item.marked ? 'bg-red-600 border-white scale-95 opacity-50' : 'bg-zinc-900 border-zinc-800'}`}
+                className={`aspect-square rounded-xl flex items-center justify-center text-3xl border-2 transition-all ${item.marked ? 'bg-indigo-600 border-white scale-95 opacity-50' : 'bg-zinc-900 border-zinc-800'}`}
               >
                 <VisualContent content={item.img} className="w-10 h-10" />
               </button>
