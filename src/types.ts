@@ -37,6 +37,7 @@ export interface PhonemeContent {
   gameImages: GameImage[];
   pistaFrases: string[];
   pistaTrabalenguas: string[];
+  pistaCompletar: { phrase: string; word: string }[];
 }
 
 export interface GameState {
@@ -59,4 +60,5 @@ export interface PersistentData {
   trophiesCount: number;
   completedPhonemes: Phoneme[];
   userResources: UserResource[];
+  customPhonemes?: Partial<Record<Phoneme, PhonemeContent>>;
 }

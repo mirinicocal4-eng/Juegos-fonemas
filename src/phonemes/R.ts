@@ -43,5 +43,12 @@ export const R_PHONEME_DATA: PhonemeContent = {
     "Erre con erre guitarra, erre con erre carril, rápido ruedan las ruedas, las ruedas del ferrocarril.",
     "La rana Ramona ríe y ríe, mientras corre por el río con su gorra roja.",
     "El perro de San Roque no tiene rabo porque Ramón Rodríguez se lo ha robado."
+  ],
+  pistaCompletar: [
+    { phrase: "El animal que salta en el charco es la", word: "RANA" },
+    { phrase: "Para saber la hora miro el", word: "RELOJ" },
+    { phrase: "El coche también se llama", word: "CARRO" },
+    { phrase: "La flor que tiene espinas es la", word: "ROSA" },
+    { phrase: "El pirata busca el", word: "TESORO" }
   ]
 };

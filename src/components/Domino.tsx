@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
+import { VisualContent } from './VisualContent';
 
 interface DominoProps {
   chain: { left: string, right: string }[];
@@ -20,9 +21,13 @@ export const Domino: React.FC<DominoProps> = ({ chain, hand, onPlay, onReset, on
       <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 overflow-x-auto">
         <div className="flex gap-2 min-w-max pb-4">
           {(chain || []).map((piece, i) => (
-            <div key={i} className="flex bg-zinc-800 border-2 border-zinc-700 rounded-xl overflow-hidden shadow-lg">
-              <div className="w-12 h-16 flex items-center justify-center text-2xl border-r border-zinc-700 bg-zinc-900/50">{piece.left}</div>
-              <div className="w-12 h-16 flex items-center justify-center text-2xl bg-zinc-900/50">{piece.right}</div>
+            <div key={`chain-${i}`} className="flex bg-zinc-800 border-2 border-zinc-700 rounded-xl overflow-hidden shadow-lg">
+              <div className="w-12 h-16 flex items-center justify-center text-2xl border-r border-zinc-700 bg-zinc-900/50">
+                <VisualContent content={piece.left} className="w-8 h-8" />
+              </div>
+              <div className="w-12 h-16 flex items-center justify-center text-2xl bg-zinc-900/50">
+                <VisualContent content={piece.right} className="w-8 h-8" />
+              </div>
             </div>
           ))}
         </div>
@@ -33,12 +38,16 @@ export const Domino: React.FC<DominoProps> = ({ chain, hand, onPlay, onReset, on
         <div className="flex flex-wrap justify-center gap-4">
           {(hand || []).map((piece, i) => (
             <button 
-              key={i}
+              key={`hand-${i}`}
               onClick={() => onPlay(i)}
               className="flex bg-zinc-800 border-2 border-red-600/30 rounded-xl overflow-hidden hover:scale-110 hover:border-red-600 transition-all shadow-xl"
             >
-              <div className="w-14 h-20 flex items-center justify-center text-3xl border-r border-zinc-700 bg-zinc-900/50">{piece.left}</div>
-              <div className="w-14 h-20 flex items-center justify-center text-3xl bg-zinc-900/50">{piece.right}</div>
+              <div className="w-14 h-20 flex items-center justify-center text-3xl border-r border-zinc-700 bg-zinc-900/50">
+                <VisualContent content={piece.left} className="w-10 h-10" />
+              </div>
+              <div className="w-14 h-20 flex items-center justify-center text-3xl bg-zinc-900/50">
+                <VisualContent content={piece.right} className="w-10 h-10" />
+              </div>
             </button>
           ))}
         </div>

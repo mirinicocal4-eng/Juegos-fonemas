@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { Gamepad2, CheckCircle2, AlertCircle, RotateCcw } from 'lucide-react';
 import { World } from '../types';
+import { VisualContent } from './VisualContent';
 
 interface GranPremioProps {
   step: number;
@@ -49,7 +50,9 @@ export const GranPremio: React.FC<GranPremioProps> = ({
             animate={{ opacity: 1, y: 0 }}
             className="bg-zinc-950 p-6 rounded-2xl border border-zinc-800 space-y-4"
           >
-            <div className="text-6xl mb-2">{granPremioBoard[step].img}</div>
+            <div className="flex justify-center">
+              <VisualContent content={granPremioBoard[step].img} className="text-6xl mb-2 w-20 h-20" />
+            </div>
             <div className="space-y-1">
               <span className="text-red-500 font-bold text-sm uppercase tracking-widest">Casilla {granPremioBoard[step].id}: {granPremioBoard[step].name}</span>
               <p className="text-2xl font-bold text-white leading-tight italic">
@@ -66,7 +69,7 @@ export const GranPremio: React.FC<GranPremioProps> = ({
             key={item.id}
             className={`aspect-square rounded-lg flex items-center justify-center text-xl border-2 transition-all ${step === i ? 'bg-red-600 border-white scale-110 z-10 shadow-lg' : 'bg-zinc-900 border-zinc-800 opacity-50'}`}
           >
-            {item.img}
+            <VisualContent content={item.img} className="w-6 h-6" />
           </div>
         ))}
       </div>

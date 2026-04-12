@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
+import { VisualContent } from './VisualContent';
 
 interface LinceProps {
   target: { img: string, name: string } | null;
@@ -22,7 +23,9 @@ export const Lince: React.FC<LinceProps> = ({ target, images, score, highScore, 
       <div className="flex justify-between items-center bg-zinc-900 p-4 rounded-2xl border border-zinc-800">
         <div className="text-center flex-1">
           <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Busca este objeto</p>
-          <div className="text-6xl my-2">{target?.img}</div>
+          <div className="text-6xl my-2 flex justify-center">
+            <VisualContent content={target?.img || ''} className="w-16 h-16" />
+          </div>
           <p className="text-xl font-black text-white uppercase italic">{target?.name}</p>
         </div>
         <div className="w-px h-16 bg-zinc-800 mx-4" />
@@ -36,11 +39,11 @@ export const Lince: React.FC<LinceProps> = ({ target, images, score, highScore, 
       <div className="grid grid-cols-5 gap-2">
         {(images || []).map((img, i) => (
           <button 
-            key={i}
+            key={`lince-${i}`}
             onClick={() => onCheck(img.img)}
             className="aspect-square bg-zinc-900 border border-zinc-800 rounded-xl flex items-center justify-center text-3xl hover:bg-zinc-800 hover:scale-110 transition-all"
           >
-            {img.img}
+            <VisualContent content={img.img} className="w-10 h-10" />
           </button>
         ))}
       </div>

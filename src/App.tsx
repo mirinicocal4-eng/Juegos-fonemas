@@ -24,7 +24,7 @@ import {
   Zap
 } from 'lucide-react';
 
-import { World, Phoneme, GameState, PersistentData } from './types';
+import { World, Phoneme, GameState, PersistentData, PhonemeContent } from './types';
 import { PHONEME_DATA } from './phonemes';
 import { STORAGE_KEY, worlds, minigames, worldRules, resources } from './constants';
 
@@ -38,13 +38,15 @@ import { Bingo } from './components/Bingo';
 import { Lince } from './components/Lince';
 import { Domino } from './components/Domino';
 import { Dobble } from './components/Dobble';
+import { DataEditor } from './components/DataEditor';
 
 const DEFAULT_PERSISTENT_DATA: PersistentData = {
   lastPhoneme: 'R',
   linceHighScore: 0,
   trophiesCount: 0,
   completedPhonemes: [],
-  userResources: []
+  userResources: [],
+  customPhonemes: {}
 };
 
 export default function App() {
@@ -59,6 +61,7 @@ export default function App() {
 
   const [persistentData, setPersistentData] = useState<PersistentData>(DEFAULT_PERSISTENT_DATA);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [editingPhoneme, setEditingPhoneme] = useState<Phoneme | null>(null);
 
   // Load data on mount
   useEffect(() => {
@@ -89,7 +92,7 @@ export default function App() {
 
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error' | 'info', message: string } | null>(null);
 
-  const currentData = PHONEME_DATA[state.phoneme] || PHONEME_DATA['R'] || {
+  const currentData = persistentData.customPhonemes?.[state.phoneme] || PHONEME_DATA[state.phoneme] || PHONEME_DATA['R'] || {
     name: '',
     color: 'zinc',
     taller: [],
@@ -111,6 +114,18 @@ export default function App() {
     setState({ ...state, phoneme, world: 'MENU', step: 0, subStep: 0 });
     setPersistentData(prev => ({ ...prev, lastPhoneme: phoneme }));
     setFeedback(null);
+  };
+
+  const saveCustomPhoneme = (newData: PhonemeContent) => {
+    if (!editingPhoneme) return;
+    setPersistentData(prev => ({
+      ...prev,
+      customPhonemes: {
+        ...(prev.customPhonemes || {}),
+        [editingPhoneme]: newData
+      }
+    }));
+    setFeedback({ type: 'success', message: `¡Contenido de ${newData.name} actualizado!` });
   };
 
   const goToWorld = (world: World) => {
@@ -135,6 +150,7 @@ export default function App() {
   const pistaEco = currentData.pistaEco || [];
   const pistaFrases = currentData.pistaFrases || [];
   const pistaTrabalenguas = currentData.pistaTrabalenguas || [];
+  const pistaCompletar = currentData.pistaCompletar || [];
 
   // --- MUNDO 4: GRAN PREMIO ---
   const granPremioBoard = (currentData.gameImages || []).map((img, i) => ({
@@ -688,6 +704,12 @@ export default function App() {
                   <button onClick={() => goToWorld('PHONEME_SELECT')} className="px-4 py-1 bg-zinc-800 text-zinc-400 rounded-full text-xs font-bold uppercase hover:text-white transition-colors">
                     Cambiar fonema ({state.phoneme})
                   </button>
+                  <button 
+                    onClick={() => setEditingPhoneme(state.phoneme)} 
+                    className="px-4 py-1 bg-red-600/20 text-red-400 border border-red-500/30 rounded-full text-xs font-bold uppercase hover:bg-red-600 hover:text-white transition-all flex items-center gap-2"
+                  >
+                    <Settings className="w-3 h-3" /> Editar Contenido
+                  </button>
                 </div>
                 <h2 className="text-4xl font-black text-white italic uppercase tracking-tighter">
                   ¡Hola, piloto! 🏁
@@ -758,6 +780,7 @@ export default function App() {
               pistaEco={pistaEco}
               pistaFrases={pistaFrases}
               pistaTrabalenguas={pistaTrabalenguas}
+              pistaCompletar={pistaCompletar}
               onFinish={() => goToWorld('MENU')}
               setFeedback={setFeedback}
             />
@@ -840,6 +863,16 @@ export default function App() {
           Copiloto de Logopedia • Especialista en AL
         </p>
       </footer>
+
+      <AnimatePresence>
+        {editingPhoneme && (
+          <DataEditor 
+            data={currentData}
+            onSave={saveCustomPhoneme}
+            onClose={() => setEditingPhoneme(null)}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

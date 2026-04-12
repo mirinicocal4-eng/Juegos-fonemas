@@ -41,5 +41,12 @@ export const S_PHONEME_DATA: PhonemeContent = {
   pistaTrabalenguas: [
     "Si la sierva que te sirve, no te sirve como sierva, de qué sirve que te sirvas de una sierva que no sirve.",
     "Sancha saca su saco seco al sol, para que el sol seque el saco seco de Sancha."
+  ],
+  pistaCompletar: [
+    { phrase: "El animal que hace sss es la", word: "SERPIENTE" },
+    { phrase: "Para sentarme uso la", word: "SILLA" },
+    { phrase: "Por el día brilla el", word: "SOL" },
+    { phrase: "Me gusta mucho comer", word: "SOPA" },
+    { phrase: "Donde vivo es mi", word: "CASA" }
   ]
 };

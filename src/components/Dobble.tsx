@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
+import { VisualContent } from './VisualContent';
 
 interface DobbleProps {
   cards: { img: string, name: string }[][];
@@ -24,14 +25,14 @@ export const Dobble: React.FC<DobbleProps> = ({ cards, onCheck, onReset, onBack 
                 // Posiciones deterministas pero que parezcan aleatorias
                 return (
                   <button 
-                    key={i}
+                    key={`card-${cardIdx}-item-${i}`}
                     onClick={() => onCheck(item.img)}
                     className="flex items-center justify-center text-4xl hover:scale-125 transition-transform"
                     style={{
                       transform: `translate(${(i % 3 - 1) * 10}px, ${(Math.floor(i / 3) - 1) * 10}px) rotate(${i * 45}deg)`,
                     }}
                   >
-                    {item.img}
+                    <VisualContent content={item.img} className="w-12 h-12" />
                   </button>
                 );
               })}

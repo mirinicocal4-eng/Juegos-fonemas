@@ -25,5 +25,12 @@ export const TR_PHONEME_DATA: PhonemeContent = {
   pistaTrabalenguas: [
     "Tres tristes tigres comen trigo en un trigal.",
     "El tren de Tristán trae trastos tras la vía."
+  ],
+  pistaCompletar: [
+    { phrase: "El transporte que va por vías es el", word: "TREN" },
+    { phrase: "En el campo trabaja el", word: "TRACTOR" },
+    { phrase: "El pan se hace con", word: "TRIGO" },
+    { phrase: "El instrumento que suena fuerte es la", word: "TROMPETA" },
+    { phrase: "La bici de tres ruedas es el", word: "TRICICLO" }
   ]
 };

@@ -25,5 +25,12 @@ export const CR_PHONEME_DATA: PhonemeContent = {
   pistaTrabalenguas: [
     "Cristina cree que el cristal de la cruz es de color crema.",
     "El cromo de Cristian cruje en el cristal."
+  ],
+  pistaCompletar: [
+    { phrase: "Para coleccionar uso un", word: "CROMO" },
+    { phrase: "La ventana es de", word: "CRISTAL" },
+    { phrase: "Para la cara uso", word: "CREMA" },
+    { phrase: "En la iglesia hay una", word: "CRUZ" },
+    { phrase: "Para pintar uso un", word: "CRAYÓN" }
   ]
 };

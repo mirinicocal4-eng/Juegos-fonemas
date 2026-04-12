@@ -25,5 +25,12 @@ export const PR_PHONEME_DATA: PhonemeContent = {
   pistaTrabalenguas: [
     "El príncipe de Prusia tiene mucha prisa por el prado.",
     "Primero pregunta el precio del premio precioso."
+  ],
+  pistaCompletar: [
+    { phrase: "Si gano la carrera me dan un", word: "PREMIO" },
+    { phrase: "El hijo del rey es el", word: "PRÍNCIPE" },
+    { phrase: "El campo verde es el", word: "PRADO" },
+    { phrase: "Si llego tarde tengo mucha", word: "PRISA" },
+    { phrase: "La hija del rey es la", word: "PRINCESA" }
   ]
 };

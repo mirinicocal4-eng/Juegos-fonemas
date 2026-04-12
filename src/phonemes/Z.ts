@@ -47,5 +47,12 @@ export const Z_PHONEME_DATA: PhonemeContent = {
   pistaTrabalenguas: [
     "El zapatero Zacarías zapatea sus zapatos azules con mucha destreza.",
     "Zorro, zorrito, saca tu hocico, que el sol brilla un poquito."
+  ],
+  pistaCompletar: [
+    { phrase: "El zapato es de color azul y lo usa el", word: "ZAPATO" },
+    { phrase: "La fruta roja que me gusta es la", word: "MANZANA" },
+    { phrase: "El animal que aúlla es el", word: "ZORRO" },
+    { phrase: "Para escribir uso un", word: "LÁPIZ" },
+    { phrase: "En el cine comemos", word: "MAÍZ" }
   ]
 };

@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
+import { VisualContent } from './VisualContent';
 
 interface BingoProps {
   player1Board: any[];
@@ -23,11 +24,11 @@ export const Bingo: React.FC<BingoProps> = ({ player1Board, player2Board, onTogg
           <div className="grid grid-cols-3 gap-2">
             {(player1Board || []).map((item, i) => (
               <button 
-                key={i}
+                key={`p1-${i}`}
                 onClick={() => onToggle(1, i)}
                 className={`aspect-square rounded-xl flex items-center justify-center text-3xl border-2 transition-all ${item.marked ? 'bg-red-600 border-white scale-95 opacity-50' : 'bg-zinc-900 border-zinc-800'}`}
               >
-                {item.img}
+                <VisualContent content={item.img} className="w-10 h-10" />
               </button>
             ))}
           </div>
@@ -37,11 +38,11 @@ export const Bingo: React.FC<BingoProps> = ({ player1Board, player2Board, onTogg
           <div className="grid grid-cols-3 gap-2">
             {(player2Board || []).map((item, i) => (
               <button 
-                key={i}
+                key={`p2-${i}`}
                 onClick={() => onToggle(2, i)}
                 className={`aspect-square rounded-xl flex items-center justify-center text-3xl border-2 transition-all ${item.marked ? 'bg-blue-600 border-white scale-95 opacity-50' : 'bg-zinc-900 border-zinc-800'}`}
               >
-                {item.img}
+                <VisualContent content={item.img} className="w-10 h-10" />
               </button>
             ))}
           </div>

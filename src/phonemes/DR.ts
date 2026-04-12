@@ -25,5 +25,12 @@ export const DR_PHONEME_DATA: PhonemeContent = {
   pistaTrabalenguas: [
     "El dragón de la gruta grita con gran fuerza.",
     "El dromedario de Drácula duerme en el cuadro."
+  ],
+  pistaCompletar: [
+    { phrase: "El animal que echa fuego es el", word: "DRAGÓN" },
+    { phrase: "El camello de una joroba es el", word: "DROMEDARIO" },
+    { phrase: "En la pared cuelgo un", word: "CUADRO" },
+    { phrase: "Para construir uso un", word: "LADRILLO" },
+    { phrase: "En el suelo hay una", word: "PIEDRA" }
   ]
 };

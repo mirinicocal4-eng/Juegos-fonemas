@@ -25,5 +25,12 @@ export const GR_PHONEME_DATA: PhonemeContent = {
   pistaTrabalenguas: [
     "El grillo Gregorio grita en la gruta gris.",
     "Graciela graba el grito del gran grillo."
+  ],
+  pistaCompletar: [
+    { phrase: "El insecto que canta es el", word: "GRILLO" },
+    { phrase: "Para levantar coches uso la", word: "GRÚA" },
+    { phrase: "El animal con rayas naranjas es el", word: "TIGRE" },
+    { phrase: "Para unir papeles uso una", word: "GRAPA" },
+    { phrase: "Si me asusto doy un", word: "GRITO" }
   ]
 };

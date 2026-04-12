@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
+import { VisualContent } from './VisualContent';
 
 interface MemoryProps {
   cards: any[];
@@ -25,7 +26,9 @@ export const Memory: React.FC<MemoryProps> = ({ cards, onFlip, onReset, onBack }
             onClick={() => onFlip(i)}
             className={`aspect-square rounded-2xl flex items-center justify-center text-4xl shadow-xl transition-all ${card.flipped || card.matched ? 'bg-zinc-800 border-2 border-red-500' : 'bg-red-600'}`}
           >
-            {card.flipped || card.matched ? card.img : '🏎️'}
+            {card.flipped || card.matched ? (
+              <VisualContent content={card.img} className="w-12 h-12" />
+            ) : '🏎️'}
           </motion.button>
         ))}
       </div>

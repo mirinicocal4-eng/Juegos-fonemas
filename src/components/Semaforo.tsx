@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { ChevronRight, Volume2 } from 'lucide-react';
 import { Phoneme, SemaforoPair } from '../types';
+import { VisualContent } from './VisualContent';
 
 interface SemaforoProps {
   phoneme: Phoneme;
@@ -75,7 +76,7 @@ export const Semaforo: React.FC<SemaforoProps> = ({
                   }}
                   className={`bg-zinc-800 border-2 rounded-2xl p-6 flex flex-col items-center gap-4 transition-all group ${isTarget ? 'hover:border-green-500' : 'hover:border-red-500'} border-zinc-700`}
                 >
-                  <span className="text-6xl group-hover:scale-110 transition-transform">{img}</span>
+                  <VisualContent content={img} className="text-6xl group-hover:scale-110 transition-transform w-16 h-16" />
                   <div className="text-center">
                     <span className="block text-2xl font-black text-white italic tracking-tighter">{word}</span>
                     <span className={`text-[10px] font-bold uppercase tracking-widest ${isTarget ? 'text-green-500' : 'text-zinc-500'}`}>
@@ -118,7 +119,7 @@ export const Semaforo: React.FC<SemaforoProps> = ({
                 className="bg-zinc-800 border border-zinc-700 p-4 rounded-xl flex items-center justify-between hover:bg-zinc-700 transition-all group"
               >
                 <div className="flex items-center gap-4">
-                  <span className="text-3xl group-hover:scale-110 transition-transform">{item.img}</span>
+                  <VisualContent content={item.img} className="text-3xl group-hover:scale-110 transition-transform w-10 h-10" />
                   <span className="text-xl font-black text-white italic">{item.word}</span>
                 </div>
                 <Volume2 className="w-5 h-5 text-zinc-600 group-hover:text-red-500" />

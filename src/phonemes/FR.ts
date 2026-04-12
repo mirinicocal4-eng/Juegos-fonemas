@@ -25,5 +25,12 @@ export const FR_PHONEME_DATA: PhonemeContent = {
   pistaTrabalenguas: [
     "Frida come fresas frescas frente a la fuente.",
     "Francisco fríe fruta fresca en la freidora."
+  ],
+  pistaCompletar: [
+    { phrase: "La fruta roja pequeña es la", word: "FRESA" },
+    { phrase: "La manzana y la pera son", word: "FRUTA" },
+    { phrase: "En invierno hace mucho", word: "FRÍO" },
+    { phrase: "Para parar el coche uso el", word: "FRENO" },
+    { phrase: "El perfume viene en un", word: "FRASCO" }
   ]
 };

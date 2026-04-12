@@ -25,5 +25,12 @@ export const BR_PHONEME_DATA: PhonemeContent = {
   pistaTrabalenguas: [
     "Brilla el brillo del brazalete de bronce.",
     "La bruja Brígida brinca por la bruma."
+  ],
+  pistaCompletar: [
+    { phrase: "En el cuerpo tengo un", word: "BRAZO" },
+    { phrase: "La que vuela en escoba es la", word: "BRUJA" },
+    { phrase: "El animal con rayas es la", word: "CEBRA" },
+    { phrase: "Para leer uso un", word: "LIBRO" },
+    { phrase: "La que da leche en el monte es la", word: "CABRA" }
   ]
 };
