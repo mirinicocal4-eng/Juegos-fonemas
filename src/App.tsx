@@ -51,13 +51,17 @@ const DEFAULT_PERSISTENT_DATA: PersistentData = {
 };
 
 export default function App() {
-  const [state, setState] = useState<GameState & { showTrabadas?: boolean }>({
+  const [state, setState] = useState<any>({
     world: 'PHONEME_SELECT',
     phoneme: 'R',
     step: 0,
     subStep: 0,
     history: [],
-    showTrabadas: false
+    showTrabadas: false,
+    playerCount: 1,
+    currentPlayer: 0,
+    playerPositions: [0, 0, 0, 0],
+    playerScores: [0, 0, 0, 0]
   });
 
   const [persistentData, setPersistentData] = useState<PersistentData>(DEFAULT_PERSISTENT_DATA);
@@ -112,7 +116,7 @@ export default function App() {
   }, [feedback]);
 
   const selectPhoneme = (phoneme: Phoneme) => {
-    setState({ ...state, phoneme, world: 'MENU', step: 0, subStep: 0 });
+    setState({ ...state, phoneme, world: 'PLAYER_COUNT', step: 0, subStep: 0 });
     setPersistentData(prev => ({ ...prev, lastPhoneme: phoneme }));
     setFeedback(null);
   };
@@ -130,8 +134,23 @@ export default function App() {
   };
 
   const goToWorld = (world: World) => {
+    if (world === 'MENU' && state.world === 'PHONEME_SELECT') {
+      setState({ ...state, world: 'PLAYER_COUNT' });
+      return;
+    }
     setState({ ...state, world, step: 0, subStep: 0 });
     setFeedback(null);
+  };
+
+  const selectPlayers = (count: number) => {
+    setState({ 
+      ...state, 
+      world: 'MENU', 
+      playerCount: count,
+      currentPlayer: 0,
+      playerPositions: [0, 0, 0, 0],
+      playerScores: [0, 0, 0, 0]
+    });
   };
 
   // --- MUNDO 1: TALLER ---
@@ -173,8 +192,8 @@ export default function App() {
   const [flippedIndices, setFlippedIndices] = useState<number[]>([]);
 
   // Bingo State
-  const [bingoBoardP1, setBingoBoardP1] = useState<{ img: string, marked: boolean }[]>([]);
-  const [bingoBoardP2, setBingoBoardP2] = useState<{ img: string, marked: boolean }[]>([]);
+  const [bingoBoards, setBingoBoards] = useState<{ img: string, marked: boolean }[][]>([]);
+  const [bingoPlayerCount, setBingoPlayerCount] = useState(2);
   const [bingoCurrent, setBingoCurrent] = useState<{ img: string, name: string } | null>(null);
   const [bingoWinner, setBingoWinner] = useState<number | null>(null);
 
@@ -186,7 +205,7 @@ export default function App() {
 
   // Domino State
   const [dominoChain, setDominoChain] = useState<{ left: string, right: string }[]>([]);
-  const [dominoHand, setDominoHand] = useState<{ left: string, right: string }[]>([]);
+  const [dominoHands, setDominoHands] = useState<{ left: string, right: string }[][]>([]);
   const [dominoPool, setDominoPool] = useState<{ left: string, right: string }[]>([]);
 
   // Dobble State
@@ -197,8 +216,18 @@ export default function App() {
     if (!granPremioBoard || granPremioBoard.length === 0) return;
     const val = Math.floor(Math.random() * 6) + 1;
     setDiceValue(val);
-    const next = Math.min(state.step + val, granPremioBoard.length - 1);
-    setState({ ...state, step: next });
+    
+    const newPositions = [...state.playerPositions];
+    const currentPos = newPositions[state.currentPlayer];
+    const next = Math.min(currentPos + val, granPremioBoard.length - 1);
+    newPositions[state.currentPlayer] = next;
+    
+    setState({ 
+      ...state, 
+      playerPositions: newPositions,
+      step: next 
+    });
+
     if (next === granPremioBoard.length - 1) {
       setTimeout(() => {
         setIsWinner(true);
@@ -214,6 +243,17 @@ export default function App() {
     }
   };
 
+  const nextTurn = () => {
+    const nextPlayer = (state.currentPlayer + 1) % state.playerCount;
+    setState({ 
+      ...state, 
+      currentPlayer: nextPlayer,
+      step: state.playerPositions[nextPlayer]
+    });
+    setDiceValue(null);
+    setFeedback({ type: 'info', message: `Turno del Explorador ${nextPlayer + 1} 🎲` });
+  };
+
   // --- GAME INITIALIZERS ---
   const initMemory = () => {
     const cards = [...gameImages.slice(0, 8), ...gameImages.slice(0, 8)]
@@ -223,17 +263,15 @@ export default function App() {
     setFlippedIndices([]);
   };
 
-  const initBingo = () => {
-    const board1 = [...gameImages]
-      .sort(() => Math.random() - 0.5)
-      .slice(0, 9)
-      .map(item => ({ img: item.img, marked: false }));
-    const board2 = [...gameImages]
-      .sort(() => Math.random() - 0.5)
-      .slice(0, 9)
-      .map(item => ({ img: item.img, marked: false }));
-    setBingoBoardP1(board1);
-    setBingoBoardP2(board2);
+  const initBingo = (playerCount: number = state.playerCount) => {
+    const newBoards = Array.from({ length: playerCount }).map(() => 
+      [...gameImages]
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 9)
+        .map(item => ({ img: item.img, marked: false }))
+    );
+    setBingoBoards(newBoards);
+    setBingoPlayerCount(playerCount);
     setBingoCurrent(null);
     setBingoWinner(null);
   };
@@ -268,8 +306,11 @@ export default function App() {
     const initialPiece = shuffled.pop()!;
     setDominoChain([initialPiece]);
     
-    const hand = shuffled.splice(0, 6); // Start with 6 tiles
-    setDominoHand(hand);
+    const hands = Array.from({ length: state.playerCount }).map(() => 
+      shuffled.splice(0, 5)
+    );
+    
+    setDominoHands(hands);
     setDominoPool(shuffled);
   };
 
@@ -306,14 +347,28 @@ export default function App() {
     if (newFlipped.length === 2) {
       const [first, second] = newFlipped;
       if (memoryCards[first].img === memoryCards[second].img) {
-        setFeedback({ type: 'success', message: `¡Pareja de ${memoryCards[first].img} encontrada! 🌟` });
+        setFeedback({ type: 'success', message: `¡Explorador ${state.currentPlayer + 1} encuentra pareja! 🌟` });
+        
+        const newScores = [...state.playerScores];
+        newScores[state.currentPlayer]++;
+        setState(prev => ({ ...prev, playerScores: newScores }));
+
         setTimeout(() => {
           const matchedCards = [...memoryCards];
           matchedCards[first].matched = true;
           matchedCards[second].matched = true;
           setMemoryCards(matchedCards);
           setFlippedIndices([]);
-          if (matchedCards.every(c => c.matched)) setFeedback({ type: 'success', message: "¡Increíble! Has encontrado todas las parejas 🏆" });
+          if (matchedCards.every(c => c.matched)) {
+            const maxScore = Math.max(...newScores);
+            const winners = newScores.map((s, i) => s === maxScore ? i + 1 : -1).filter(i => i !== -1);
+            setFeedback({ 
+              type: 'success', 
+              message: winners.length === 1 
+                ? `¡Fin del juego! Gana el Explorador ${winners[0]} 🏆` 
+                : `¡Empate entre Exploradores ${winners.join(' y ')}! 🤝`
+            });
+          }
         }, 500);
       } else {
         setFeedback({ type: 'error', message: "¡Oh no! Sigue intentándolo 🏎️" });
@@ -323,7 +378,11 @@ export default function App() {
           resetCards[second].flipped = false;
           setMemoryCards(resetCards);
           setFlippedIndices([]);
-          setFeedback(null);
+          
+          // Switch turn
+          const nextPlayer = (state.currentPlayer + 1) % state.playerCount;
+          setState(prev => ({ ...prev, currentPlayer: nextPlayer }));
+          setFeedback({ type: 'info', message: `Turno del Explorador ${nextPlayer + 1} 🎲` });
         }, 1000);
       }
     }
@@ -332,49 +391,61 @@ export default function App() {
   const nextBingoBall = () => {
     if (bingoWinner) return;
     const available = gameImages.filter(img => 
-      (bingoBoardP1.find(b => b.img === img.img && !b.marked)) || 
-      (bingoBoardP2.find(b => b.img === img.img && !b.marked))
+      bingoBoards.some(board => board.find(b => b.img === img.img && !b.marked))
     );
-    if (available.length === 0) return;
+    if (available.length === 0) {
+      setFeedback({ type: 'info', message: "¡Ya han salido todas las imágenes! 🏁" });
+      return;
+    }
     const next = available[Math.floor(Math.random() * available.length)];
     setBingoCurrent(next);
+    setFeedback(null);
   };
 
-  const markBingo = (player: 1 | 2, index: number) => {
+  const markBingo = (playerIndex: number, itemIndex: number) => {
     if (bingoWinner || !bingoCurrent) return;
-    const board = player === 1 ? bingoBoardP1 : bingoBoardP2;
-    if (board[index].img !== bingoCurrent.img) {
+    const board = bingoBoards[playerIndex];
+    if (board[itemIndex].img !== bingoCurrent.img) {
       setFeedback({ type: 'error', message: "¡Esa no es la imagen que ha salido! ❌" });
       return;
     }
     
-    const newBoard = [...board];
-    newBoard[index].marked = true;
-    if (player === 1) setBingoBoardP1(newBoard);
-    else setBingoBoardP2(newBoard);
+    if (board[itemIndex].marked) return;
 
-    setFeedback({ type: 'success', message: `¡Explorador ${player} marca ${bingoCurrent.img}! ✅` });
+    const newBoards = [...bingoBoards];
+    const newBoard = [...board];
+    newBoard[itemIndex].marked = true;
+    newBoards[playerIndex] = newBoard;
+    setBingoBoards(newBoards);
+
+    setFeedback({ type: 'success', message: `¡Explorador ${playerIndex + 1} marca ${bingoCurrent.img}! ✅` });
     
     if (newBoard.every(b => b.marked)) {
-      setBingoWinner(player);
-      setFeedback({ type: 'success', message: `¡BINGO! ¡El Explorador ${player} ha completado el cartón! ✨🏆` });
+      setBingoWinner(playerIndex + 1);
+      setFeedback({ type: 'success', message: `¡BINGO! ¡El Explorador ${playerIndex + 1} ha completado el cartón! ✨🏆` });
     }
   };
 
   const checkLince = (item: any) => {
     const itemImg = typeof item === 'string' ? item : item?.img;
     if (itemImg === linceTarget?.img) {
-      const newScore = linceScore + 1;
-      setLinceScore(newScore);
+      const newScores = [...state.playerScores];
+      newScores[state.currentPlayer]++;
       
-      if (newScore > persistentData.linceHighScore) {
-        setPersistentData(prev => ({ ...prev, linceHighScore: newScore }));
+      const newTotalScore = newScores.reduce((a, b) => a + b, 0);
+      
+      if (newTotalScore > persistentData.linceHighScore) {
+        setPersistentData(prev => ({ ...prev, linceHighScore: newTotalScore }));
       }
 
       if (lincePool.length === 0) {
+        const maxScore = Math.max(...newScores);
+        const winners = newScores.map((s, i) => s === maxScore ? i + 1 : -1).filter(i => i !== -1);
         setFeedback({ 
           type: 'success', 
-          message: `¡INCREÍBLE! Has encontrado las ${gameImages.length} imágenes. ¡Eres un lince! 🏆🏁` 
+          message: winners.length === 1 
+            ? `¡INCREÍBLE! Gana el Explorador ${winners[0]} con ${maxScore} aciertos 🏆🏁` 
+            : `¡Empate entre Exploradores ${winners.join(' y ')}! 🤝`
         });
         setLinceTarget(null);
       } else {
@@ -383,14 +454,17 @@ export default function App() {
         setLincePool(nextPool);
         setLinceTarget(nextTarget);
         
-        if (newScore === 10 && gameImages.length > 10) {
-          setFeedback({ type: 'success', message: "¡Ojo de Lince! Llevas 10 imágenes 🏆" });
-        } else {
-          setFeedback({ type: 'success', message: `¡Encontrado! +1 punto 🎯` });
-        }
+        // Switch turn
+        const nextPlayer = (state.currentPlayer + 1) % state.playerCount;
+        setState(prev => ({ ...prev, playerScores: newScores, currentPlayer: nextPlayer }));
+        setFeedback({ type: 'success', message: `¡Encontrado por Explorador ${state.currentPlayer + 1}! Turno del ${nextPlayer + 1} 🎯` });
       }
     } else {
       setFeedback({ type: 'error', message: "¡Ese no es! Sigue buscando 🧐" });
+      // Optional: switch turn on error? Better to let them try until they find it or just switch.
+      // Let's switch turn on error to make it more challenging.
+      const nextPlayer = (state.currentPlayer + 1) % state.playerCount;
+      setState(prev => ({ ...prev, currentPlayer: nextPlayer }));
     }
   };
 
@@ -411,49 +485,58 @@ export default function App() {
 
     if (canPlay) {
       setDominoChain([...dominoChain, playedPiece]);
-      const newHand = dominoHand.filter((_, i) => i !== index);
-      setDominoHand(newHand);
-      setFeedback({ type: 'success', message: "¡Pieza encajada! 🏎️💨" });
+      const newHands = [...dominoHands];
+      const newHand = newHands[state.currentPlayer].filter((_, i) => i !== index);
+      newHands[state.currentPlayer] = newHand;
+      setDominoHands(newHands);
       
-      if (newHand.length === 0 && dominoPool.length === 0) {
-        setFeedback({ type: 'success', message: "¡HAS GANADO! Has colocado todas tus fichas 🏆🏁" });
+      if (newHand.length === 0) {
+        setFeedback({ type: 'success', message: `¡DOMINÓ! Gana el Explorador ${state.currentPlayer + 1} 🏆🏁` });
+      } else {
+        setFeedback({ type: 'success', message: "¡Pieza encajada! 🧩" });
+        setTimeout(nextTurn, 1000);
       }
     } else {
-      setFeedback({ type: 'error', message: "¡Esa pieza no encaja! Busca una que coincida con el extremo 🧩" });
+      setFeedback({ type: 'error', message: "¡Esa pieza no encaja! Busca una que coincida con el extremo 🧐" });
     }
   };
 
   const handleDobbleClick = (img: string) => {
     if (img === dobbleTarget) {
-      setFeedback({ type: 'success', message: "¡LO TENGO! Has encontrado la pareja rápida ⚡🏆" });
-      setTimeout(initDobble, 1000);
+      const newScores = [...state.playerScores];
+      newScores[state.currentPlayer]++;
+      
+      setFeedback({ type: 'success', message: `¡Explorador ${state.currentPlayer + 1} lo ha encontrado! 🌟` });
+      
+      setTimeout(() => {
+        initDobble();
+        const nextPlayer = (state.currentPlayer + 1) % state.playerCount;
+        setState(prev => ({ ...prev, playerScores: newScores, currentPlayer: nextPlayer }));
+        setFeedback({ type: 'info', message: `Turno del Explorador ${nextPlayer + 1} 🎲` });
+      }, 1000);
     } else {
       setFeedback({ type: 'error', message: "¡Casi! Mira bien, solo hay una imagen igual en las dos cartas 🧐" });
+      const nextPlayer = (state.currentPlayer + 1) % state.playerCount;
+      setState(prev => ({ ...prev, currentPlayer: nextPlayer }));
     }
   };
 
   const drawDominoPiece = () => {
     if (dominoPool.length === 0) {
-      if (!dominoChain || dominoChain.length === 0) return;
-      // Check if user is truly stuck
-      const lastPiece = dominoChain[dominoChain.length - 1];
-      const hasMove = dominoHand.some(p => p.left === lastPiece.right || p.right === lastPiece.right);
-      
-      if (!hasMove) {
-        setFeedback({ 
-          type: 'info', 
-          message: `¡Práctica terminada! Te han sobrado ${dominoHand.length} fichas. ¡Buen intento! ✨` 
-        });
-      } else {
-        setFeedback({ type: 'error', message: "¡Aún tienes fichas que puedes colocar! Mira bien... 🧐" });
-      }
+      setFeedback({ type: 'info', message: "No quedan piezas en el montón. ¡Pasa el turno! ⏭️" });
+      setTimeout(nextTurn, 1500);
       return;
     }
+    
     const newPool = [...dominoPool];
-    const drawn = newPool.pop()!;
+    const piece = newPool.pop()!;
+    const newHands = [...dominoHands];
+    newHands[state.currentPlayer] = [...newHands[state.currentPlayer], piece];
+    
     setDominoPool(newPool);
-    setDominoHand([...dominoHand, drawn]);
-    setFeedback({ type: 'info', message: "Has robado una ficha del montón 🃏" });
+    setDominoHands(newHands);
+    setFeedback({ type: 'info', message: `Explorador ${state.currentPlayer + 1} roba una pieza 🧩` });
+    setTimeout(nextTurn, 1000);
   };
 
   const resetGame = () => {
@@ -715,6 +798,34 @@ export default function App() {
             </motion.div>
           )}
 
+          {state.world === 'PLAYER_COUNT' && (
+            <motion.div 
+              key="world-player-count"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="max-w-md mx-auto bg-zinc-900 border border-zinc-800 rounded-3xl p-8 text-center space-y-8"
+            >
+              <div className="space-y-2">
+                <h2 className="text-3xl font-black italic text-white uppercase">¿Cuántos exploradores?</h2>
+                <p className="text-zinc-500 font-bold uppercase tracking-widest text-xs">Selecciona el número de jugadores</p>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                {[1, 2, 3, 4].map(num => (
+                  <button
+                    key={num}
+                    onClick={() => selectPlayers(num)}
+                    className="aspect-square bg-zinc-800 hover:bg-indigo-600 border-2 border-zinc-700 hover:border-white rounded-2xl flex flex-col items-center justify-center gap-2 transition-all hover:scale-105 active:scale-95 group"
+                  >
+                    <span className="text-4xl font-black text-white group-hover:scale-110 transition-transform">{num}</span>
+                    <span className="text-[10px] font-bold text-zinc-500 group-hover:text-indigo-200 uppercase tracking-widest">
+                      {num === 1 ? 'Jugador' : 'Jugadores'}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          )}
+
           {state.world === 'MENU' && (
             <motion.div 
               key="menu"
@@ -727,6 +838,9 @@ export default function App() {
                 <div className="flex justify-center gap-2 mb-4">
                   <button onClick={() => goToWorld('PHONEME_SELECT')} className="px-4 py-1 bg-zinc-800 text-zinc-400 rounded-full text-xs font-bold uppercase hover:text-white transition-colors">
                     Cambiar sonido ({state.phoneme})
+                  </button>
+                  <button onClick={() => setState({ ...state, world: 'PLAYER_COUNT' })} className="px-4 py-1 bg-zinc-800 text-zinc-400 rounded-full text-xs font-bold uppercase hover:text-white transition-colors">
+                    Jugadores ({state.playerCount})
                   </button>
                   <button 
                     onClick={() => setEditingPhoneme(state.phoneme)} 
@@ -819,7 +933,11 @@ export default function App() {
               step={state.step}
               diceValue={diceValue}
               granPremioBoard={granPremioBoard}
+              playerCount={state.playerCount}
+              currentPlayer={state.currentPlayer}
+              playerPositions={state.playerPositions}
               onRollDice={rollDice}
+              onNextTurn={nextTurn}
               onGoToWorld={goToWorld}
             />
           )}
@@ -828,6 +946,9 @@ export default function App() {
             <Memory 
               key="world-memory"
               cards={memoryCards}
+              playerCount={state.playerCount}
+              currentPlayer={state.currentPlayer}
+              playerScores={state.playerScores}
               onFlip={handleMemoryClick}
               onReset={initMemory}
               onBack={() => goToWorld('GRAN_PREMIO')}
@@ -837,10 +958,12 @@ export default function App() {
           {state.world === 'BINGO' && (
             <Bingo 
               key="world-bingo"
-              player1Board={bingoBoardP1}
-              player2Board={bingoBoardP2}
+              boards={bingoBoards}
+              playerCount={bingoPlayerCount}
+              currentBall={bingoCurrent}
+              onNextBall={nextBingoBall}
               onToggle={markBingo}
-              onReset={initBingo}
+              onReset={(count) => initBingo(count || bingoPlayerCount)}
               onBack={() => goToWorld('GRAN_PREMIO')}
             />
           )}
@@ -850,7 +973,9 @@ export default function App() {
               key="world-lince"
               target={linceTarget}
               images={linceBoard}
-              score={linceScore}
+              playerCount={state.playerCount}
+              currentPlayer={state.currentPlayer}
+              playerScores={state.playerScores}
               highScore={persistentData.linceHighScore}
               onCheck={(item: any) => checkLince(item)}
               onReset={initLince}
@@ -862,9 +987,11 @@ export default function App() {
             <Domino 
               key="world-domino"
               chain={dominoChain}
-              hand={dominoHand}
+              hands={dominoHands}
               poolCount={dominoPool.length}
-              onPlay={(index: number) => handleDominoClick(dominoHand[index], index)}
+              playerCount={state.playerCount}
+              currentPlayer={state.currentPlayer}
+              onPlay={handleDominoClick}
               onDraw={drawDominoPiece}
               onReset={initDomino}
               onBack={() => goToWorld('GRAN_PREMIO')}
@@ -875,6 +1002,9 @@ export default function App() {
             <Dobble 
               key="world-dobble"
               cards={dobbleCards}
+              playerCount={state.playerCount}
+              currentPlayer={state.currentPlayer}
+              playerScores={state.playerScores}
               onCheck={handleDobbleClick}
               onReset={initDobble}
               onBack={() => goToWorld('GRAN_PREMIO')}

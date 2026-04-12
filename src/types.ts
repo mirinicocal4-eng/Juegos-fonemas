@@ -1,4 +1,4 @@
-export type World = 'PHONEME_SELECT' | 'MENU' | 'TALLER' | 'SEMAFORO' | 'PISTA' | 'GRAN_PREMIO' | 'MEMORY' | 'BINGO' | 'LINCE' | 'DOMINO' | 'DOBBLE' | 'LIBRARY';
+export type World = 'PHONEME_SELECT' | 'PLAYER_COUNT' | 'MENU' | 'TALLER' | 'SEMAFORO' | 'PISTA' | 'GRAN_PREMIO' | 'MEMORY' | 'BINGO' | 'LINCE' | 'DOMINO' | 'DOBBLE' | 'LIBRARY';
 export type Phoneme = 'R' | 'S' | 'Z' | 'BR' | 'PR' | 'TR' | 'DR' | 'GR' | 'CR' | 'FR';
 
 export interface TallerStep {

@@ -44,6 +44,7 @@ export const worldRules: Record<World, string> = {
   DOMINO: "Encaja las piezas: la imagen de la izquierda de tu pieza debe ser igual a la de la derecha de la cadena.",
   DOBBLE: "¡Sé el más rápido! Encuentra la única imagen que se repite en las dos cartas circulares.",
   PHONEME_SELECT: "Selecciona el sonido que quieres practicar hoy.",
+  PLAYER_COUNT: "Selecciona cuántos exploradores van a participar en la aventura.",
   LIBRARY: "Consulta materiales, libros y guías para complementar tu aprendizaje."
 };
 

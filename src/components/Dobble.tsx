@@ -4,12 +4,25 @@ import { VisualContent } from './VisualContent';
 
 interface DobbleProps {
   cards: { img: string, name: string }[][];
+  playerCount: number;
+  currentPlayer: number;
+  playerScores: number[];
   onCheck: (img: string) => void;
   onReset: () => void;
   onBack: () => void;
 }
 
-export const Dobble: React.FC<DobbleProps> = ({ cards, onCheck, onReset, onBack }) => {
+export const Dobble: React.FC<DobbleProps> = ({ 
+  cards, 
+  playerCount,
+  currentPlayer,
+  playerScores,
+  onCheck, 
+  onReset, 
+  onBack 
+}) => {
+  const playerColors = ['indigo', 'blue', 'emerald', 'orange'];
+
   return (
     <motion.div 
       key="dobble"
@@ -17,22 +30,43 @@ export const Dobble: React.FC<DobbleProps> = ({ cards, onCheck, onReset, onBack 
       animate={{ opacity: 1, scale: 1 }}
       className="space-y-8"
     >
-      <div className="flex flex-col sm:flex-row justify-center items-center gap-12 py-8">
+      {/* Scores Area */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        {Array.from({ length: playerCount }).map((_, i) => (
+          <div 
+            key={i}
+            className={`p-4 rounded-2xl border-2 transition-all ${currentPlayer === i ? `bg-${playerColors[i]}-600 border-white scale-105 shadow-lg` : 'bg-zinc-900 border-zinc-800 opacity-50'}`}
+          >
+            <p className="text-[10px] font-black text-white/70 uppercase tracking-widest">Explorador {i + 1}</p>
+            <p className="text-2xl font-black text-white italic">{playerScores[i]} pts</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="flex flex-col sm:flex-row justify-center items-center gap-12 py-8 relative">
+        <div className={`absolute top-0 left-0 w-full h-1 bg-${playerColors[currentPlayer]}-500 rounded-full`} />
         {(cards || []).map((card, cardIdx) => (
           <div key={cardIdx} className="relative w-64 h-64 bg-white rounded-full shadow-2xl border-8 border-zinc-200 overflow-hidden">
-            <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 p-4">
+            <div className="absolute inset-0 p-4 flex items-center justify-center">
               {(card || []).map((item, i) => {
-                // Posiciones deterministas pero que parezcan aleatorias
+                const isCenter = i === 0;
+                const angle = (i - 1) * (360 / (card.length - 1)) * (Math.PI / 180);
+                const radius = isCenter ? 0 : 65; 
+                const x = Math.cos(angle) * radius;
+                const y = Math.sin(angle) * radius;
+                
                 return (
                   <button 
                     key={`card-${cardIdx}-item-${i}`}
                     onClick={() => onCheck(item.img)}
-                    className="flex items-center justify-center text-4xl hover:scale-125 transition-transform"
+                    className="absolute flex items-center justify-center hover:scale-125 transition-transform"
                     style={{
-                      transform: `translate(${(i % 3 - 1) * 10}px, ${(Math.floor(i / 3) - 1) * 10}px) rotate(${i * 45}deg)`,
+                      left: `calc(50% + ${x}px)`,
+                      top: `calc(50% + ${y}px)`,
+                      transform: `translate(-50%, -50%)`,
                     }}
                   >
-                    <VisualContent content={item.img} className="w-12 h-12" />
+                    <VisualContent content={item.img} className="w-14 h-14" />
                   </button>
                 );
               })}

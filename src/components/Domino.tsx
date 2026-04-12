@@ -4,15 +4,30 @@ import { VisualContent } from './VisualContent';
 
 interface DominoProps {
   chain: { left: string, right: string }[];
-  hand: { left: string, right: string }[];
+  hands: { left: string, right: string }[][];
   poolCount: number;
-  onPlay: (index: number) => void;
+  playerCount: number;
+  currentPlayer: number;
+  onPlay: (piece: any, index: number) => void;
   onDraw: () => void;
   onReset: () => void;
   onBack: () => void;
 }
 
-export const Domino: React.FC<DominoProps> = ({ chain, hand, poolCount, onPlay, onDraw, onReset, onBack }) => {
+export const Domino: React.FC<DominoProps> = ({ 
+  chain, 
+  hands, 
+  poolCount, 
+  playerCount,
+  currentPlayer,
+  onPlay, 
+  onDraw, 
+  onReset, 
+  onBack 
+}) => {
+  const playerColors = ['indigo', 'blue', 'emerald', 'orange'];
+  const currentHand = hands[currentPlayer] || [];
+
   return (
     <motion.div 
       key="domino"
@@ -20,8 +35,21 @@ export const Domino: React.FC<DominoProps> = ({ chain, hand, poolCount, onPlay, 
       animate={{ opacity: 1, y: 0 }}
       className="space-y-8"
     >
+      {/* Players Info */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        {Array.from({ length: playerCount }).map((_, i) => (
+          <div 
+            key={i}
+            className={`p-4 rounded-2xl border-2 transition-all ${currentPlayer === i ? `bg-${playerColors[i]}-600 border-white scale-105 shadow-lg` : 'bg-zinc-900 border-zinc-800 opacity-50'}`}
+          >
+            <p className="text-[10px] font-black text-white/70 uppercase tracking-widest">Explorador {i + 1}</p>
+            <p className="text-xl font-black text-white italic">{(hands[i] || []).length} piezas</p>
+          </div>
+        ))}
+      </div>
+
       <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 overflow-x-auto">
-        <div className="flex gap-2 min-w-max pb-4">
+        <div className="flex gap-2 min-w-max pb-4 justify-center">
           {(chain || []).map((piece, i) => (
             <div key={`chain-${i}`} className="flex bg-zinc-800 border-2 border-zinc-700 rounded-xl overflow-hidden shadow-lg">
               <div className="w-12 h-16 flex items-center justify-center text-2xl border-r border-zinc-700 bg-zinc-900/50">
@@ -37,7 +65,7 @@ export const Domino: React.FC<DominoProps> = ({ chain, hand, poolCount, onPlay, 
 
       <div className="space-y-6">
         <div className="flex justify-between items-center px-2">
-          <p className="text-zinc-500 font-bold uppercase tracking-widest text-xs">Tus Piezas</p>
+          <p className="text-zinc-500 font-bold uppercase tracking-widest text-xs">Mano del Explorador {currentPlayer + 1}</p>
           <button 
             onClick={onDraw}
             disabled={poolCount === 0}
@@ -47,10 +75,10 @@ export const Domino: React.FC<DominoProps> = ({ chain, hand, poolCount, onPlay, 
           </button>
         </div>
         <div className="flex flex-wrap justify-center gap-4">
-          {(hand || []).map((piece, i) => (
+          {currentHand.map((piece, i) => (
             <button 
               key={`hand-${i}`}
-              onClick={() => onPlay(i)}
+              onClick={() => onPlay(piece, i)}
               className="flex bg-zinc-800 border-2 border-indigo-600/30 rounded-xl overflow-hidden hover:scale-110 hover:border-indigo-600 transition-all shadow-xl"
             >
               <div className="w-14 h-20 flex items-center justify-center text-3xl border-r border-zinc-700 bg-zinc-900/50">

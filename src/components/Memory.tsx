@@ -4,12 +4,25 @@ import { VisualContent } from './VisualContent';
 
 interface MemoryProps {
   cards: any[];
+  playerCount: number;
+  currentPlayer: number;
+  playerScores: number[];
   onFlip: (index: number) => void;
   onReset: () => void;
   onBack: () => void;
 }
 
-export const Memory: React.FC<MemoryProps> = ({ cards, onFlip, onReset, onBack }) => {
+export const Memory: React.FC<MemoryProps> = ({ 
+  cards, 
+  playerCount,
+  currentPlayer,
+  playerScores,
+  onFlip, 
+  onReset, 
+  onBack 
+}) => {
+  const playerColors = ['indigo', 'blue', 'emerald', 'orange'];
+
   return (
     <motion.div 
       key="memory"
@@ -17,6 +30,19 @@ export const Memory: React.FC<MemoryProps> = ({ cards, onFlip, onReset, onBack }
       animate={{ opacity: 1, scale: 1 }}
       className="space-y-8"
     >
+      {/* Scores Area */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        {Array.from({ length: playerCount }).map((_, i) => (
+          <div 
+            key={i}
+            className={`p-4 rounded-2xl border-2 transition-all ${currentPlayer === i ? `bg-${playerColors[i]}-600 border-white scale-105 shadow-lg` : 'bg-zinc-900 border-zinc-800 opacity-50'}`}
+          >
+            <p className="text-[10px] font-black text-white/70 uppercase tracking-widest">Explorador {i + 1}</p>
+            <p className="text-2xl font-black text-white italic">{playerScores[i]} pts</p>
+          </div>
+        ))}
+      </div>
+
       <div className="grid grid-cols-4 gap-4">
         {(cards || []).map((card, i) => (
           <motion.button
