@@ -21,7 +21,8 @@ import {
   BookOpen,
   FileText,
   ExternalLink,
-  Zap
+  Zap,
+  Sparkles
 } from 'lucide-react';
 
 import { World, Phoneme, GameState, PersistentData, PhonemeContent } from './types';
@@ -347,11 +348,11 @@ export default function App() {
     if (player === 1) setBingoBoardP1(newBoard);
     else setBingoBoardP2(newBoard);
 
-    setFeedback({ type: 'success', message: `¡Piloto ${player} marca ${bingoCurrent.img}! ✅` });
+    setFeedback({ type: 'success', message: `¡Explorador ${player} marca ${bingoCurrent.img}! ✅` });
     
     if (newBoard.every(b => b.marked)) {
       setBingoWinner(player);
-      setFeedback({ type: 'success', message: `¡BINGO! ¡El Piloto ${player} ha ganado la carrera! 🏁🏆` });
+      setFeedback({ type: 'success', message: `¡BINGO! ¡El Explorador ${player} ha completado el cartón! ✨🏆` });
     }
   };
 
@@ -420,7 +421,7 @@ export default function App() {
       if (!hasMove) {
         setFeedback({ 
           type: 'info', 
-          message: `¡Carrera terminada! Te han sobrado ${dominoHand.length} fichas. ¡Buen intento, piloto! 🏁🏎️` 
+          message: `¡Práctica terminada! Te han sobrado ${dominoHand.length} fichas. ¡Buen intento! ✨` 
         });
       } else {
         setFeedback({ type: 'error', message: "¡Aún tienes fichas que puedes colocar! Mira bien... 🧐" });
@@ -465,7 +466,7 @@ export default function App() {
               ¡CAMPEÓN DEL MUNDO! 🏆
             </h2>
             <p className="text-zinc-400 text-xl max-w-md mx-auto">
-              Has dominado la <span className="text-red-500 font-bold italic">/RR/</span> vibrante alveolar. ¡Tu motor suena perfecto!
+              Has dominado la <span className="text-indigo-500 font-bold italic">/RR/</span> vibrante alveolar. ¡Tu voz suena perfecta!
             </p>
           </div>
 
@@ -497,19 +498,19 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 font-sans selection:bg-red-500/30">
+    <div className="min-h-screen bg-zinc-950 text-zinc-100 font-sans selection:bg-indigo-500/30">
       {/* Header */}
       <header className="p-6 border-b border-zinc-800 flex justify-between items-center bg-zinc-900/50 backdrop-blur-md sticky top-0 z-50">
         <div 
           className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
           onClick={() => goToWorld('PHONEME_SELECT')}
         >
-          <div className="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center shadow-lg shadow-red-900/20">
-            <Car className="text-white w-6 h-6" />
+          <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-900/20">
+            <Sparkles className="text-white w-6 h-6" />
           </div>
           <div>
-            <h1 className="text-xl font-bold tracking-tight">RUM-RUM 🏎️</h1>
-            <p className="text-xs text-zinc-500 uppercase tracking-widest font-semibold">Taller de Logopedia</p>
+            <h1 className="text-xl font-bold tracking-tight">Estación ✨</h1>
+            <p className="text-xs text-zinc-500 uppercase tracking-widest font-semibold">Logopedia Creativa</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -562,9 +563,9 @@ export default function App() {
               animate={{ scale: 1, y: 0 }}
               className="bg-zinc-900 border border-zinc-800 p-8 rounded-3xl max-w-md w-full space-y-6 shadow-2xl"
             >
-              <div className="flex items-center gap-3 text-red-500">
+              <div className="flex items-center gap-3 text-indigo-500">
                 <AlertCircle className="w-8 h-8" />
-                <h3 className="text-2xl font-black italic uppercase">Reglas del Piloto</h3>
+                <h3 className="text-2xl font-black italic uppercase">Guía de Práctica</h3>
               </div>
               <p className="text-zinc-300 text-lg leading-relaxed">
                 {worldRules[state.world]}
@@ -573,20 +574,20 @@ export default function App() {
                 onClick={() => setShowRules(false)}
                 className="w-full bg-white text-black font-black py-4 rounded-xl uppercase italic"
               >
-                ¡Entendido, Copiloto!
+                ¡Entendido!
               </button>
 
               <div className="pt-6 border-t border-zinc-800">
                 <button 
                   onClick={() => {
-                    if (confirm("¿Seguro que quieres borrar todo tu progreso de piloto?")) {
+                    if (confirm("¿Seguro que quieres borrar todo tu progreso?")) {
                       localStorage.removeItem(STORAGE_KEY);
                       window.location.reload();
                     }
                   }}
-                  className="text-[10px] text-zinc-600 hover:text-red-500 font-bold uppercase tracking-widest transition-colors w-full text-center"
+                  className="text-[10px] text-zinc-600 hover:text-indigo-500 font-bold uppercase tracking-widest transition-colors w-full text-center"
                 >
-                  Reiniciar memoria de piloto
+                  Reiniciar memoria de aprendizaje
                 </button>
               </div>
             </motion.div>
@@ -625,10 +626,10 @@ export default function App() {
             >
               <div className="space-y-4">
                 <h2 className="text-5xl font-black text-white italic uppercase tracking-tighter">
-                  {state.showTrabadas ? '¡Elige la trabada! 🏎️' : '¡Elige tu combustible! ⛽'}
+                  {state.showTrabadas ? '¡Elige la trabada! ✨' : '¡Elige el sonido! 🎙️'}
                 </h2>
                 <p className="text-zinc-400 text-lg">
-                  {state.showTrabadas ? 'Selecciona el grupo de letras para entrenar.' : '¿Qué fonema vamos a entrenar hoy en la carrera?'}
+                  {state.showTrabadas ? 'Selecciona el grupo de letras para practicar.' : '¿Qué sonido vamos a practicar hoy?'}
                 </p>
               </div>
 
@@ -702,21 +703,21 @@ export default function App() {
               <div className="text-center space-y-4">
                 <div className="flex justify-center gap-2 mb-4">
                   <button onClick={() => goToWorld('PHONEME_SELECT')} className="px-4 py-1 bg-zinc-800 text-zinc-400 rounded-full text-xs font-bold uppercase hover:text-white transition-colors">
-                    Cambiar fonema ({state.phoneme})
+                    Cambiar sonido ({state.phoneme})
                   </button>
                   <button 
                     onClick={() => setEditingPhoneme(state.phoneme)} 
-                    className="px-4 py-1 bg-red-600/20 text-red-400 border border-red-500/30 rounded-full text-xs font-bold uppercase hover:bg-red-600 hover:text-white transition-all flex items-center gap-2"
+                    className="px-4 py-1 bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 rounded-full text-xs font-bold uppercase hover:bg-indigo-600 hover:text-white transition-all flex items-center gap-2"
                   >
                     <Settings className="w-3 h-3" /> Editar Contenido
                   </button>
                 </div>
                 <h2 className="text-4xl font-black text-white italic uppercase tracking-tighter">
-                  ¡Hola, piloto! 🏁
+                  ¡Hola, explorador! ✨
                 </h2>
                 <p className="text-zinc-400 text-lg">
-                  Bienvenido al taller de <span className={`text-${currentData.color}-500 font-bold italic uppercase`}>{currentData.name}</span>.
-                  ¿A qué mundo quieres ir hoy?
+                  Bienvenido a la estación de <span className={`text-${currentData.color}-500 font-bold italic uppercase`}>{currentData.name}</span>.
+                  ¿A qué aventura quieres ir hoy?
                 </p>
               </div>
 
@@ -731,7 +732,7 @@ export default function App() {
                       {w.icon}
                     </div>
                     <div className="relative z-10 flex flex-col gap-1">
-                      <span className="text-red-500 font-bold text-[10px] uppercase tracking-widest">Mundo</span>
+                      <span className="text-indigo-500 font-bold text-[10px] uppercase tracking-widest">Estación</span>
                       <span className="text-2xl font-black text-white italic uppercase tracking-tighter">{w.name}</span>
                       <p className="text-zinc-500 text-xs font-medium">{w.desc}</p>
                     </div>
@@ -860,7 +861,7 @@ export default function App() {
       {/* Footer hint */}
       <footer className="fixed bottom-0 left-0 right-0 p-4 bg-zinc-950/80 backdrop-blur-md border-t border-zinc-800 text-center">
         <p className="text-[10px] text-zinc-500 uppercase tracking-[0.2em] font-bold">
-          Copiloto de Logopedia • Especialista en AL
+          Asistente de Logopedia • Especialista en AL
         </p>
       </footer>
 

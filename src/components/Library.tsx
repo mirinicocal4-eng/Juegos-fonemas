@@ -75,9 +75,9 @@ export const Library: React.FC<LibraryProps> = ({ resources, userResources, onUp
       className="space-y-8 pb-12"
     >
       <div className="space-y-2">
-        <h3 className="text-2xl font-black text-white uppercase italic tracking-tighter">Biblioteca del Piloto</h3>
+        <h3 className="text-2xl font-black text-white uppercase italic tracking-tighter">Biblioteca de Apoyo</h3>
         <p className="text-zinc-400 text-lg">
-          Consulta materiales, libros y guías para complementar tu entrenamiento fuera de la pista.
+          Consulta materiales, libros y guías para complementar tu aprendizaje.
         </p>
       </div>
 
@@ -89,7 +89,7 @@ export const Library: React.FC<LibraryProps> = ({ resources, userResources, onUp
         onClick={() => fileInputRef.current?.click()}
         className={`p-10 border-2 border-dashed rounded-3xl transition-all cursor-pointer flex flex-col items-center justify-center gap-4 ${
           isDragging 
-            ? 'border-red-500 bg-red-500/10 scale-[1.02]' 
+            ? 'border-indigo-500 bg-indigo-500/10 scale-[1.02]' 
             : 'border-zinc-800 bg-zinc-900/50 hover:border-zinc-700 hover:bg-zinc-900'
         }`}
       >
@@ -100,7 +100,7 @@ export const Library: React.FC<LibraryProps> = ({ resources, userResources, onUp
           className="hidden" 
           accept=".pdf,.doc,.docx,image/*"
         />
-        <div className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-colors ${isDragging || isUploading ? 'bg-red-600 text-white' : 'bg-zinc-800 text-zinc-500'}`}>
+        <div className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-colors ${isDragging || isUploading ? 'bg-indigo-600 text-white' : 'bg-zinc-800 text-zinc-500'}`}>
           {isUploading ? (
             <motion.div 
               animate={{ rotate: 360 }}
@@ -128,10 +128,10 @@ export const Library: React.FC<LibraryProps> = ({ resources, userResources, onUp
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 key={`user-res-${idx}`}
-                className="p-6 bg-zinc-900 border border-zinc-800 rounded-2xl flex items-center justify-between group hover:border-red-500/30 transition-all"
+                className="p-6 bg-zinc-900 border border-zinc-800 rounded-2xl flex items-center justify-between group hover:border-indigo-500/30 transition-all"
               >
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-red-600/10 rounded-xl flex items-center justify-center text-red-500">
+                  <div className="w-12 h-12 bg-indigo-600/10 rounded-xl flex items-center justify-center text-indigo-500">
                     <FileIcon className="w-6 h-6" />
                   </div>
                   <div>
@@ -163,7 +163,7 @@ export const Library: React.FC<LibraryProps> = ({ resources, userResources, onUp
                       e.stopPropagation();
                       onDeleteUserResource(idx);
                     }}
-                    className="p-3 bg-zinc-800 hover:bg-red-600 text-white rounded-xl transition-all"
+                    className="p-3 bg-zinc-800 hover:bg-indigo-600 text-white rounded-xl transition-all"
                     title="Eliminar"
                   >
                     <X className="w-5 h-5" />
@@ -182,10 +182,10 @@ export const Library: React.FC<LibraryProps> = ({ resources, userResources, onUp
           {(resources || []).map((res, idx) => (
             <div 
               key={idx}
-              className="p-6 bg-zinc-900 border border-zinc-800 rounded-2xl flex items-center justify-between group hover:border-red-500/30 transition-all"
+              className="p-6 bg-zinc-900 border border-zinc-800 rounded-2xl flex items-center justify-between group hover:border-indigo-500/30 transition-all"
             >
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-zinc-800 rounded-xl flex items-center justify-center text-red-500 group-hover:scale-110 transition-transform">
+                <div className="w-12 h-12 bg-zinc-800 rounded-xl flex items-center justify-center text-indigo-500 group-hover:scale-110 transition-transform">
                   {res.icon}
                 </div>
                 <div>
@@ -198,7 +198,7 @@ export const Library: React.FC<LibraryProps> = ({ resources, userResources, onUp
               </div>
               <button 
                 onClick={() => alert('Aquí se abriría el enlace al recurso: ' + res.title)}
-                className="p-3 bg-zinc-800 hover:bg-red-600 text-white rounded-xl transition-all"
+                className="p-3 bg-zinc-800 hover:bg-indigo-600 text-white rounded-xl transition-all"
               >
                 <ExternalLink className="w-5 h-5" />
               </button>

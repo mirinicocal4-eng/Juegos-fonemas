@@ -99,25 +99,25 @@ export const DataEditor: React.FC<DataEditorProps> = ({ data, onSave, onClose })
         <div className="flex border-b border-zinc-800">
           <button 
             onClick={() => setActiveTab('images')}
-            className={`flex-1 py-4 text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'images' ? 'text-red-500 border-b-2 border-red-500 bg-red-500/5' : 'text-zinc-500 hover:text-zinc-300'}`}
+            className={`flex-1 py-4 text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'images' ? 'text-indigo-500 border-b-2 border-indigo-500 bg-indigo-500/5' : 'text-zinc-500 hover:text-zinc-300'}`}
           >
             Vocabulario
           </button>
           <button 
             onClick={() => setActiveTab('pairs')}
-            className={`flex-1 py-4 text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'pairs' ? 'text-red-500 border-b-2 border-red-500 bg-red-500/5' : 'text-zinc-500 hover:text-zinc-300'}`}
+            className={`flex-1 py-4 text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'pairs' ? 'text-indigo-500 border-b-2 border-indigo-500 bg-indigo-500/5' : 'text-zinc-500 hover:text-zinc-300'}`}
           >
             Pares Mínimos
           </button>
           <button 
             onClick={() => setActiveTab('phrases')}
-            className={`flex-1 py-4 text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'phrases' ? 'text-red-500 border-b-2 border-red-500 bg-red-500/5' : 'text-zinc-500 hover:text-zinc-300'}`}
+            className={`flex-1 py-4 text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'phrases' ? 'text-indigo-500 border-b-2 border-indigo-500 bg-indigo-500/5' : 'text-zinc-500 hover:text-zinc-300'}`}
           >
             Frases
           </button>
           <button 
             onClick={() => setActiveTab('taller')}
-            className={`flex-1 py-4 text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'taller' ? 'text-red-500 border-b-2 border-red-500 bg-red-500/5' : 'text-zinc-500 hover:text-zinc-300'}`}
+            className={`flex-1 py-4 text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'taller' ? 'text-indigo-500 border-b-2 border-indigo-500 bg-indigo-500/5' : 'text-zinc-500 hover:text-zinc-300'}`}
           >
             Taller
           </button>
@@ -134,7 +134,7 @@ export const DataEditor: React.FC<DataEditorProps> = ({ data, onSave, onClose })
                     href="https://arasaac.org/pictograms/search" 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="text-[10px] text-red-500 hover:underline flex items-center gap-1 mt-1 font-bold uppercase"
+                    className="text-[10px] text-indigo-500 hover:underline flex items-center gap-1 mt-1 font-bold uppercase"
                   >
                     <ExternalLink className="w-2 h-2" /> Buscar en ARASAAC
                   </a>
@@ -148,7 +148,7 @@ export const DataEditor: React.FC<DataEditorProps> = ({ data, onSave, onClose })
                   </button>
                   <button 
                     onClick={addGameImage}
-                    className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white text-xs font-black rounded-lg hover:bg-red-500 transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white text-xs font-black rounded-lg hover:bg-indigo-500 transition-colors"
                   >
                     <Plus className="w-4 h-4" /> Añadir Palabra
                   </button>
@@ -159,19 +159,19 @@ export const DataEditor: React.FC<DataEditorProps> = ({ data, onSave, onClose })
                 <motion.div 
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="p-4 bg-zinc-800 border border-red-500/30 rounded-2xl space-y-3"
+                  className="p-4 bg-zinc-800 border border-indigo-500/30 rounded-2xl space-y-3"
                 >
                   <p className="text-[10px] text-zinc-400 font-bold uppercase">Pega una lista de palabras (una por línea):</p>
                   <textarea 
                     value={bulkText}
                     onChange={(e) => setBulkText(e.target.value)}
                     placeholder="RANA&#10;ROSA&#10;RATÓN..."
-                    className="w-full h-32 bg-zinc-900 border border-zinc-700 rounded-xl p-3 text-white text-sm outline-none focus:border-red-500"
+                    className="w-full h-32 bg-zinc-900 border border-zinc-700 rounded-xl p-3 text-white text-sm outline-none focus:border-indigo-500"
                   />
                   <div className="flex gap-2">
                     <button 
                       onClick={handleBulkImport}
-                      className="flex-1 py-2 bg-red-600 text-white text-xs font-black rounded-lg"
+                      className="flex-1 py-2 bg-indigo-600 text-white text-xs font-black rounded-lg"
                     >
                       Añadir a la lista
                     </button>
@@ -231,7 +231,7 @@ export const DataEditor: React.FC<DataEditorProps> = ({ data, onSave, onClose })
                 <h3 className="text-white font-bold uppercase text-sm tracking-widest">Pares Mínimos ({editedData.semaforoPares.length})</h3>
                 <button 
                   onClick={addSemaforoPair}
-                  className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white text-xs font-black rounded-lg hover:bg-red-500 transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white text-xs font-black rounded-lg hover:bg-indigo-500 transition-colors"
                 >
                   <Plus className="w-4 h-4" /> Añadir Par
                 </button>
@@ -306,7 +306,7 @@ export const DataEditor: React.FC<DataEditorProps> = ({ data, onSave, onClose })
                           <button
                             key={num}
                             onClick={() => updateSemaforoPair(i, 'target', num)}
-                            className={`px-4 py-1 rounded-full text-[10px] font-black uppercase transition-all ${pair.target === num ? 'bg-red-600 text-white' : 'bg-zinc-900 text-zinc-500'}`}
+                            className={`px-4 py-1 rounded-full text-[10px] font-black uppercase transition-all ${pair.target === num ? 'bg-indigo-600 text-white' : 'bg-zinc-900 text-zinc-500'}`}
                           >
                             Palabra {num}
                           </button>
@@ -331,7 +331,7 @@ export const DataEditor: React.FC<DataEditorProps> = ({ data, onSave, onClose })
                       newPhrases[i] = e.target.value;
                       setEditedData({ ...editedData, pistaFrases: newPhrases });
                     }}
-                    className="flex-1 bg-zinc-900 border border-zinc-800 p-3 rounded-xl text-white text-sm outline-none focus:border-red-500 transition-colors min-h-[80px]"
+                    className="flex-1 bg-zinc-900 border border-zinc-800 p-3 rounded-xl text-white text-sm outline-none focus:border-indigo-500 transition-colors min-h-[80px]"
                   />
                   <button 
                     onClick={() => {
@@ -412,7 +412,7 @@ export const DataEditor: React.FC<DataEditorProps> = ({ data, onSave, onClose })
           </button>
           <button 
             onClick={handleSave}
-            className="flex-1 py-4 bg-red-600 text-white font-black rounded-2xl uppercase text-xs tracking-widest hover:bg-red-500 transition-all shadow-lg shadow-red-900/20 flex items-center justify-center gap-2"
+            className="flex-1 py-4 bg-indigo-600 text-white font-black rounded-2xl uppercase text-xs tracking-widest hover:bg-indigo-500 transition-all shadow-lg shadow-indigo-900/20 flex items-center justify-center gap-2"
           >
             <Save className="w-4 h-4" /> Guardar Cambios
           </button>

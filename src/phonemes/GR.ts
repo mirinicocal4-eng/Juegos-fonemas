@@ -4,7 +4,7 @@ export const GR_PHONEME_DATA: PhonemeContent = {
   name: 'Trabada GR',
   color: 'orange',
   taller: [
-    { title: "¡EL GRUÑIDO! (GR)", instruction: "Sonido desde la garganta y lengua arriba:", sound: "G-R-G-R", tip: "¡Como un motor potente!" },
+    { title: "¡EL GRUÑIDO! (GR)", instruction: "Sonido desde la garganta y lengua arriba:", sound: "G-R-G-R", tip: "¡Con mucha energía!" },
     { title: "¡Garganta!", instruction: "Ahora con vocales:", sound: "GRA-GRE-GRI", tip: "¡Siente el sonido atrás!" }
   ],
   semaforoPares: [

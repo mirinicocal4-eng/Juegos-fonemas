@@ -2,11 +2,11 @@ import { PhonemeContent } from '../types';
 
 export const R_PHONEME_DATA: PhonemeContent = {
   name: 'Fonema R/RR',
-  color: 'red',
+  color: 'indigo',
   taller: [
-    { title: "¡Calentando motores!", instruction: "Pon la lengua arriba (en el garaje) y repite:", sound: "T-R-T-R", tip: "¡Lengua arriba!" },
-    { title: "¡Más potencia!", instruction: "Ahora con fuerza, lengua arriba:", sound: "D-R-D-R", tip: "¡Siente el cosquilleo!" },
-    { title: "¡Vibración final!", instruction: "¡Arrancamos! Di con fuerza:", sound: "RRRRRR", tip: "¡Siente la vibración en la punta!" }
+    { title: "¡Calentando la voz!", instruction: "Pon la lengua arriba y repite:", sound: "T-R-T-R", tip: "¡Lengua arriba!" },
+    { title: "¡Más fuerza!", instruction: "Ahora con energía, lengua arriba:", sound: "D-R-D-R", tip: "¡Siente el cosquilleo!" },
+    { title: "¡Vibración final!", instruction: "¡Lanzamos el sonido! Di con fuerza:", sound: "RRRRRR", tip: "¡Siente la vibración en la punta!" }
   ],
   semaforoPares: [
     { w1: "PERA", s1: "R suave", i1: "🍐", w2: "PERRA", s2: "R fuerte", i2: "🐕", target: 2 },

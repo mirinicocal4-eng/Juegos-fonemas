@@ -20,7 +20,7 @@ export const Bingo: React.FC<BingoProps> = ({ player1Board, player2Board, onTogg
     >
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
         <div className="space-y-4">
-          <h3 className="text-xl font-black italic text-red-500 uppercase">Piloto 1</h3>
+          <h3 className="text-xl font-black italic text-indigo-500 uppercase">Explorador 1</h3>
           <div className="grid grid-cols-3 gap-2">
             {(player1Board || []).map((item, i) => (
               <button 
@@ -34,7 +34,7 @@ export const Bingo: React.FC<BingoProps> = ({ player1Board, player2Board, onTogg
           </div>
         </div>
         <div className="space-y-4">
-          <h3 className="text-xl font-black italic text-blue-500 uppercase">Piloto 2</h3>
+          <h3 className="text-xl font-black italic text-blue-500 uppercase">Explorador 2</h3>
           <div className="grid grid-cols-3 gap-2">
             {(player2Board || []).map((item, i) => (
               <button 

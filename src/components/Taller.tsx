@@ -32,10 +32,10 @@ export const Taller: React.FC<TallerProps> = ({
       <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 space-y-8">
         <div className="flex items-center justify-between">
           <div className="space-y-1">
-            <span className="text-red-500 font-bold text-xs uppercase tracking-widest">Paso {step + 1} de {(tallerSteps || []).length}</span>
+            <span className="text-indigo-500 font-bold text-xs uppercase tracking-widest">Paso {step + 1} de {(tallerSteps || []).length}</span>
             <h3 className="text-3xl font-black italic text-white uppercase">{currentStep.title}</h3>
           </div>
-          <div className="w-16 h-16 bg-red-600 rounded-2xl flex items-center justify-center shadow-lg shadow-red-900/40">
+          <div className="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-900/40">
             <Mic className="w-8 h-8 text-white" />
           </div>
         </div>
@@ -46,22 +46,22 @@ export const Taller: React.FC<TallerProps> = ({
             {currentStep.sound}
           </div>
           <div className="flex items-center gap-2 text-zinc-500 text-sm italic">
-            <span className="w-2 h-2 bg-red-600 rounded-full animate-pulse" />
+            <span className="w-2 h-2 bg-indigo-600 rounded-full animate-pulse" />
             {currentStep.tip}
           </div>
         </div>
 
         <div className="flex gap-4">
           <button 
-            onClick={() => setFeedback({ type: 'success', message: "¡Excelente! El motor suena perfecto 🏎️💨" })}
-            className="flex-1 bg-red-600 hover:bg-red-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-red-900/40 transition-all flex items-center justify-center gap-2"
+            onClick={() => setFeedback({ type: 'success', message: "¡Excelente! El sonido es perfecto ✨" })}
+            className="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-indigo-900/40 transition-all flex items-center justify-center gap-2"
           >
             <CheckCircle2 className="w-5 h-5" /> ¡Lo hice bien!
           </button>
           <button 
             onClick={() => {
               let msg = "¡Cuidado! Revisa la posición de tu lengua ⚠️";
-              if (phoneme === 'R') msg = "¡Cuidado! Lengua arriba para que el motor no se ahogue ⚠️";
+              if (phoneme === 'R') msg = "¡Cuidado! Lengua arriba para que el sonido salga bien ⚠️";
               if (phoneme === 'S') msg = "¡Cuidado! No saques la lengua, mantenla detrás de los dientes ⚠️";
               if (phoneme === 'Z') msg = "¡Cuidado! Saca un poquito la lengua entre los dientes ⚠️";
               setFeedback({ type: 'error', message: msg });
@@ -85,7 +85,7 @@ export const Taller: React.FC<TallerProps> = ({
           onClick={onFinish}
           className="w-full border border-zinc-700 text-white font-bold py-4 rounded-xl hover:bg-zinc-800 transition-all uppercase italic"
         >
-          Terminar Entrenamiento
+          Terminar Práctica
         </button>
       )}
     </motion.div>

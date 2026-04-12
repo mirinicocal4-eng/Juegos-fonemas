@@ -35,13 +35,13 @@ export const Semaforo: React.FC<SemaforoProps> = ({
       <div className="flex gap-2 mb-6">
         <button 
           onClick={() => onSetSubStep(0)}
-          className={`flex-1 py-2 rounded-lg font-bold text-xs uppercase tracking-widest transition-all ${subStep === 0 ? 'bg-red-600 text-white' : 'bg-zinc-900 text-zinc-500'}`}
+          className={`flex-1 py-2 rounded-lg font-bold text-xs uppercase tracking-widest transition-all ${subStep === 0 ? 'bg-indigo-600 text-white' : 'bg-zinc-900 text-zinc-500'}`}
         >
           Nivel A: Pares
         </button>
         <button 
           onClick={() => onSetSubStep(1)}
-          className={`flex-1 py-2 rounded-lg font-bold text-xs uppercase tracking-widest transition-all ${subStep === 1 ? 'bg-red-600 text-white' : 'bg-zinc-900 text-zinc-500'}`}
+          className={`flex-1 py-2 rounded-lg font-bold text-xs uppercase tracking-widest transition-all ${subStep === 1 ? 'bg-indigo-600 text-white' : 'bg-zinc-900 text-zinc-500'}`}
         >
           Nivel B: Radar
         </button>
@@ -111,9 +111,9 @@ export const Semaforo: React.FC<SemaforoProps> = ({
                 transition={{ delay: i * 0.1 }}
                 onClick={() => {
                   if (item.hasTarget) {
-                    setFeedback({ type: 'success', message: `¡Radar activado! ${item.word} tiene el sonido ✅` });
+                    setFeedback({ type: 'success', message: `¡Sonido detectado! ${item.word} tiene el sonido ✅` });
                   } else {
-                    setFeedback({ type: 'error', message: `¡Error de radar! ${item.word} no tiene el sonido ❌` });
+                    setFeedback({ type: 'error', message: `¡Sonido no encontrado! ${item.word} no tiene el sonido ❌` });
                   }
                 }}
                 className="bg-zinc-800 border border-zinc-700 p-4 rounded-xl flex items-center justify-between hover:bg-zinc-700 transition-all group"
@@ -122,7 +122,7 @@ export const Semaforo: React.FC<SemaforoProps> = ({
                   <VisualContent content={item.img} className="text-3xl group-hover:scale-110 transition-transform w-10 h-10" />
                   <span className="text-xl font-black text-white italic">{item.word}</span>
                 </div>
-                <Volume2 className="w-5 h-5 text-zinc-600 group-hover:text-red-500" />
+                <Volume2 className="w-5 h-5 text-zinc-600 group-hover:text-indigo-500" />
               </motion.button>
             ))}
           </div>

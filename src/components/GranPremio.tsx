@@ -29,10 +29,10 @@ export const GranPremio: React.FC<GranPremioProps> = ({
       <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 text-center space-y-8">
         <div className="flex justify-center">
           <div className="relative">
-            <div className="absolute inset-0 bg-red-600 blur-2xl opacity-20 animate-pulse" />
+            <div className="absolute inset-0 bg-indigo-600 blur-2xl opacity-20 animate-pulse" />
             <button 
               onClick={onRollDice}
-              className="relative w-32 h-32 bg-zinc-800 border-4 border-red-600 rounded-3xl flex items-center justify-center text-5xl font-black italic text-white shadow-2xl hover:scale-105 active:scale-95 transition-all"
+              className="relative w-32 h-32 bg-zinc-800 border-4 border-indigo-600 rounded-3xl flex items-center justify-center text-5xl font-black italic text-white shadow-2xl hover:scale-105 active:scale-95 transition-all"
             >
               {diceValue || <Gamepad2 className="w-12 h-12" />}
             </button>
@@ -54,7 +54,7 @@ export const GranPremio: React.FC<GranPremioProps> = ({
               <VisualContent content={granPremioBoard[step].img} className="text-6xl mb-2 w-20 h-20" />
             </div>
             <div className="space-y-1">
-              <span className="text-red-500 font-bold text-sm uppercase tracking-widest">Casilla {granPremioBoard[step].id}: {granPremioBoard[step].name}</span>
+              <span className="text-indigo-500 font-bold text-sm uppercase tracking-widest">Paso {granPremioBoard[step].id}: {granPremioBoard[step].name}</span>
               <p className="text-2xl font-bold text-white leading-tight italic">
                 {granPremioBoard[step].q}
               </p>
@@ -67,7 +67,7 @@ export const GranPremio: React.FC<GranPremioProps> = ({
         {granPremioBoard.map((item, i) => (
           <div 
             key={item.id}
-            className={`aspect-square rounded-lg flex items-center justify-center text-xl border-2 transition-all ${step === i ? 'bg-red-600 border-white scale-110 z-10 shadow-lg' : 'bg-zinc-900 border-zinc-800 opacity-50'}`}
+            className={`aspect-square rounded-lg flex items-center justify-center text-xl border-2 transition-all ${step === i ? 'bg-indigo-600 border-white scale-110 z-10 shadow-lg' : 'bg-zinc-900 border-zinc-800 opacity-50'}`}
           >
             <VisualContent content={item.img} className="w-6 h-6" />
           </div>
@@ -76,42 +76,42 @@ export const GranPremio: React.FC<GranPremioProps> = ({
 
       <div className="space-y-4 pt-8 border-t border-zinc-800">
         <div className="text-center">
-          <h3 className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em] italic">Juegos Rápidos 🏎️</h3>
+          <h3 className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em] italic">Juegos Rápidos ✨</h3>
         </div>
         <div className="grid grid-cols-3 sm:grid-cols-5 gap-4">
           <button 
             onClick={() => onGoToWorld('MEMORY')}
             className="p-4 bg-zinc-900 border border-zinc-800 rounded-2xl hover:bg-zinc-800 transition-all text-center space-y-2"
           >
-            <Gamepad2 className="w-6 h-6 mx-auto text-red-500" />
+            <Gamepad2 className="w-6 h-6 mx-auto text-indigo-500" />
             <p className="text-xs font-bold uppercase">Memory</p>
           </button>
           <button 
             onClick={() => onGoToWorld('BINGO')}
             className="p-4 bg-zinc-900 border border-zinc-800 rounded-2xl hover:bg-zinc-800 transition-all text-center space-y-2"
           >
-            <CheckCircle2 className="w-6 h-6 mx-auto text-red-500" />
+            <CheckCircle2 className="w-6 h-6 mx-auto text-indigo-500" />
             <p className="text-xs font-bold uppercase">Bingo</p>
           </button>
           <button 
             onClick={() => onGoToWorld('LINCE')}
             className="p-4 bg-zinc-900 border border-zinc-800 rounded-2xl hover:bg-zinc-800 transition-all text-center space-y-2"
           >
-            <AlertCircle className="w-6 h-6 mx-auto text-red-500" />
+            <AlertCircle className="w-6 h-6 mx-auto text-indigo-500" />
             <p className="text-xs font-bold uppercase">Lince</p>
           </button>
           <button 
             onClick={() => onGoToWorld('DOMINO')}
             className="p-4 bg-zinc-900 border border-zinc-800 rounded-2xl hover:bg-zinc-800 transition-all text-center space-y-2"
           >
-            <RotateCcw className="w-6 h-6 mx-auto text-red-500" />
+            <RotateCcw className="w-6 h-6 mx-auto text-indigo-500" />
             <p className="text-xs font-bold uppercase">Dominó</p>
           </button>
           <button 
             onClick={() => onGoToWorld('DOBBLE')}
             className="p-4 bg-zinc-900 border border-zinc-800 rounded-2xl hover:bg-zinc-800 transition-all text-center space-y-2"
           >
-            <CheckCircle2 className="w-6 h-6 mx-auto text-red-500" />
+            <CheckCircle2 className="w-6 h-6 mx-auto text-indigo-500" />
             <p className="text-xs font-bold uppercase">Dobble</p>
           </button>
         </div>

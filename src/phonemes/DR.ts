@@ -4,7 +4,7 @@ export const DR_PHONEME_DATA: PhonemeContent = {
   name: 'Trabada DR',
   color: 'orange',
   taller: [
-    { title: "¡EL MOTOR! (DR)", instruction: "Golpea rápido con la punta de la lengua:", sound: "D-R-D-R", tip: "¡Siente el cosquilleo!" },
+    { title: "¡EL SONIDO! (DR)", instruction: "Golpea rápido con la punta de la lengua:", sound: "D-R-D-R", tip: "¡Siente el cosquilleo!" },
     { title: "¡Fuerza!", instruction: "Ahora con vocales:", sound: "DRA-DRE-DRI", tip: "¡Lengua fuerte!" }
   ],
   semaforoPares: [
