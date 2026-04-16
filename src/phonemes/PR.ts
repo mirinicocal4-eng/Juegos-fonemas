@@ -4,12 +4,13 @@ export const PR_PHONEME_DATA: PhonemeContent = {
   name: 'Trabada PR',
   color: 'orange',
   taller: [
-    { title: "¡EXPLOSIÓN! (PR)", instruction: "Sopla fuerte con la lengua arriba:", sound: "P-R-P-R", tip: "¡Como un petardo suave!" },
-    { title: "¡Potencia!", instruction: "Ahora con vocales:", sound: "PRA-PRE-PRI", tip: "¡Suelta el aire!" }
+    { title: "¡EXPLOSIÓN! (PR)", instruction: "Sopla fuerte con la lengua arriba:", sound: "P-R-P-R", tip: "¡Como un petardo suave!", img: "https://static.arasaac.org/pictograms/2569/2569_300.png" },
+    { title: "¡Potencia!", instruction: "Ahora con vocales:", sound: "PRA-PRE-PRI", tip: "¡Suelta el aire!", img: "https://static.arasaac.org/pictograms/2569/2569_300.png" }
   ],
   semaforoPares: [
     { w1: "PISA", s1: "Sin R", i1: "👣", w2: "PRISA", s2: "Con PR", i2: "🏃‍♂️", target: 2 }
   ],
+  semaforoRadar: [],
   pistaEco: [
     { word: "Premio", img: "🎁" }, { word: "Príncipe", img: "🤴" }, { word: "Prado", img: "🌿" }, { word: "Prisa", img: "🏃‍♂️" }
   ],

@@ -4,12 +4,13 @@ export const GR_PHONEME_DATA: PhonemeContent = {
   name: 'Trabada GR',
   color: 'orange',
   taller: [
-    { title: "¡EL GRUÑIDO! (GR)", instruction: "Sonido desde la garganta y lengua arriba:", sound: "G-R-G-R", tip: "¡Con mucha energía!" },
-    { title: "¡Garganta!", instruction: "Ahora con vocales:", sound: "GRA-GRE-GRI", tip: "¡Siente el sonido atrás!" }
+    { title: "¡EL GRUÑIDO! (GR)", instruction: "Sonido desde la garganta y lengua arriba:", sound: "G-R-G-R", tip: "¡Con mucha energía!", img: "https://static.arasaac.org/pictograms/2569/2569_300.png" },
+    { title: "¡Garganta!", instruction: "Ahora con vocales:", sound: "GRA-GRE-GRI", tip: "¡Siente el sonido atrás!", img: "https://static.arasaac.org/pictograms/2569/2569_300.png" }
   ],
   semaforoPares: [
     { w1: "GATO", s1: "Sin R", i1: "🐱", w2: "GRATO", s2: "Con GR", i2: "😊", target: 2 }
   ],
+  semaforoRadar: [],
   pistaEco: [
     { word: "Grillo", img: "🦗" }, { word: "Grúa", img: "🏗️" }, { word: "Tigre", img: "🐯" }, { word: "Grapa", img: "📎" }
   ],

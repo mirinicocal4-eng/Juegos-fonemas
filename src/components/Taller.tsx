@@ -20,7 +20,7 @@ export const Taller: React.FC<TallerProps> = ({
   onFinish, 
   setFeedback 
 }) => {
-  const currentStep = tallerSteps[step] || { title: '', instruction: '', sound: '', tip: '' };
+  const currentStep = tallerSteps[step] || { title: '', instruction: '', sound: '', tip: '', img: '' };
 
   return (
     <motion.div 
@@ -35,10 +35,18 @@ export const Taller: React.FC<TallerProps> = ({
             <span className="text-indigo-500 font-bold text-xs uppercase tracking-widest">Paso {step + 1} de {(tallerSteps || []).length}</span>
             <h3 className="text-3xl font-black italic text-white uppercase">{currentStep.title}</h3>
           </div>
-          <div className="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-900/40">
+          <div className="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-900/40 shrink-0">
             <Mic className="w-8 h-8 text-white" />
           </div>
         </div>
+
+        {currentStep.img && (
+          <div className="flex justify-center">
+            <div className="w-48 h-48 bg-zinc-950 rounded-2xl border border-zinc-800 p-4 flex items-center justify-center overflow-hidden">
+              <img src={currentStep.img} alt={currentStep.title} className="max-w-full max-h-full object-contain" />
+            </div>
+          </div>
+        )}
 
         <div className="bg-zinc-950 p-6 rounded-2xl border border-zinc-800 space-y-4">
           <p className="text-zinc-400 font-medium">{currentStep.instruction}</p>

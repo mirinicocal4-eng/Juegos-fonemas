@@ -6,21 +6,39 @@ export interface TallerStep {
   instruction: string;
   sound: string;
   tip: string;
+  img?: string;
 }
 
 export interface SemaforoPair {
   w1: string;
   s1: string;
-  i1: string;
+  i1?: string;
+  i1_img?: string;
   w2: string;
   s2: string;
-  i2: string;
+  i2?: string;
+  i2_img?: string;
   target: number;
 }
 
 export interface PistaEcoItem {
   word: string;
-  img: string;
+  img?: string;
+  subtitle?: string;
+  hasTarget?: boolean;
+}
+
+export interface PistaDecirItem {
+  word: string;
+  img?: string;
+  category: 'inicio' | 'contiene' | 'final' | 'inversa';
+  subtitle?: string;
+}
+
+export interface SemaforoRadarItem {
+  word: string;
+  img?: string;
+  hasTarget: boolean;
 }
 
 export interface GameImage {
@@ -31,9 +49,12 @@ export interface GameImage {
 export interface PhonemeContent {
   name: string;
   color: string;
+  pistaEcoTitle?: string;
   taller: TallerStep[];
   semaforoPares: SemaforoPair[];
+  semaforoRadar?: SemaforoRadarItem[];
   pistaEco: PistaEcoItem[];
+  pistaDecir?: PistaDecirItem[];
   gameImages: GameImage[];
   pistaFrases: string[];
   pistaTrabalenguas: string[];

@@ -3,7 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect } from 'react';
+import * as React from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Trophy, 
@@ -41,6 +42,14 @@ import { Domino } from './components/Domino';
 import { Dobble } from './components/Dobble';
 import { DataEditor } from './components/DataEditor';
 
+interface AppState extends GameState {
+  showTrabadas: boolean;
+  playerCount: number;
+  currentPlayer: number;
+  playerPositions: number[];
+  playerScores: number[];
+}
+
 const DEFAULT_PERSISTENT_DATA: PersistentData = {
   lastPhoneme: 'R',
   linceHighScore: 0,
@@ -51,7 +60,7 @@ const DEFAULT_PERSISTENT_DATA: PersistentData = {
 };
 
 export default function App() {
-  const [state, setState] = useState<any>({
+  const [state, setState] = useState<AppState>({
     world: 'PHONEME_SELECT',
     phoneme: 'R',
     step: 0,
@@ -103,10 +112,12 @@ export default function App() {
     taller: [],
     semaforoPares: [],
     pistaEco: [],
+    pistaDecir: [],
     gameImages: [],
     pistaFrases: [],
-    pistaTrabalenguas: []
-  };
+    pistaTrabalenguas: [],
+    pistaCompletar: []
+  } as PhonemeContent;
 
   useEffect(() => {
     if (feedback) {
@@ -159,15 +170,14 @@ export default function App() {
   // --- MUNDO 2: SEMAFORO ---
   const semaforoPares = currentData.semaforoPares || [];
 
-  const semaforoRadar = [
-    ...(currentData.pistaEco || []).map(p => ({ word: p.word?.toUpperCase() || '', hasTarget: true, img: p.img })),
-    { word: "MOTO", hasTarget: false, img: "🏍️" },
-    { word: "BICI", hasTarget: state.phoneme === 'Z', img: "🚲" },
-    { word: "PATO", hasTarget: false, img: "🦆" }
-  ];
+  const semaforoRadar = (currentData.semaforoRadar && currentData.semaforoRadar.length > 0)
+    ? currentData.semaforoRadar
+    : (currentData.pistaEco || []).map(p => ({ word: p.word?.toUpperCase() || '', hasTarget: true, img: p.img }));
 
   // --- MUNDO 3: PISTA ---
+  const pistaEcoTitle = currentData.pistaEcoTitle;
   const pistaEco = currentData.pistaEco || [];
+  const pistaDecir = currentData.pistaDecir || [];
   const pistaFrases = currentData.pistaFrases || [];
   const pistaTrabalenguas = currentData.pistaTrabalenguas || [];
   const pistaCompletar = currentData.pistaCompletar || [];
@@ -918,7 +928,10 @@ export default function App() {
           {state.world === 'PISTA' && (
             <Pista 
               key="world-pista"
+              phoneme={state.phoneme}
+              pistaEcoTitle={pistaEcoTitle}
               pistaEco={pistaEco}
+              pistaDecir={pistaDecir}
               pistaFrases={pistaFrases}
               pistaTrabalenguas={pistaTrabalenguas}
               pistaCompletar={pistaCompletar}
@@ -963,7 +976,7 @@ export default function App() {
               currentBall={bingoCurrent}
               onNextBall={nextBingoBall}
               onToggle={markBingo}
-              onReset={(count) => initBingo(count || bingoPlayerCount)}
+              onReset={(count?: number) => initBingo(count || bingoPlayerCount)}
               onBack={() => goToWorld('GRAN_PREMIO')}
             />
           )}

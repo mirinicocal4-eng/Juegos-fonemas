@@ -4,22 +4,144 @@ export const S_PHONEME_DATA: PhonemeContent = {
   name: 'Fonema S',
   color: 'blue',
   taller: [
-    { title: "¡La Serpiente!", instruction: "Dientes juntos y deja salir el aire:", sound: "S-S-S-S", tip: "¡Como si mandaras callar!" },
-    { title: "¡Globo pinchado!", instruction: "Suelta el aire muy despacio:", sound: "SSS-SSS", tip: "¡No saques la lengua!" },
+    { title: "¡La Serpiente!", instruction: "Dientes juntos y deja salir el aire:", sound: "S-S-S-S", tip: "¡Como si mandaras callar!", img: "https://static.arasaac.org/pictograms/2568/2568_300.png" },
+    { title: "¡Silencio!", instruction: "Suelta el aire muy despacio:", sound: "SSS-SSS", tip: "¡No saques la lengua!", img:"https://static.arasaac.org/pictograms/5936/5936_300.png"  },
     { title: "¡Siseo veloz!", instruction: "Ahora rápido como un rayo:", sound: "SA-SE-SI", tip: "¡Sonríe un poquito!" }
   ],
   semaforoPares: [
-    { w1: "OSO", s1: "Con S", i1: "🐻", w2: "OCHO", s2: "Con CH", i2: "8️⃣", target: 1 },
-    { w1: "CASA", s1: "Con S", i1: "🏠", w2: "CAZA", s2: "Con Z", i2: "🏹", target: 1 },
-    { w1: "SOPA", s1: "Con S", i1: "🥣", w2: "COPA", s2: "Con C", i2: "🏆", target: 1 },
-    { w1: "SILLA", s1: "Con S", i1: "🪑", w2: "PILLA", s2: "Con P", i2: "🏃", target: 1 },
-    { w1: "PESO", s1: "Con S", i1: "⚖️", w2: "PECHO", s2: "Con CH", i2: "👕", target: 1 },
-    { w1: "TASA", s1: "Con S", i1: "📈", w2: "TAZA", s2: "Con Z", i2: "☕", target: 1 }
+    // Plantilla para 10 pares mínimos con pictogramas.
+    { 
+      w1: "Sopa", s1: "Con S", i1_img: "https://static.arasaac.org/pictograms/2573/2573_300.png",
+      w2: "Copa", s2: "Con C", i2_img: "https://static.arasaac.org/pictograms/2356/2356_300.png",
+      target: 1 
+    },
+    { 
+      w1: "Vaso", s1: "Con S", i1_img: "https://static.arasaac.org/pictograms/2610/2610_300.png",
+      w2: "Bajo", s2: "Con J", i2_img: "https://static.arasaac.org/pictograms/4571/4571_300.png",
+      target: 1 
+    },
+    { 
+      w1: "Coso", s1: "Con S", i1_img: "https://static.arasaac.org/pictograms/2722/2722_300.png",
+      w2: "Cojo", s2: "Con J", i2_img: "https://static.arasaac.org/pictograms/26952/26952_300.png",
+      target: 1 
+    },
+    { 
+      w1: "Oso", s1: "Con S", i1_img: "https://static.arasaac.org/pictograms/2488/2488_300.png",
+      w2: "Ojo", s2: "Con J", i2_img: "https://static.arasaac.org/pictograms/6573/6573_300.png",
+      target: 1 
+    },
+    { 
+      w1: "Hueso", s1: "Con S", i1_img: "https://static.arasaac.org/pictograms/6528/6528_300.png",
+      w2: "Huevo", s2: "Con V", i2_img: "https://static.arasaac.org/pictograms/2427/2427_300.png",
+      target: 1 
+    },
+    { 
+      w1: "Casa", s1: "Con S", i1_img: "https://static.arasaac.org/pictograms/2317/2317_300.png",
+      w2: "Cama", s2: "Con M", i2_img: "https://static.arasaac.org/pictograms/2304/2304_300.png",
+      target: 1 
+    },
+    { 
+      w1: "Gasa", s1: "Con S", i1_img: "https://static.arasaac.org/pictograms/27794/27794_300.png",
+      w2: "Gata", s2: "Con T", i2_img: "https://static.arasaac.org/pictograms/9881/9881_300.png",
+      target: 1 
+    },
+    { 
+      w1: "Peso", s1: "Con S", i1_img: "https://static.arasaac.org/pictograms/2655/2655_300.png",
+      w2: "Pecho", s2: "Con CH", i2_img: "https://static.arasaac.org/pictograms/2853/2853_300.png",
+      target: 1 
+    },
+    { 
+      w1: "Cisne", s1: "Con S", i1_img: "https://static.arasaac.org/pictograms/2337/2337_300.png",
+      w2: "Cine", s2: "Sin S", i2_img: "https://static.arasaac.org/pictograms/30387/30387_300.png",
+      target: 1 
+    },
+    { 
+      w1: "Pasta", s1: "Con S", i1_img: "https://static.arasaac.org/pictograms/8652/8652_300.png",
+      w2: "Pata", s2: "Con T", i2_img: "https://static.arasaac.org/pictograms/28479/28479_300.png",
+      target: 1 
+    }
   ],
+  pistaEcoTitle: "Suena o no suena con S",
+  semaforoRadar: [],
   pistaEco: [
-    { word: "Sapo", img: "🐸" }, { word: "Silla", img: "🪑" }, { word: "Sol", img: "☀️" }, { word: "Mesa", img: "🪑" },
-    { word: "Sopa", img: "🥣" }, { word: "Saco", img: "🛍️" }, { word: "Sofá", img: "🛋️" }, { word: "Sirena", img: "🧜‍♀️" },
-    { word: "Isla", img: "🏝️" }, { word: "Escalera", img: "🪜" }, { word: "Estrella", img: "⭐" }, { word: "Pastel", img: "🍰" }
+    { word: "Sopa" }, // 1
+    { word: "Salchicha" }, // 2
+    { word: "Arroz" }, // 3
+    { word: "Lasaña" }, // 4
+    { word: "Sémola" }, // 5
+    { word: "Lechuga" }, // 6
+    { word: "Sirope" }, // 7
+    { word: "Pizarra" }, // 8
+    { word: "Silla" }, // 9
+    { word: "Mesa" }, // 10
+    { word: "Seño" }, // 11
+    { word: "Clase" }, // 12
+    { word: "Patio" }, // 13
+    { word: "Sillón" }, // 14
+    { word: "Puerta" }, // 15
+    { word: "Baño" }, // 16
+    { word: "Salón" }, // 17
+    { word: "Aseo" }, // 18
+    { word: "Terraza" }, // 19
+    { word: "Sofá" }, // 20
+    { word: "Unicornio" }, // 21
+    { word: "Superhéroe" }, // 22
+    { word: "Bruja" }, // 23
+    { word: "Sirena" }, // 24
+    { word: "Superman" }, // 25
+    { word: "Batman" }, // 26
+    { word: "Superboy" }, // 27
+    { word: "Dormir" }, // 28
+    { word: "Saltar" }, // 29
+    { word: "Hablar" }, // 30
+    { word: "Pasear" }, // 31
+    { word: "Comer" }, // 32
+    { word: "Observar" }, // 33
+    { word: "Saborear" }, // 34
+    { word: "Tiburón" }, // 35
+    { word: "Medusa" }, // 36
+    { word: "Saltamontes" }, // 37
+    { word: "Ardilla" }, // 38
+    { word: "Gusano" }, // 39
+    { word: "Dinosaurio" }, // 40
+    { word: "Serpiente" }, // 41
+    { word: "Terraza" }, // 42
+    { word: "Sofá" }  // 43
+  ],
+  pistaDecir: [
+    // Empiezan por S
+    { word: "sal", img: "", category: "inicio" },
+    { word: "sapo", img: "", category: "inicio" },
+    { word: "sol", img: "", category: "inicio" },
+    { word: "sofá", img: "", category: "inicio" },
+    { word: "suma", img: "", category: "inicio" },
+    { word: "suelo", img: "", category: "inicio" },
+    { word: "seta", img: "", category: "inicio" },
+    { word: "semáforo", img: "", category: "inicio" },
+    { word: "silla", img: "", category: "inicio" },
+    { word: "sirena", img: "", category: "inicio" },
+    // Contienen S
+    { word: "mesa", img: "", category: "contiene" },
+    { word: "rosa", img: "", category: "contiene" },
+    { word: "vaso", img: "", category: "contiene" },
+    { word: "queso", img: "", category: "contiene" },
+    { word: "asustar", img: "", category: "contiene" },
+    { word: "basura", img: "", category: "contiene" },
+    { word: "jersey", img: "", category: "contiene" },
+    { word: "caseta", img: "", category: "contiene" },
+    { word: "música", img: "", category: "contiene" },
+    { word: "mesilla", img: "", category: "contiene" },
+    // Acaban en S y posición inversa.
+    { word: "bastón", img: "", category: "inversa" },
+    { word: "más", img: "", category: "final" },
+    { word: "bosque", img: "", category: "inversa" },
+    { word: "dos", img: "", category: "final" },
+    { word: "muslo", img: "", category: "inversa" },
+    { word: "bus", img: "", category: "final" },
+    { word: "escoba", img: "", category: "inversa" },
+    { word: "mes", img: "", category: "final" },
+    { word: "piscina", img: "", category: "inversa" },
+    { word: "gas", img: "", category: "final" }
   ],
   gameImages: [
     { img: "🐸", name: "SAPO" }, { img: "🪑", name: "SILLA" }, { img: "☀️", name: "SOL" }, { img: "🐻", name: "OSO" },

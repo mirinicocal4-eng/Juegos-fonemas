@@ -4,9 +4,9 @@ export const Z_PHONEME_DATA: PhonemeContent = {
   name: 'Fonema Z/C',
   color: 'emerald',
   taller: [
-    { title: "¡Lengua fuera!", instruction: "Saca un poquito la lengua entre los dientes:", sound: "Z-Z-Z-Z", tip: "¡Muerde la punta suavemente!" },
-    { title: "¡El Abejorro!", instruction: "Haz que vibre el aire entre los dientes:", sound: "ZZZ-ZZZ", tip: "¡Sopla flojito!" },
-    { title: "¡Zumbido final!", instruction: "Di las sílabas mágicas:", sound: "ZA-ZE-ZI", tip: "¡No escondas la lengua!" }
+    { title: "¡Lengua fuera!", instruction: "Saca un poquito la lengua entre los dientes:", sound: "Z-Z-Z-Z", tip: "¡Muerde la punta suavemente!", img: "https://static.arasaac.org/pictograms/2571/2571_300.png" },
+    { title: "¡El Abejorro!", instruction: "Haz que vibre el aire entre los dientes:", sound: "ZZZ-ZZZ", tip: "¡Sopla flojito!", img: "https://static.arasaac.org/pictograms/2571/2571_300.png" },
+    { title: "¡Zumbido final!", instruction: "Di las sílabas mágicas:", sound: "ZA-ZE-ZI", tip: "¡No escondas la lengua!", img: "https://static.arasaac.org/pictograms/2571/2571_300.png" }
   ],
   semaforoPares: [
     { w1: "TAZA", s1: "Con Z", i1: "☕", w2: "TASA", s2: "Con S", i2: "📈", target: 1 },
@@ -16,6 +16,7 @@ export const Z_PHONEME_DATA: PhonemeContent = {
     { w1: "CEBO", s1: "Con Z/C", i1: "🪱", w2: "SEBO", s2: "Con S", i2: "🕯️", target: 1 },
     { w1: "CIERVO", s1: "Con Z/C", i1: "🦌", w2: "SIERVO", s2: "Con S", i2: "🙇", target: 1 }
   ],
+  semaforoRadar: [],
   pistaEco: [
     { word: "Zapato", img: "👞" }, { word: "Zorro", img: "🦊" }, { word: "Taza", img: "☕" }, { word: "Manzana", img: "🍎" },
     { word: "Zanahoria", img: "🥕" }, { word: "Zumo", img: "🧃" }, { word: "Cebra", img: "🦓" }, { word: "Cielo", img: "☁️" },

@@ -4,12 +4,13 @@ export const DR_PHONEME_DATA: PhonemeContent = {
   name: 'Trabada DR',
   color: 'orange',
   taller: [
-    { title: "¡EL SONIDO! (DR)", instruction: "Golpea rápido con la punta de la lengua:", sound: "D-R-D-R", tip: "¡Siente el cosquilleo!" },
-    { title: "¡Fuerza!", instruction: "Ahora con vocales:", sound: "DRA-DRE-DRI", tip: "¡Lengua fuerte!" }
+    { title: "¡EL SONIDO! (DR)", instruction: "Golpea rápido con la punta de la lengua:", sound: "D-R-D-R", tip: "¡Siente el cosquilleo!", img: "https://static.arasaac.org/pictograms/2569/2569_300.png" },
+    { title: "¡Fuerza!", instruction: "Ahora con vocales:", sound: "DRA-DRE-DRI", tip: "¡Lengua fuerte!", img: "https://static.arasaac.org/pictograms/2569/2569_300.png" }
   ],
   semaforoPares: [
     { w1: "DADO", s1: "Sin R", i1: "🎲", w2: "DRAGÓN", s2: "Con DR", i2: "🐉", target: 2 }
   ],
+  semaforoRadar: [],
   pistaEco: [
     { word: "Dragón", img: "🐉" }, { word: "Dromedario", img: "🐪" }, { word: "Cuadro", img: "🖼️" }, { word: "Ladrillo", img: "🧱" }
   ],

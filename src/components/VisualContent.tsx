@@ -1,11 +1,15 @@
 import React from 'react';
 
 interface VisualContentProps {
-  content: string;
+  content?: string;
   className?: string;
 }
 
 export const VisualContent: React.FC<VisualContentProps> = ({ content, className }) => {
+  if (!content) {
+    return <span className={className} />;
+  }
+
   const isImage = content.startsWith('http') || content.startsWith('data:image') || content.includes('/');
 
   if (isImage) {

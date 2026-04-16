@@ -4,9 +4,9 @@ export const R_PHONEME_DATA: PhonemeContent = {
   name: 'Fonema R/RR',
   color: 'indigo',
   taller: [
-    { title: "¡Calentando la voz!", instruction: "Pon la lengua arriba y repite:", sound: "T-R-T-R", tip: "¡Lengua arriba!" },
-    { title: "¡Más fuerza!", instruction: "Ahora con energía, lengua arriba:", sound: "D-R-D-R", tip: "¡Siente el cosquilleo!" },
-    { title: "¡Vibración final!", instruction: "¡Lanzamos el sonido! Di con fuerza:", sound: "RRRRRR", tip: "¡Siente la vibración en la punta!" }
+    { title: "¡Calentando la voz!", instruction: "Pon la lengua arriba y repite:", sound: "T-R-T-R", tip: "¡Lengua arriba!", img: "https://static.arasaac.org/pictograms/2569/2569_300.png" },
+    { title: "¡Más fuerza!", instruction: "Ahora con energía, lengua arriba:", sound: "D-R-D-R", tip: "¡Siente el cosquilleo!", img: "https://static.arasaac.org/pictograms/2569/2569_300.png" },
+    { title: "¡Vibración final!", instruction: "¡Lanzamos el sonido! Di con fuerza:", sound: "RRRRRR", tip: "¡Siente la vibración en la punta!", img: "https://static.arasaac.org/pictograms/2569/2569_300.png" }
   ],
   semaforoPares: [
     { w1: "PERA", s1: "R suave", i1: "🍐", w2: "PERRA", s2: "R fuerte", i2: "🐕", target: 2 },
@@ -16,6 +16,7 @@ export const R_PHONEME_DATA: PhonemeContent = {
     { w1: "CERO", s1: "R suave", i1: "0️⃣", w2: "CERRO", s2: "R fuerte", i2: "⛰️", target: 2 },
     { w1: "MIRA", s1: "R suave", i1: "👀", w2: "MIRRA", s2: "R fuerte", i2: "🏺", target: 2 }
   ],
+  semaforoRadar: [],
   pistaEco: [
     { word: "Rana", img: "🐸" }, { word: "Rosa", img: "🌹" }, { word: "Jarra", img: "🏺" }, { word: "Perro", img: "🐶" },
     { word: "Torre", img: "🏰" }, { word: "Gorra", img: "🧢" }, { word: "Rueda", img: "🛞" }, { word: "Radio", img: "📻" },

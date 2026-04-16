@@ -1,7 +1,7 @@
-import React from 'react';
+import * as React from 'react';
 import { motion } from 'motion/react';
 import { ChevronRight, Volume2 } from 'lucide-react';
-import { Phoneme, SemaforoPair } from '../types';
+import { Phoneme, SemaforoPair, SemaforoRadarItem } from '../types';
 import { VisualContent } from './VisualContent';
 
 interface SemaforoProps {
@@ -9,7 +9,7 @@ interface SemaforoProps {
   step: number;
   subStep: number;
   semaforoPares: SemaforoPair[];
-  semaforoRadar: any[];
+  semaforoRadar: SemaforoRadarItem[];
   onSetSubStep: (subStep: number) => void;
   onNextStep: () => void;
   setFeedback: (fb: { type: 'success' | 'error' | 'info', message: string } | null) => void;
@@ -24,7 +24,58 @@ export const Semaforo: React.FC<SemaforoProps> = ({
   onSetSubStep,
   onNextStep,
   setFeedback
-}) => {
+}: SemaforoProps) => {
+  const [voices, setVoices] = React.useState<SpeechSynthesisVoice[]>([]);
+
+  React.useEffect(() => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+    const synth = window.speechSynthesis;
+    const updateVoices = () => setVoices(synth.getVoices());
+
+    updateVoices();
+    synth.addEventListener('voiceschanged', updateVoices);
+
+    return () => synth.removeEventListener('voiceschanged', updateVoices);
+  }, []);
+
+  const speakWord = (word: string) => {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      const synth = window.speechSynthesis;
+      const utterance = new SpeechSynthesisUtterance(word);
+      utterance.lang = 'es-ES';
+      utterance.volume = 1;
+      utterance.pitch = 1;
+      utterance.rate = 0.95;
+
+      const esVoice = voices.find(v => v.lang.startsWith('es')) || voices[0];
+      if (esVoice) {
+        utterance.voice = esVoice;
+      }
+
+      const speak = () => {
+        synth.cancel();
+        synth.speak(utterance);
+      };
+
+      if (voices.length > 0) {
+        speak();
+      } else {
+        const onVoicesChanged = () => {
+          const updatedVoices = synth.getVoices();
+          const esVoiceLoaded = updatedVoices.find(v => v.lang.startsWith('es')) || updatedVoices[0];
+          if (esVoiceLoaded) {
+            utterance.voice = esVoiceLoaded;
+          }
+          speak();
+          synth.removeEventListener('voiceschanged', onVoicesChanged);
+        };
+        synth.addEventListener('voiceschanged', onVoicesChanged);
+      }
+    } else {
+      setFeedback({ type: 'error', message: 'Este navegador no soporta voz sintética.' });
+    }
+  };
+
   return (
     <motion.div 
       key="semaforo"
@@ -56,10 +107,11 @@ export const Semaforo: React.FC<SemaforoProps> = ({
 
           <div className="grid grid-cols-2 gap-6">
             {[1, 2].map((num) => {
-              const pair = semaforoPares[step] || { w1: '', s1: '', i1: '', w2: '', s2: '', i2: '', target: 1 };
+              const pair = semaforoPares[step] || { w1: '', s1: '', i1: '', i1_img: '', w2: '', s2: '', i2: '', i2_img: '', target: 1 };
               const word = num === 1 ? pair.w1 : pair.w2;
               const soundLabel = num === 1 ? pair.s1 : pair.s2;
-              const img = num === 1 ? pair.i1 : pair.i2;
+              const emoji = num === 1 ? pair.i1 : pair.i2;
+              const pictograma = num === 1 ? pair.i1_img : pair.i2_img;
               const isTarget = num === pair.target;
               
               return (
@@ -76,13 +128,28 @@ export const Semaforo: React.FC<SemaforoProps> = ({
                   }}
                   className={`bg-zinc-800 border-2 rounded-2xl p-6 flex flex-col items-center gap-4 transition-all group ${isTarget ? 'hover:border-green-500' : 'hover:border-red-500'} border-zinc-700`}
                 >
-                  <VisualContent content={img} className="text-6xl group-hover:scale-110 transition-transform w-16 h-16" />
+                  <div className="relative w-20 h-20 flex items-center justify-center">
+                    <VisualContent 
+                      content={pictograma || emoji} 
+                      className={`${pictograma ? 'w-20 h-20' : 'text-6xl'} group-hover:scale-110 transition-transform`} 
+                    />
+                  </div>
                   <div className="text-center">
                     <span className="block text-2xl font-black text-white italic tracking-tighter">{word}</span>
                     <span className={`text-[10px] font-bold uppercase tracking-widest ${isTarget ? 'text-green-500' : 'text-zinc-500'}`}>
                       {soundLabel}
                     </span>
                   </div>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      speakWord(word);
+                    }}
+                    className="px-3 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full uppercase text-[10px] tracking-widest font-semibold"
+                  >
+                    Escuchar
+                  </button>
                 </motion.button>
               );
             })}
@@ -103,7 +170,7 @@ export const Semaforo: React.FC<SemaforoProps> = ({
           </div>
 
           <div className="grid grid-cols-1 gap-4">
-            {(semaforoRadar || []).map((item, i) => (
+            {(semaforoRadar || []).map((item: any, i: number) => (
               <motion.button
                 key={i}
                 initial={{ opacity: 0, y: 10 }}
@@ -122,7 +189,16 @@ export const Semaforo: React.FC<SemaforoProps> = ({
                   <VisualContent content={item.img} className="text-3xl group-hover:scale-110 transition-transform w-10 h-10" />
                   <span className="text-xl font-black text-white italic">{item.word}</span>
                 </div>
-                <Volume2 className="w-5 h-5 text-zinc-600 group-hover:text-indigo-500" />
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    speakWord(item.word);
+                  }}
+                  className="p-2 rounded-full bg-zinc-800 hover:bg-zinc-700 text-zinc-300"
+                >
+                  <Volume2 className="w-5 h-5" />
+                </button>
               </motion.button>
             ))}
           </div>

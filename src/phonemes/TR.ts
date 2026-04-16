@@ -4,12 +4,13 @@ export const TR_PHONEME_DATA: PhonemeContent = {
   name: 'Trabada TR',
   color: 'orange',
   taller: [
-    { title: "¡EL TREN! (TR)", instruction: "Golpea rápido con la punta de la lengua:", sound: "T-R-T-R", tip: "¡Muy cortito y veloz!" },
-    { title: "¡Velocidad!", instruction: "Ahora con vocales:", sound: "TRA-TRE-TRI", tip: "¡Punta de la lengua arriba!" }
+    { title: "¡EL TREN! (TR)", instruction: "Golpea rápido con la punta de la lengua:", sound: "T-R-T-R", tip: "¡Muy cortito y veloz!", img: "https://static.arasaac.org/pictograms/2569/2569_300.png" },
+    { title: "¡Velocidad!", instruction: "Ahora con vocales:", sound: "TRA-TRE-TRI", tip: "¡Punta de la lengua arriba!", img: "https://static.arasaac.org/pictograms/2569/2569_300.png" }
   ],
   semaforoPares: [
     { w1: "TONO", s1: "Sin R", i1: "🎵", w2: "TRONO", s2: "Con TR", i2: "👑", target: 2 }
   ],
+  semaforoRadar: [],
   pistaEco: [
     { word: "Tren", img: "🚂" }, { word: "Tractor", img: "🚜" }, { word: "Trigo", img: "🍞" }, { word: "Trompeta", img: "🎺" }
   ],

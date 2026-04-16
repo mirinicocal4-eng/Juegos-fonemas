@@ -4,12 +4,13 @@ export const BR_PHONEME_DATA: PhonemeContent = {
   name: 'Trabada BR',
   color: 'orange',
   taller: [
-    { title: "¡BRRRR! (BR)", instruction: "Labios juntos y lengua arriba. Di:", sound: "B-R-B-R", tip: "¡Siente la vibración en los labios!" },
-    { title: "¡Vibración!", instruction: "Ahora con vocales:", sound: "BRA-BRE-BRI", tip: "¡Lengua muy arriba!" }
+    { title: "¡BRRRR! (BR)", instruction: "Labios juntos y lengua arriba. Di:", sound: "B-R-B-R", tip: "¡Siente la vibración en los labios!", img: "https://static.arasaac.org/pictograms/2569/2569_300.png" },
+    { title: "¡Vibración!", instruction: "Ahora con vocales:", sound: "BRA-BRE-BRI", tip: "¡Lengua muy arriba!", img: "https://static.arasaac.org/pictograms/2569/2569_300.png" }
   ],
   semaforoPares: [
     { w1: "BAZO", s1: "Sin R", i1: "🩸", w2: "BRAZO", s2: "Con BR", i2: "🦾", target: 2 }
   ],
+  semaforoRadar: [],
   pistaEco: [
     { word: "Brazo", img: "🦾" }, { word: "Bruja", img: "🧙‍♀️" }, { word: "Cebra", img: "🦓" }, { word: "Libro", img: "📚" }, { word: "Cabra", img: "🐐" }
   ],
