@@ -106,7 +106,7 @@ export const Bingo: React.FC<BingoProps> = ({
                           : 'bg-zinc-900 border-zinc-800 hover:border-zinc-600'
                       }`}
                     >
-                      <VisualContent content={item.img} alt={item.name || ''} className="w-10 h-10" />
+                      <VisualContent content={item.img} alt={item.name} className="w-10 h-10" />
                     </button>
                   ))}
                 </div>
