@@ -188,11 +188,11 @@ export default function App() {
   const [diceValue, setDiceValue] = useState<number | null>(null);
 
   // Memory State
-  const [memoryCards, setMemoryCards] = useState<{ id: number, img: string, flipped: boolean, matched: boolean }[]>([]);
+  const [memoryCards, setMemoryCards] = useState<{ id: number, img: string, name: string, flipped: boolean, matched: boolean }[]>([]);
   const [flippedIndices, setFlippedIndices] = useState<number[]>([]);
 
   // Bingo State
-  const [bingoBoards, setBingoBoards] = useState<{ img: string, marked: boolean }[][]>([]);
+  const [bingoBoards, setBingoBoards] = useState<{ img: string, name: string, marked: boolean }[][]>([]);
   const [bingoPlayerCount, setBingoPlayerCount] = useState(2);
   const [bingoCurrent, setBingoCurrent] = useState<{ img: string, name: string } | null>(null);
   const [bingoWinner, setBingoWinner] = useState<number | null>(null);
@@ -258,7 +258,7 @@ export default function App() {
   const initMemory = () => {
     const cards = [...gameImages.slice(0, 8), ...gameImages.slice(0, 8)]
       .sort(() => Math.random() - 0.5)
-      .map((item, index) => ({ id: index, img: item.img, flipped: false, matched: false }));
+      .map((item, index) => ({ id: index, img: item.img, name: item.name, flipped: false, matched: false }));
     setMemoryCards(cards);
     setFlippedIndices([]);
   };
@@ -268,7 +268,7 @@ export default function App() {
       [...gameImages]
         .sort(() => Math.random() - 0.5)
         .slice(0, 9)
-        .map(item => ({ img: item.img, marked: false }))
+        .map(item => ({ img: item.img, name: item.name, marked: false }))
     );
     setBingoBoards(newBoards);
     setBingoPlayerCount(playerCount);

@@ -76,7 +76,7 @@ export const GranPremio: React.FC<GranPremioProps> = ({
             className="bg-zinc-950 p-6 rounded-2xl border border-zinc-800 space-y-4"
           >
             <div className="flex justify-center">
-              <VisualContent content={granPremioBoard[step].img} className="text-6xl mb-2 w-20 h-20" />
+              <VisualContent content={granPremioBoard[step].img} alt={granPremioBoard[step].name} className="text-6xl mb-2 w-20 h-20" />
             </div>
             <div className="space-y-1">
               <span className="text-indigo-500 font-bold text-sm uppercase tracking-widest">Paso {granPremioBoard[step].id}: {granPremioBoard[step].name}</span>
@@ -96,7 +96,7 @@ export const GranPremio: React.FC<GranPremioProps> = ({
               key={item.id}
               className={`aspect-square rounded-lg flex flex-col items-center justify-center text-xl border-2 transition-all relative ${playersHere.length > 0 ? 'bg-zinc-800 border-white scale-105 z-10 shadow-lg' : 'bg-zinc-900 border-zinc-800 opacity-50'}`}
             >
-              <VisualContent content={item.img} className="w-6 h-6 mb-1" />
+              <VisualContent content={item.img} alt={item.name} className="w-6 h-6 mb-1" />
               <div className="flex gap-0.5 absolute -bottom-1">
                 {playersHere.map(pIdx => (
                   <div key={pIdx} className={`w-3 h-3 rounded-full ${playerColors[pIdx]} border border-white`} />
