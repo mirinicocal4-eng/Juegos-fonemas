@@ -1,7 +1,8 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { ChevronRight, CheckCircle2, Mic } from 'lucide-react';
+import { ChevronRight, CheckCircle2, Mic, Volume2 } from 'lucide-react';
 import { Phoneme, GameState, TallerStep } from '../types';
+import { setupSpeechVoices, speakText } from '../utils/speech';
 
 interface TallerProps {
   phoneme: Phoneme;
@@ -20,7 +21,17 @@ export const Taller: React.FC<TallerProps> = ({
   onFinish, 
   setFeedback 
 }) => {
+  const [voices, setVoices] = React.useState<SpeechSynthesisVoice[]>([]);
   const currentStep = tallerSteps[step] || { title: '', instruction: '', sound: '', tip: '', img: '' };
+
+  React.useEffect(() => {
+    const cleanup = setupSpeechVoices(setVoices);
+    return cleanup;
+  }, []);
+
+  const speakCurrentText = (text: string) => {
+    speakText(text, voices, () => setFeedback({ type: 'error', message: 'Este navegador no soporta voz sintética.' }));
+  };
 
   return (
     <motion.div 
@@ -50,10 +61,17 @@ export const Taller: React.FC<TallerProps> = ({
 
         <div className="bg-zinc-950 p-6 rounded-2xl border border-zinc-800 space-y-4">
           <p className="text-zinc-400 font-medium">{currentStep.instruction}</p>
-          <div className="text-5xl font-black italic text-white tracking-widest py-4 border-y border-zinc-800 text-center">
-            {currentStep.sound}
-          </div>
-          <div className="flex items-center gap-2 text-zinc-500 text-sm italic">
+          <div className="flex items-center justify-center gap-4 text-white py-4 border-y border-zinc-800">
+            <div className="text-5xl font-black italic tracking-widest text-center">
+              {currentStep.sound}
+            </div>
+            <button
+              type="button"
+              onClick={() => speakCurrentText(currentStep.sound)}
+              className="p-3 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white transition-all"
+            >
+              <Volume2 className="w-5 h-5" />
+            </button>
             <span className="w-2 h-2 bg-indigo-600 rounded-full animate-pulse" />
             {currentStep.tip}
           </div>

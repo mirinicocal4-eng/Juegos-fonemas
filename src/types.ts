@@ -1,5 +1,5 @@
 export type World = 'PHONEME_SELECT' | 'PLAYER_COUNT' | 'MENU' | 'TALLER' | 'SEMAFORO' | 'PISTA' | 'GRAN_PREMIO' | 'MEMORY' | 'BINGO' | 'LINCE' | 'DOMINO' | 'DOBBLE' | 'LIBRARY';
-export type Phoneme = 'R' | 'S' | 'Z' | 'BR' | 'PR' | 'TR' | 'DR' | 'GR' | 'CR' | 'FR';
+export type Phoneme = 'R' | 'RR' | 'S' | 'Z' | 'BR' | 'PR' | 'TR' | 'DR' | 'GR' | 'CR' | 'FR';
 
 export interface TallerStep {
   title: string;
@@ -59,6 +59,12 @@ export interface PhonemeContent {
   pistaFrases: string[];
   pistaTrabalenguas: string[];
   pistaCompletar: { phrase: string; word: string }[];
+  pdfUrl?: string;
+}
+
+export interface PistaProgress {
+  currentPhraseIndex: number;
+  currentPhraseAnswer: string;
 }
 
 export interface GameState {

@@ -26,7 +26,7 @@ import {
   Sparkles
 } from 'lucide-react';
 
-import { World, Phoneme, GameState, PersistentData, PhonemeContent } from './types';
+import { World, Phoneme, GameState, PersistentData, PhonemeContent, PistaEcoItem, PistaProgress } from './types';
 import { PHONEME_DATA } from './phonemes';
 import { STORAGE_KEY, worlds, minigames, worldRules, resources } from './constants';
 
@@ -48,6 +48,8 @@ interface AppState extends GameState {
   currentPlayer: number;
   playerPositions: number[];
   playerScores: number[];
+  semaforoPairStep: number;
+  semaforoRadarStep: number;
 }
 
 const DEFAULT_PERSISTENT_DATA: PersistentData = {
@@ -70,12 +72,16 @@ export default function App() {
     playerCount: 1,
     currentPlayer: 0,
     playerPositions: [0, 0, 0, 0],
-    playerScores: [0, 0, 0, 0]
+    playerScores: [0, 0, 0, 0],
+    semaforoPairStep: 0,
+    semaforoRadarStep: 0
   });
 
   const [persistentData, setPersistentData] = useState<PersistentData>(DEFAULT_PERSISTENT_DATA);
   const [isLoaded, setIsLoaded] = useState(false);
   const [editingPhoneme, setEditingPhoneme] = useState<Phoneme | null>(null);
+  const [pistaProgress, setPistaProgress] = useState<Partial<Record<Phoneme, PistaProgress>>>({});
+  const [pistaResetKey, setPistaResetKey] = useState(0);
 
   // Load data on mount
   useEffect(() => {
@@ -86,7 +92,8 @@ export default function App() {
         setPersistentData({
           ...DEFAULT_PERSISTENT_DATA,
           ...parsed,
-          completedPhonemes: parsed.completedPhonemes || [],
+          trophiesCount: 0,
+          completedPhonemes: [],
           userResources: parsed.userResources || []
         });
         setState(prev => ({ ...prev, phoneme: parsed.lastPhoneme || 'R' }));
@@ -119,6 +126,59 @@ export default function App() {
     pistaCompletar: []
   } as PhonemeContent;
 
+  const normalizeWord = (word: string) =>
+    word
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase();
+
+  const shuffleArray = <T,>(items: T[]) =>
+    [...items].sort(() => Math.random() - 0.5);
+
+  const getPhonemeTargetPatterns = (phoneme: Phoneme) => {
+    switch (phoneme) {
+      case 'Z':
+        return ['z', 'ce', 'ci'];
+      case 'RR':
+        return ['rr'];
+      default:
+        return [phoneme.toLowerCase()];
+    }
+  };
+
+  const getBalancedRandomPistaEco = (items: PistaEcoItem[], phoneme: Phoneme, groupSize = 5) => {
+    const patterns = getPhonemeTargetPatterns(phoneme);
+
+    const startsWithTarget = items.filter((item) => {
+      const word = normalizeWord(item.word || '');
+      return patterns.some((pattern) => word.startsWith(pattern));
+    });
+
+    const containsTarget = items.filter((item) => {
+      const word = normalizeWord(item.word || '');
+      return !patterns.some((pattern) => word.startsWith(pattern))
+        && patterns.some((pattern) => word.includes(pattern));
+    });
+
+    const noTarget = items.filter((item) => {
+      const word = normalizeWord(item.word || '');
+      return !patterns.some((pattern) => word.includes(pattern));
+    });
+
+    const selected = [
+      ...shuffleArray(startsWithTarget).slice(0, groupSize),
+      ...shuffleArray(containsTarget).slice(0, groupSize),
+      ...shuffleArray(noTarget).slice(0, groupSize)
+    ];
+
+    const remaining = shuffleArray(items.filter((item) => !selected.includes(item)));
+    while (selected.length < Math.min(items.length, groupSize * 3) && remaining.length > 0) {
+      selected.push(remaining.shift()!);
+    }
+
+    return shuffleArray(selected);
+  };
+
   useEffect(() => {
     if (feedback) {
       const timer = setTimeout(() => setFeedback(null), 4000);
@@ -127,8 +187,15 @@ export default function App() {
   }, [feedback]);
 
   const selectPhoneme = (phoneme: Phoneme) => {
-    setState({ ...state, phoneme, world: 'PLAYER_COUNT', step: 0, subStep: 0 });
+    setState({ ...state, phoneme, world: 'PLAYER_COUNT', step: 0, subStep: 0, semaforoPairStep: 0, semaforoRadarStep: 0 });
     setPersistentData(prev => ({ ...prev, lastPhoneme: phoneme }));
+    setPistaProgress((prev) => ({
+      ...prev,
+      [phoneme]: {
+        currentPhraseIndex: 0,
+        currentPhraseAnswer: ''
+      }
+    }));
     setFeedback(null);
   };
 
@@ -149,6 +216,18 @@ export default function App() {
       setState({ ...state, world: 'PLAYER_COUNT' });
       return;
     }
+
+    if (world === 'PISTA') {
+      setPistaProgress((prev) => ({
+        ...prev,
+        [state.phoneme]: {
+          currentPhraseIndex: 0,
+          currentPhraseAnswer: ''
+        }
+      }));
+      setPistaResetKey((prev) => prev + 1);
+    }
+
     setState({ ...state, world, step: 0, subStep: 0 });
     setFeedback(null);
   };
@@ -170,13 +249,21 @@ export default function App() {
   // --- MUNDO 2: SEMAFORO ---
   const semaforoPares = currentData.semaforoPares || [];
 
-  const semaforoRadar = (currentData.semaforoRadar && currentData.semaforoRadar.length > 0)
-    ? currentData.semaforoRadar
-    : (currentData.pistaEco || []).map(p => ({ word: p.word?.toUpperCase() || '', hasTarget: true, img: p.img }));
+  const semaforoRadar = React.useMemo(() => {
+    if (currentData.semaforoRadar && currentData.semaforoRadar.length > 0) {
+      return currentData.semaforoRadar;
+    }
+
+    return shuffleArray((currentData.pistaEco || []).map(p => ({ word: p.word || '', hasTarget: p.hasTarget ?? true, img: p.img })));
+  }, [currentData.semaforoRadar, currentData.pistaEco]);
+
+  const semaforoStep = state.subStep === 0 ? state.semaforoPairStep : state.semaforoRadarStep;
 
   // --- MUNDO 3: PISTA ---
-  const pistaEcoTitle = currentData.pistaEcoTitle;
-  const pistaEco = currentData.pistaEco || [];
+  const pistaEco = React.useMemo(
+    () => getBalancedRandomPistaEco(currentData.pistaEco || [], state.phoneme),
+    [currentData.pistaEco, state.world, state.phoneme]
+  );
   const pistaDecir = currentData.pistaDecir || [];
   const pistaFrases = currentData.pistaFrases || [];
   const pistaTrabalenguas = currentData.pistaTrabalenguas || [];
@@ -554,6 +641,12 @@ export default function App() {
     setFeedback(null);
     setIsWinner(false);
     setDiceValue(null);
+    setPistaProgress({});
+    setPersistentData(prev => ({
+      ...prev,
+      trophiesCount: 0,
+      completedPhonemes: []
+    }));
   };
 
   if (isWinner) {
@@ -751,12 +844,13 @@ export default function App() {
 
               {!state.showTrabadas ? (
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                  {(['R', 'S', 'Z'] as Phoneme[]).map((p) => (
+                  {(['R', 'RR', 'S', 'Z'] as Phoneme[]).map((p) => (
                     <button
                       key={p}
                       onClick={() => selectPhoneme(p)}
                       className={`p-6 rounded-3xl border-4 transition-all hover:scale-105 flex flex-col items-center justify-center relative ${
                         p === 'R' ? 'bg-red-600/10 border-red-600 text-red-500' :
+                        p === 'RR' ? 'bg-rose-600/10 border-rose-600 text-rose-500' :
                         p === 'S' ? 'bg-blue-600/10 border-blue-600 text-blue-500' :
                         'bg-emerald-600/10 border-emerald-600 text-emerald-500'
                       }`}
@@ -905,21 +999,32 @@ export default function App() {
             <Semaforo 
               key="world-semaforo"
               phoneme={state.phoneme}
-              step={state.step}
+              step={semaforoStep}
               subStep={state.subStep}
               semaforoPares={semaforoPares}
               semaforoRadar={semaforoRadar}
-              onSetSubStep={(ss) => setState({ ...state, subStep: ss, step: 0 })}
+              onSetSubStep={(ss) => setState((prev) => ({ ...prev, subStep: ss }))}
               onNextStep={() => {
                 const pLen = (semaforoPares || []).length;
                 const rLen = (semaforoRadar || []).length;
-                const max = state.subStep === 0 ? pLen : rLen;
-                if(state.step < max - 1) {
-                  setState({ ...state, step: state.step + 1 }); 
-                  setFeedback(null);
-                } else {
+
+                setState((prev) => {
+                  if (prev.subStep === 0) {
+                    if (prev.semaforoPairStep < pLen - 1) {
+                      setFeedback(null);
+                      return { ...prev, semaforoPairStep: prev.semaforoPairStep + 1 };
+                    }
+                    goToWorld('MENU');
+                    return prev;
+                  }
+
+                  if (prev.semaforoRadarStep < rLen - 1) {
+                    setFeedback(null);
+                    return { ...prev, semaforoRadarStep: prev.semaforoRadarStep + 1 };
+                  }
                   goToWorld('MENU');
-                }
+                  return prev;
+                });
               }}
               setFeedback={setFeedback}
             />
@@ -927,15 +1032,27 @@ export default function App() {
 
           {state.world === 'PISTA' && (
             <Pista 
-              key="world-pista"
+              key={`world-pista-${pistaResetKey}`}
               phoneme={state.phoneme}
-              pistaEcoTitle={pistaEcoTitle}
               pistaEco={pistaEco}
               pistaDecir={pistaDecir}
               pistaFrases={pistaFrases}
               pistaTrabalenguas={pistaTrabalenguas}
               pistaCompletar={pistaCompletar}
-              onFinish={() => goToWorld('MENU')}
+              pdfUrl={currentData.pdfUrl}
+              pistaProgress={pistaProgress[state.phoneme] || { currentPhraseIndex: 0, currentPhraseAnswer: '' }}
+              onPistaProgressChange={(progress) => setPistaProgress(prev => ({ ...prev, [state.phoneme]: progress }))}
+              onFinish={() => {
+                setPersistentData(prev => {
+                  const alreadyCompleted = (prev.completedPhonemes || []).includes(state.phoneme);
+                  return {
+                    ...prev,
+                    trophiesCount: alreadyCompleted ? prev.trophiesCount : prev.trophiesCount + 1,
+                    completedPhonemes: alreadyCompleted ? (prev.completedPhonemes || []) : [...(prev.completedPhonemes || []), state.phoneme]
+                  };
+                });
+                goToWorld('MENU');
+              }}
               setFeedback={setFeedback}
             />
           )}

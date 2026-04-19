@@ -144,19 +144,36 @@ export const Library: React.FC<LibraryProps> = ({ resources, userResources, onUp
                 </div>
                 <div className="flex gap-2">
                   {res.data && (
-                    <button 
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        const win = window.open();
-                        if (win) {
-                          win.document.write(`<iframe src="${res.data}" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>`);
-                        }
-                      }}
-                      className="p-3 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl transition-all"
-                      title="Ver"
-                    >
-                      <Eye className="w-5 h-5" />
-                    </button>
+                    <>
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const win = window.open();
+                          if (win) {
+                            win.document.write(`<iframe src="${res.data}" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>`);
+                          }
+                        }}
+                        className="p-3 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl transition-all"
+                        title="Ver"
+                      >
+                        <Eye className="w-5 h-5" />
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const link = document.createElement('a');
+                          link.href = res.data;
+                          link.download = res.title;
+                          document.body.appendChild(link);
+                          link.click();
+                          document.body.removeChild(link);
+                        }}
+                        className="p-3 bg-zinc-800 hover:bg-indigo-600 text-white rounded-xl transition-all"
+                        title="Descargar"
+                      >
+                        <ExternalLink className="w-5 h-5" />
+                      </button>
+                    </>
                   )}
                   <button 
                     onClick={(e) => {
@@ -174,38 +191,6 @@ export const Library: React.FC<LibraryProps> = ({ resources, userResources, onUp
           </div>
         </div>
       )}
-
-      {/* Default Resources */}
-      <div className="space-y-4">
-        <h4 className="text-sm font-black text-zinc-500 uppercase tracking-[0.2em] italic">Recursos Recomendados</h4>
-        <div className="grid grid-cols-1 gap-4">
-          {(resources || []).map((res, idx) => (
-            <div 
-              key={idx}
-              className="p-6 bg-zinc-900 border border-zinc-800 rounded-2xl flex items-center justify-between group hover:border-indigo-500/30 transition-all"
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-zinc-800 rounded-xl flex items-center justify-center text-indigo-500 group-hover:scale-110 transition-transform">
-                  {res.icon}
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">{res.type}</span>
-                    <h4 className="text-lg font-bold text-white uppercase italic tracking-tight">{res.title}</h4>
-                  </div>
-                  <p className="text-zinc-500 text-sm">{res.desc}</p>
-                </div>
-              </div>
-              <button 
-                onClick={() => alert('Aquí se abriría el enlace al recurso: ' + res.title)}
-                className="p-3 bg-zinc-800 hover:bg-indigo-600 text-white rounded-xl transition-all"
-              >
-                <ExternalLink className="w-5 h-5" />
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
 
       <div className="p-8 bg-zinc-900 border border-zinc-800 rounded-3xl space-y-4 relative overflow-hidden">
         <div className="absolute top-0 right-0 p-8 opacity-5">
