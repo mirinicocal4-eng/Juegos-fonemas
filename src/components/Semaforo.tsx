@@ -100,15 +100,18 @@ export const Semaforo: React.FC<SemaforoProps> = ({
           <div className="text-center space-y-4">
             <p className="text-zinc-400 uppercase tracking-widest text-xs font-bold">Radar de Sonidos</p>
             <p className="text-lg text-white italic">¿Contiene el sonido {phoneme === 'R' ? 'fuerte' : phoneme}?</p>
+            <p className="text-xs text-zinc-500 font-bold uppercase tracking-widest">
+              {step + 1} / {(semaforoRadar || []).length}
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 gap-4">
-            {(semaforoRadar || []).map((item, i) => (
+          {(semaforoRadar || []).length > 0 && (() => {
+            const item = semaforoRadar[step] || semaforoRadar[0];
+            return (
               <motion.button
-                key={i}
+                key={step}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
                 onClick={() => {
                   if (item.hasTarget) {
                     setFeedback({ type: 'success', message: `¡Sonido detectado! ${item.word} tiene el sonido ✅` });
@@ -116,16 +119,23 @@ export const Semaforo: React.FC<SemaforoProps> = ({
                     setFeedback({ type: 'error', message: `¡Sonido no encontrado! ${item.word} no tiene el sonido ❌` });
                   }
                 }}
-                className="bg-zinc-800 border border-zinc-700 p-4 rounded-xl flex items-center justify-between hover:bg-zinc-700 transition-all group"
+                className="w-full bg-zinc-800 border border-zinc-700 p-8 rounded-xl flex items-center justify-between hover:bg-zinc-700 transition-all group"
               >
                 <div className="flex items-center gap-4">
-                  <VisualContent content={item.img} alt={item.word} className="text-3xl group-hover:scale-110 transition-transform w-10 h-10" />
-                  <span className="text-xl font-black text-white italic">{item.word}</span>
+                  <VisualContent content={item.img} alt={item.word} className="text-5xl group-hover:scale-110 transition-transform w-16 h-16" />
+                  <span className="text-3xl font-black text-white italic">{item.word}</span>
                 </div>
-                <Volume2 className="w-5 h-5 text-zinc-600 group-hover:text-indigo-500" />
+                <Volume2 className="w-6 h-6 text-zinc-600 group-hover:text-indigo-500" />
               </motion.button>
-            ))}
-          </div>
+            );
+          })()}
+
+          <button
+            onClick={onNextStep}
+            className="w-full py-4 bg-zinc-800 hover:bg-zinc-700 text-white font-bold rounded-xl transition-all flex items-center justify-center gap-2 uppercase text-xs tracking-widest"
+          >
+            Siguiente Palabra <ChevronRight className="w-4 h-4" />
+          </button>
         </div>
       )}
     </motion.div>
