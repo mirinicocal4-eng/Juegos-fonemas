@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Mic, Sparkles } from 'lucide-react';
+import { Mic, Sparkles, ChevronRight } from 'lucide-react';
 import { PistaEcoItem } from '../types';
 import { VisualContent } from './VisualContent';
 
@@ -22,11 +22,19 @@ export const Pista: React.FC<PistaProps> = ({
   setFeedback
 }) => {
   const [completedIndices, setCompletedIndices] = React.useState<number[]>([]);
+  const [completarIndex, setCompletarIndex] = React.useState(0);
 
   const toggleComplete = (index: number, word: string) => {
     if (!completedIndices.includes(index)) {
       setCompletedIndices([...completedIndices, index]);
       setFeedback({ type: 'success', message: `¡Muy bien! La palabra es ${word.toUpperCase()} ✨` });
+    }
+  };
+
+  const goNextCompletar = () => {
+    if (completarIndex < (pistaCompletar || []).length - 1) {
+      setCompletarIndex(completarIndex + 1);
+      setFeedback(null);
     }
   };
 
@@ -59,17 +67,24 @@ export const Pista: React.FC<PistaProps> = ({
 
         {/* Completar Frases Section */}
         <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 space-y-4">
-          <div className="flex items-center gap-2 text-yellow-500 font-bold uppercase tracking-widest text-xs">
-            <Mic className="w-4 h-4" /> Desafío de Completar Frases
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-yellow-500 font-bold uppercase tracking-widest text-xs">
+              <Mic className="w-4 h-4" /> Desafío de Completar Frases
+            </div>
+            <span className="text-xs text-zinc-500 font-bold uppercase tracking-widest">
+              {completarIndex + 1} / {(pistaCompletar || []).length}
+            </span>
           </div>
-          <div className="space-y-4">
-            {(pistaCompletar || []).map((item, i) => (
-              <div key={i} className="p-4 bg-zinc-800 rounded-xl border-l-4 border-yellow-500 space-y-3">
+          {(pistaCompletar || []).length > 0 && (() => {
+            const item = pistaCompletar[completarIndex];
+            const i = completarIndex;
+            return (
+              <div className="p-4 bg-zinc-800 rounded-xl border-l-4 border-yellow-500 space-y-3">
                 <p className="text-lg text-zinc-300 font-medium">
                   "{item.phrase} <span className="text-yellow-500 font-black tracking-widest">{completedIndices.includes(i) ? item.word.toUpperCase() : '_______'}</span>"
                 </p>
                 {!completedIndices.includes(i) && (
-                  <button 
+                  <button
                     onClick={() => toggleComplete(i, item.word)}
                     className="px-4 py-2 bg-yellow-600 hover:bg-yellow-500 text-black font-black rounded-lg text-xs uppercase italic transition-colors"
                   >
@@ -77,8 +92,16 @@ export const Pista: React.FC<PistaProps> = ({
                   </button>
                 )}
               </div>
-            ))}
-          </div>
+            );
+          })()}
+          {completarIndex < (pistaCompletar || []).length - 1 && (
+            <button
+              onClick={goNextCompletar}
+              className="w-full py-3 bg-zinc-800 hover:bg-zinc-700 text-white font-bold rounded-xl transition-all flex items-center justify-center gap-2 uppercase text-xs tracking-widest"
+            >
+              Siguiente Frase <ChevronRight className="w-4 h-4" />
+            </button>
+          )}
         </div>
 
         {/* Frases Section */}
