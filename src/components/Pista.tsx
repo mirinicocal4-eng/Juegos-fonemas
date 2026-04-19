@@ -11,13 +11,7 @@ interface PistaProps {
   pistaDecir: PistaDecirItem[];
   pistaFrases: string[];
   pistaTrabalenguas: string[];
-  pistaCompletar: { phrase: string; word: string }[];
   pdfUrl?: string;
-  pistaProgress?: {
-    currentPhraseIndex: number;
-    currentPhraseAnswer: string;
-  };
-  onPistaProgressChange?: (progress: { currentPhraseIndex: number; currentPhraseAnswer: string }) => void;
   onFinish: () => void;
   setFeedback: (fb: { type: 'success' | 'error' | 'info', message: string } | null) => void;
 }
@@ -28,21 +22,10 @@ export const Pista: React.FC<PistaProps> = ({
   pistaDecir,
   pistaFrases,
   pistaTrabalenguas,
-  pistaCompletar,
   pdfUrl,
-  pistaProgress,
-  onPistaProgressChange,
   onFinish,
   setFeedback
 }: PistaProps) => {
-  const [currentPhraseIndex, setCurrentPhraseIndex] = React.useState<number>(pistaProgress?.currentPhraseIndex ?? 0);
-  const [currentPhraseAnswer, setCurrentPhraseAnswer] = React.useState<string>(pistaProgress?.currentPhraseAnswer ?? '');
-  const [attemptCount, setAttemptCount] = React.useState<number>(0);
-  const [showSolution, setShowSolution] = React.useState<boolean>(false);
-  const [activePistaSection, setActivePistaSection] = React.useState<'MAIN' | 'COMPLETAR'>('MAIN');
-  const inputRef = React.useRef<HTMLInputElement | null>(null);
-  const scrollPositionRef = React.useRef<number | null>(null);
-  const shouldRestoreScrollRef = React.useRef<boolean>(false);
   const [voices, setVoices] = React.useState<SpeechSynthesisVoice[]>([]);
   const [showOptionalPhrases, setShowOptionalPhrases] = React.useState(false);
 
@@ -51,23 +34,6 @@ export const Pista: React.FC<PistaProps> = ({
     return cleanup;
   }, []);
 
-  React.useLayoutEffect(() => {
-    if (shouldRestoreScrollRef.current && scrollPositionRef.current !== null && activePistaSection === 'COMPLETAR') {
-      window.scrollTo({ top: scrollPositionRef.current, behavior: 'auto' });
-      shouldRestoreScrollRef.current = false;
-      scrollPositionRef.current = null;
-    }
-  }, [currentPhraseIndex, activePistaSection]);
-
-  React.useEffect(() => {
-    setCurrentPhraseIndex(pistaProgress?.currentPhraseIndex ?? 0);
-    setCurrentPhraseAnswer(pistaProgress?.currentPhraseAnswer ?? '');
-    setAttemptCount(0);
-    setShowSolution(false);
-    setActivePistaSection('MAIN');
-  }, [phoneme]);
-
-
   const normalizeText = (text: string) =>
     text
       .normalize('NFD')
@@ -75,141 +41,8 @@ export const Pista: React.FC<PistaProps> = ({
       .trim()
       .toUpperCase();
 
-  const handlePhraseChange = (value: string) => {
-    if (showSolution) return;
-    setCurrentPhraseAnswer(value);
-  };
-
-  const advanceToNextPhrase = (showNextMessage: boolean = false) => {
-    const nextIndex = Math.min(currentPhraseIndex + 1, pistaCompletar.length);
-    setCurrentPhraseIndex(nextIndex);
-    setCurrentPhraseAnswer('');
-    setAttemptCount(0);
-    setShowSolution(false);
-    onPistaProgressChange?.({ currentPhraseIndex: nextIndex, currentPhraseAnswer: '' });
-    if (showNextMessage && nextIndex < pistaCompletar.length) {
-      setFeedback({ type: 'info', message: 'Siguiente frase lista para completar.' });
-    }
-  };
-
-  const handlePhraseSubmit = () => {
-    if (activePistaSection === 'COMPLETAR') {
-      scrollPositionRef.current = window.scrollY;
-      shouldRestoreScrollRef.current = true;
-    }
-
-    if (showSolution) {
-      advanceToNextPhrase();
-      return;
-    }
-
-    const expected = pistaCompletar[currentPhraseIndex]?.word || '';
-    const answer = currentPhraseAnswer || '';
-
-    if (!answer.trim()) {
-      setFeedback({ type: 'info', message: 'Escribe la palabra antes de comprobar.' });
-      return;
-    }
-
-    if (normalizeText(answer) === normalizeText(expected)) {
-      setFeedback({ type: 'success', message: `¡Correcto! La palabra es ${expected.toUpperCase()} ✨` });
-      advanceToNextPhrase(false);
-    } else {
-      const nextAttempt = attemptCount + 1;
-      setAttemptCount(nextAttempt);
-      if (nextAttempt >= 2) {
-        setShowSolution(true);
-        setCurrentPhraseAnswer(expected);
-        onPistaProgressChange?.({ currentPhraseIndex, currentPhraseAnswer: expected });
-        setFeedback({ type: 'info', message: `Solución: ${expected.toUpperCase()}` });
-      } else {
-        setFeedback({ type: 'error', message: 'Casi, intenta escribirla de nuevo.' });
-      }
-    }
-  };
-
-  const handleResetPractice = () => {
-    setCurrentPhraseIndex(0);
-    setCurrentPhraseAnswer('');
-    setAttemptCount(0);
-    setShowSolution(false);
-    onPistaProgressChange?.({ currentPhraseIndex: 0, currentPhraseAnswer: '' });
-    setFeedback({ type: 'info', message: 'Práctica reiniciada.' });
-  };
-
   const speakWord = (word: string) => {
     speakText(word, voices, () => setFeedback({ type: 'error', message: 'Este navegador no soporta voz sintética.' }));
-  };
-
-  const renderCompletionActivity = () => {
-    const item = pistaCompletar[currentPhraseIndex];
-
-    return (
-      <div className="space-y-6">
-        <button
-          type="button"
-          onClick={() => setActivePistaSection('MAIN')}
-          className="px-4 py-3 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs uppercase tracking-[0.25em] font-bold rounded-full"
-        >
-          Volver a actividades
-        </button>
-
-        <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 space-y-4">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-            <div className="flex items-center gap-2 text-yellow-500 font-bold uppercase tracking-widest text-xs">
-              <Mic className="w-4 h-4" /> Desafío de Completar Frases
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-[11px] uppercase tracking-[0.3em] text-zinc-500">
-                {pistaCompletar.length > 0 ? `Frase ${Math.min(currentPhraseIndex + 1, pistaCompletar.length)}/${pistaCompletar.length}` : 'Sin frases'}
-              </span>
-              <button
-                type="button"
-                onClick={handleResetPractice}
-                className="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-[10px] uppercase tracking-[0.25em] font-bold rounded-full"
-              >
-                Reiniciar práctica
-              </button>
-            </div>
-          </div>
-          <div className="space-y-4">
-            {pistaCompletar.length === 0 ? (
-              <div className="rounded-2xl p-4 bg-zinc-950 border border-zinc-800 text-zinc-400 text-sm text-center">
-                No hay frases para completar en este fonema.
-              </div>
-            ) : currentPhraseIndex >= pistaCompletar.length ? (
-              <div className="rounded-2xl p-6 bg-emerald-950 border border-emerald-700 text-emerald-200 text-center">
-                <p className="font-bold text-lg">¡Has completado todas las frases!</p>
-                <p className="text-sm text-zinc-300">Avanza al siguiente reto cuando estés listo.</p>
-              </div>
-            ) : (
-              <div className="p-4 bg-zinc-800 rounded-xl border-l-4 border-yellow-500 space-y-3">
-                <p className="text-lg text-zinc-300 font-medium">
-                  "{item.phrase} <span className="text-yellow-500 font-black tracking-widest">{'_______'}</span>"
-                </p>
-                <div className="space-y-3">
-                  <input
-                    ref={inputRef}
-                    value={currentPhraseAnswer}
-                    onChange={(e) => handlePhraseChange(e.target.value)}
-                    placeholder="Escribe aquí"
-                    disabled={showSolution}
-                    className="w-full rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-3 text-sm text-white outline-none focus:border-yellow-500 disabled:cursor-not-allowed disabled:opacity-60"
-                  />
-                  <button
-                    type="button"
-                    onClick={handlePhraseSubmit}
-                    className="w-full px-4 py-3 bg-yellow-600 hover:bg-yellow-500 text-black font-black rounded-lg text-xs uppercase italic transition-colors"
-                  >
-                    {showSolution ? 'Siguiente frase' : 'Comprobar'}
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    );
   };
 
   const groupedDecir = pistaDecir.reduce<Record<string, PistaDecirItem[]>>((acc, item) => {
@@ -248,8 +81,9 @@ export const Pista: React.FC<PistaProps> = ({
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       className="space-y-8"
+      style={{ overflowAnchor: 'none' }}
     >
-      <div className="grid grid-cols-1 gap-8">
+      <div style={{ overflowAnchor: 'none' }} className="grid grid-cols-1 gap-8">
         {pdfUrl && (
           <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 space-y-4">
             <div className="flex items-center justify-between gap-4">
@@ -276,9 +110,7 @@ export const Pista: React.FC<PistaProps> = ({
           </div>
         )}
 
-        {activePistaSection === 'MAIN' ? (
-          <>
-            {/* Articulación: Decir Palabras */}
+        {/* Articulación: Decir Palabras */}
             <div className="bg-indigo-950 border border-indigo-900 rounded-3xl p-6 space-y-4">
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-2 text-amber-400 font-bold uppercase tracking-widest text-xs">
@@ -404,23 +236,6 @@ export const Pista: React.FC<PistaProps> = ({
             ))}
           </div>
         </div>
-
-        <div className="grid grid-cols-1 gap-4">
-          <button
-            type="button"
-            onClick={() => setActivePistaSection('COMPLETAR')}
-            className="group relative overflow-hidden rounded-3xl border border-yellow-500 bg-zinc-900 p-6 text-left transition hover:border-yellow-400 hover:bg-zinc-800"
-          >
-            <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 to-transparent opacity-0 transition group-hover:opacity-100" />
-            <div className="relative z-10 space-y-3">
-              <div className="text-yellow-400 uppercase tracking-[0.3em] text-[10px] font-bold">Actividad separada</div>
-              <h3 className="text-2xl font-black text-white">Completar frases</h3>
-              <p className="text-sm text-zinc-400">Abre este desafío en una vista independiente.</p>
-            </div>
-          </button>
-        </div>
-          </>
-        ) : renderCompletionActivity()}
       </div>
       <button 
         type="button"

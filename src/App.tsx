@@ -26,13 +26,14 @@ import {
   Sparkles
 } from 'lucide-react';
 
-import { World, Phoneme, GameState, PersistentData, PhonemeContent, PistaEcoItem, PistaProgress } from './types';
+import { World, Phoneme, GameState, PersistentData, PhonemeContent, PistaEcoItem, PistaProgress, SemaforoRadarItem } from './types';
 import { PHONEME_DATA } from './phonemes';
 import { STORAGE_KEY, worlds, minigames, worldRules, resources } from './constants';
 
 import { Taller } from './components/Taller';
 import { Semaforo } from './components/Semaforo';
 import { Pista } from './components/Pista';
+import { CompletarFrasesWorld } from './components/CompletarFrasesWorld';
 import { GranPremio } from './components/GranPremio';
 import { Library } from './components/Library';
 import { Memory } from './components/Memory';
@@ -179,6 +180,36 @@ export default function App() {
     return shuffleArray(selected);
   };
 
+  const splitSemaforoRadarItems = (items: SemaforoRadarItem[]) => {
+    const shuffled = shuffleArray(items);
+    const positive = shuffled.filter((item) => item.hasTarget);
+    const negative = shuffled.filter((item) => !item.hasTarget);
+    const total = shuffled.length;
+    const mainCount = Math.max(2, Math.floor(total / 2));
+    let mainPositiveCount = Math.min(Math.ceil(mainCount / 2), positive.length);
+    let mainNegativeCount = Math.min(mainCount - mainPositiveCount, negative.length);
+
+    if (mainPositiveCount + mainNegativeCount < mainCount) {
+      const remaining = mainCount - mainPositiveCount - mainNegativeCount;
+      if (positive.length - mainPositiveCount >= remaining) {
+        mainPositiveCount += remaining;
+      } else {
+        mainNegativeCount += remaining;
+      }
+    }
+
+    const mainItems = shuffleArray([
+      ...positive.slice(0, mainPositiveCount),
+      ...negative.slice(0, mainNegativeCount)
+    ]);
+    const optionalItems = shuffled.filter((item) => !mainItems.includes(item));
+
+    return {
+      mainRadarItems: mainItems,
+      optionalRadarItems: optionalItems
+    };
+  };
+
   useEffect(() => {
     if (feedback) {
       const timer = setTimeout(() => setFeedback(null), 4000);
@@ -249,12 +280,12 @@ export default function App() {
   // --- MUNDO 2: SEMAFORO ---
   const semaforoPares = currentData.semaforoPares || [];
 
-  const semaforoRadar = React.useMemo(() => {
-    if (currentData.semaforoRadar && currentData.semaforoRadar.length > 0) {
-      return currentData.semaforoRadar;
-    }
+  const { mainRadarItems: semaforoRadar, optionalRadarItems: optionalSemaforoRadar } = React.useMemo(() => {
+    const allRadarItems = currentData.semaforoRadar && currentData.semaforoRadar.length > 0
+      ? currentData.semaforoRadar
+      : (currentData.pistaEco || []).map(p => ({ word: p.word || '', hasTarget: p.hasTarget ?? true, img: p.img }));
 
-    return shuffleArray((currentData.pistaEco || []).map(p => ({ word: p.word || '', hasTarget: p.hasTarget ?? true, img: p.img })));
+    return splitSemaforoRadarItems(allRadarItems);
   }, [currentData.semaforoRadar, currentData.pistaEco]);
 
   const semaforoStep = state.subStep === 0 ? state.semaforoPairStep : state.semaforoRadarStep;
@@ -1003,6 +1034,7 @@ export default function App() {
               subStep={state.subStep}
               semaforoPares={semaforoPares}
               semaforoRadar={semaforoRadar}
+              optionalSemaforoRadar={optionalSemaforoRadar}
               onSetSubStep={(ss) => setState((prev) => ({ ...prev, subStep: ss }))}
               onNextStep={() => {
                 const pLen = (semaforoPares || []).length;
@@ -1038,10 +1070,7 @@ export default function App() {
               pistaDecir={pistaDecir}
               pistaFrases={pistaFrases}
               pistaTrabalenguas={pistaTrabalenguas}
-              pistaCompletar={pistaCompletar}
               pdfUrl={currentData.pdfUrl}
-              pistaProgress={pistaProgress[state.phoneme] || { currentPhraseIndex: 0, currentPhraseAnswer: '' }}
-              onPistaProgressChange={(progress) => setPistaProgress(prev => ({ ...prev, [state.phoneme]: progress }))}
               onFinish={() => {
                 setPersistentData(prev => {
                   const alreadyCompleted = (prev.completedPhonemes || []).includes(state.phoneme);
@@ -1054,6 +1083,18 @@ export default function App() {
                 goToWorld('MENU');
               }}
               setFeedback={setFeedback}
+            />
+          )}
+
+          {state.world === 'COMPLETAR' && (
+            <CompletarFrasesWorld
+              key={`world-completar-${pistaResetKey}`}
+              phoneme={state.phoneme}
+              pistaCompletar={pistaCompletar}
+              pistaProgress={pistaProgress[state.phoneme] || { currentPhraseIndex: 0, currentPhraseAnswer: '' }}
+              onPistaProgressChange={(progress) => setPistaProgress(prev => ({ ...prev, [state.phoneme]: progress }))}
+              setFeedback={setFeedback}
+              onAdvance={() => goToWorld('GRAN_PREMIO')}
             />
           )}
 
