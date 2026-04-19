@@ -3,16 +3,17 @@ import React from 'react';
 interface VisualContentProps {
   content: string;
   className?: string;
+  alt?: string;
 }
 
-export const VisualContent: React.FC<VisualContentProps> = ({ content, className }) => {
+export const VisualContent: React.FC<VisualContentProps> = ({ content, className, alt = '' }) => {
   const isImage = content.startsWith('http') || content.startsWith('data:image') || content.includes('/');
 
   if (isImage) {
     return (
       <img 
         src={content} 
-        alt="" 
+        alt={alt} 
         className={`${className} object-contain`} 
         referrerPolicy="no-referrer" 
       />

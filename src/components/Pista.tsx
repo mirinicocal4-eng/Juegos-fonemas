@@ -50,7 +50,7 @@ export const Pista: React.FC<PistaProps> = ({
                 onClick={() => setFeedback({ type: 'info', message: `¡Repite conmigo: ${item.word.toUpperCase()}! ✨` })}
                 className="p-4 bg-zinc-800 hover:bg-zinc-700 rounded-xl flex flex-col items-center gap-2 transition-all group"
               >
-                <VisualContent content={item.img} className="text-4xl group-hover:scale-110 transition-transform w-12 h-12" />
+                <VisualContent content={item.img} alt={item.word} className="text-4xl group-hover:scale-110 transition-transform w-12 h-12" />
                 <span className="text-xs font-bold text-white uppercase">{item.word}</span>
               </button>
             ))}

@@ -66,7 +66,7 @@ export const Dobble: React.FC<DobbleProps> = ({
                       transform: `translate(-50%, -50%)`,
                     }}
                   >
-                    <VisualContent content={item.img} className="w-14 h-14" />
+                    <VisualContent content={item.img} alt={item.name} className="w-14 h-14" />
                   </button>
                 );
               })}
