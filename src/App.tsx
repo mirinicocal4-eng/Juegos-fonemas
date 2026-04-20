@@ -316,11 +316,11 @@ export default function App() {
   const [diceValue, setDiceValue] = useState<number | null>(null);
 
   // Memory State
-  const [memoryCards, setMemoryCards] = useState<{ id: number, img: string, flipped: boolean, matched: boolean }[]>([]);
+  const [memoryCards, setMemoryCards] = useState<{ id: number, img: string, name?: string, flipped: boolean, matched: boolean }[]>([]);
   const [flippedIndices, setFlippedIndices] = useState<number[]>([]);
 
   // Bingo State
-  const [bingoBoards, setBingoBoards] = useState<{ img: string, marked: boolean }[][]>([]);
+  const [bingoBoards, setBingoBoards] = useState<{ img: string, name?: string, marked: boolean }[][]>([]);
   const [bingoPlayerCount, setBingoPlayerCount] = useState(2);
   const [bingoCurrent, setBingoCurrent] = useState<{ img: string, name: string } | null>(null);
   const [bingoWinner, setBingoWinner] = useState<number | null>(null);
@@ -332,9 +332,9 @@ export default function App() {
   const [linceScore, setLinceScore] = useState(0);
 
   // Domino State
-  const [dominoChain, setDominoChain] = useState<{ left: string, right: string }[]>([]);
-  const [dominoHands, setDominoHands] = useState<{ left: string, right: string }[][]>([]);
-  const [dominoPool, setDominoPool] = useState<{ left: string, right: string }[]>([]);
+  const [dominoChain, setDominoChain] = useState<{ left: string, right: string, leftName: string, rightName: string }[]>([]);
+  const [dominoHands, setDominoHands] = useState<{ left: string, right: string, leftName: string, rightName: string }[][]>([]);
+  const [dominoPool, setDominoPool] = useState<{ left: string, right: string, leftName: string, rightName: string }[]>([]);
 
   // Dobble State
   const [dobbleCards, setDobbleCards] = useState<{ img: string, name: string }[][]>([]);
@@ -386,7 +386,7 @@ export default function App() {
   const initMemory = () => {
     const cards = [...gameImages.slice(0, 8), ...gameImages.slice(0, 8)]
       .sort(() => Math.random() - 0.5)
-      .map((item, index) => ({ id: index, img: item.img, flipped: false, matched: false }));
+      .map((item, index) => ({ id: index, img: item.img, name: item.name, flipped: false, matched: false }));
     setMemoryCards(cards);
     setFlippedIndices([]);
   };
@@ -396,7 +396,7 @@ export default function App() {
       [...gameImages]
         .sort(() => Math.random() - 0.5)
         .slice(0, 9)
-        .map(item => ({ img: item.img, marked: false }))
+        .map(item => ({ img: item.img, name: item.name, marked: false }))
     );
     setBingoBoards(newBoards);
     setBingoPlayerCount(playerCount);
@@ -420,12 +420,17 @@ export default function App() {
 
   const initDomino = () => {
     if (gameImages.length < 2) return;
-    const selectedImages = [...gameImages].sort(() => Math.random() - 0.5).slice(0, 7).map(img => img.img);
-    const allTiles: { left: string, right: string }[] = [];
+    const selectedImages = [...gameImages].sort(() => Math.random() - 0.5).slice(0, 7);
+    const allTiles: { left: string, right: string, leftName: string, rightName: string }[] = [];
     
     for (let i = 0; i < selectedImages.length; i++) {
       for (let j = i; j < selectedImages.length; j++) {
-        allTiles.push({ left: selectedImages[i], right: selectedImages[j] });
+        allTiles.push({
+          left: selectedImages[i].img,
+          leftName: selectedImages[i].name,
+          right: selectedImages[j].img,
+          rightName: selectedImages[j].name,
+        });
       }
     }
     
@@ -596,7 +601,7 @@ export default function App() {
     }
   };
 
-  const handleDominoClick = (piece: { left: string, right: string }, index: number) => {
+  const handleDominoClick = (piece: { left: string, right: string, leftName: string, rightName: string }, index: number) => {
     if (!dominoChain || dominoChain.length === 0) return;
     const lastPiece = dominoChain[dominoChain.length - 1];
     
@@ -608,7 +613,12 @@ export default function App() {
       canPlay = true;
     } else if (piece.right === lastPiece.right) {
       canPlay = true;
-      playedPiece = { left: piece.right, right: piece.left };
+      playedPiece = {
+        left: piece.right,
+        right: piece.left,
+        leftName: piece.rightName,
+        rightName: piece.leftName,
+      };
     }
 
     if (canPlay) {

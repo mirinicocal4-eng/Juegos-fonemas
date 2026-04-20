@@ -66,7 +66,7 @@ export const Bingo: React.FC<BingoProps> = ({
                   animate={{ scale: 1, rotate: 0 }}
                   key={currentBall.img}
                 >
-                  <VisualContent content={currentBall.img} className="w-20 h-20" />
+                  <VisualContent content={currentBall.img} alt={currentBall.name} className="w-20 h-20" />
                 </motion.div>
               ) : (
                 <div className="text-zinc-700">
@@ -106,7 +106,7 @@ export const Bingo: React.FC<BingoProps> = ({
                           : 'bg-zinc-900 border-zinc-800 hover:border-zinc-600'
                       }`}
                     >
-                      <VisualContent content={item.img} className="w-10 h-10" />
+                      <VisualContent content={item.img} alt={item.name} className="w-10 h-10" />
                     </button>
                   ))}
                 </div>

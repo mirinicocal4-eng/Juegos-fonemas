@@ -25,21 +25,11 @@ export const CompletarFrasesWorld: React.FC<CompletarFrasesWorldProps> = ({
   const [attemptCount, setAttemptCount] = React.useState<number>(0);
   const [showSolution, setShowSolution] = React.useState<boolean>(false);
   const [voices, setVoices] = React.useState<SpeechSynthesisVoice[]>([]);
-  const scrollRestoreRef = React.useRef<number | null>(null);
-  const shouldRestoreScrollRef = React.useRef<boolean>(false);
 
   React.useEffect(() => {
     const cleanup = setupSpeechVoices(setVoices);
     return cleanup;
   }, []);
-
-  React.useLayoutEffect(() => {
-    if (shouldRestoreScrollRef.current && scrollRestoreRef.current !== null) {
-      window.scrollTo({ top: scrollRestoreRef.current, behavior: 'auto' });
-      shouldRestoreScrollRef.current = false;
-      scrollRestoreRef.current = null;
-    }
-  }, [currentPhraseIndex, showSolution]);
 
   React.useEffect(() => {
     setCurrentPhraseIndex(pistaProgress?.currentPhraseIndex ?? 0);
@@ -61,8 +51,6 @@ export const CompletarFrasesWorld: React.FC<CompletarFrasesWorldProps> = ({
   };
 
   const advanceToNextPhrase = (showNextMessage: boolean = false) => {
-    scrollRestoreRef.current = window.scrollY;
-    shouldRestoreScrollRef.current = true;
     const nextIndex = Math.min(currentPhraseIndex + 1, pistaCompletar.length);
     setCurrentPhraseIndex(nextIndex);
     setCurrentPhraseAnswer('');
@@ -106,8 +94,6 @@ export const CompletarFrasesWorld: React.FC<CompletarFrasesWorldProps> = ({
   };
 
   const resetPractice = () => {
-    scrollRestoreRef.current = window.scrollY;
-    shouldRestoreScrollRef.current = true;
     setCurrentPhraseIndex(0);
     setCurrentPhraseAnswer('');
     setAttemptCount(0);

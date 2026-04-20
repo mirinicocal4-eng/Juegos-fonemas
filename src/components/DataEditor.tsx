@@ -189,7 +189,7 @@ export const DataEditor: React.FC<DataEditorProps> = ({ data, onSave, onClose })
                 {editedData.gameImages.map((item, i) => (
                   <div key={i} className="p-4 bg-zinc-800/50 border border-zinc-700/50 rounded-2xl flex items-center gap-4 group">
                     <div className="w-16 h-16 bg-zinc-900 rounded-xl flex items-center justify-center relative overflow-hidden border border-zinc-700">
-                      <VisualContent content={item.img} className="w-10 h-10" />
+                      <VisualContent content={item.img} alt={item.name} className="w-10 h-10" />
                     </div>
                     <div className="flex-1 space-y-2">
                       <div className="flex items-center gap-2 bg-zinc-900 p-2 rounded-lg border border-zinc-700">

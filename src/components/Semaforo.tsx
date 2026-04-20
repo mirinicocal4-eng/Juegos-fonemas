@@ -35,10 +35,31 @@ export const Semaforo: React.FC<SemaforoProps> = ({
   const [showOptionalRadar, setShowOptionalRadar] = React.useState(false);
   const [optionalRadarStep, setOptionalRadarStep] = React.useState(0);
 
+  const safeOptionalRadarStep = optionalSemaforoRadar.length > 0 ? optionalRadarStep % optionalSemaforoRadar.length : 0;
+  const optionalItem = optionalSemaforoRadar[safeOptionalRadarStep];
+  const optionalResult = optionalRadarResults[safeOptionalRadarStep];
+  const optionalIsCorrect = optionalResult?.correct;
+  const optionalShowCorrect = optionalResult?.showCorrect ?? false;
+  const optionalRevealed = optionalIsCorrect || optionalShowCorrect;
+  const optionalShowButtons = !optionalResult || (!optionalIsCorrect && optionalResult?.attempts < 2 && !optionalShowCorrect);
+
   React.useEffect(() => {
     const cleanup = setupSpeechVoices(setVoices);
     return cleanup;
   }, []);
+
+  React.useEffect(() => {
+    setOptionalRadarStep(0);
+    if (optionalSemaforoRadar.length === 0) {
+      setShowOptionalRadar(false);
+    }
+  }, [optionalSemaforoRadar]);
+
+  React.useEffect(() => {
+    if (subStep === 1 && optionalSemaforoRadar.length > 0) {
+      setShowOptionalRadar(true);
+    }
+  }, [subStep, optionalSemaforoRadar.length]);
 
   const speakWord = (word: string) => {
     speakText(word, voices, () => setFeedback({ type: 'error', message: 'Este navegador no soporta voz sintética.' }));
@@ -203,7 +224,7 @@ export const Semaforo: React.FC<SemaforoProps> = ({
             <p className="text-lg text-white italic">¿Contiene el sonido {phoneme === 'RR' ? 'fuerte' : phoneme}?</p>
           </div>
 
-          <div className="grid grid-cols-1 gap-4">
+          <div className="grid grid-cols-1 gap-4" style={{ overflowAnchor: 'none' }}>
             {semaforoRadar && semaforoRadar.length > 0 ? (
               (() => {
                 const item = semaforoRadar[step];
@@ -219,12 +240,12 @@ export const Semaforo: React.FC<SemaforoProps> = ({
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0 }}
-                    className={`bg-zinc-800 border rounded-xl p-4 transition-all ${isCorrect ? 'border-emerald-500 bg-emerald-950' : showCorrect ? 'border-red-500 bg-red-950' : 'border-zinc-700 hover:bg-zinc-700'}`}
+                    className={`bg-zinc-800 border rounded-xl p-4 transition-all min-h-[340px] ${isCorrect ? 'border-emerald-500 bg-emerald-950' : showCorrect ? 'border-red-500 bg-red-950' : 'border-zinc-700 hover:bg-zinc-700'}`}
                   >
                     <div className="flex items-center gap-4">
                       <div className="w-14 h-14 rounded-2xl bg-zinc-950 border border-zinc-800 flex items-center justify-center text-2xl">
                         {revealed ? (
-                          <VisualContent content={item.img || '❓'} className="text-3xl" />
+                          <VisualContent content={item.img || '❓'} alt={item.word} className="text-3xl" />
                         ) : (
                           <span className="text-zinc-500">?</span>
                         )}
@@ -279,7 +300,7 @@ export const Semaforo: React.FC<SemaforoProps> = ({
                     key="radar-empty"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-zinc-800 border border-zinc-700 rounded-xl p-6 text-center"
+                    className="bg-zinc-800 border border-zinc-700 rounded-xl p-6 text-center min-h-[340px]"
                   >
                     <p className="text-zinc-300">No hay sonidos disponibles en radar.</p>
                   </motion.div>
@@ -298,7 +319,7 @@ export const Semaforo: React.FC<SemaforoProps> = ({
           </div>
 
           {optionalSemaforoRadar.length > 0 && (
-            <div className="border-t border-zinc-800 pt-6">
+            <div className="border-t border-zinc-800 pt-6" style={{ overflowAnchor: 'none' }}>
               <div className="flex items-center justify-between gap-4 mb-4">
                 <div>
                   <p className="text-zinc-400 uppercase tracking-widest text-[10px] font-bold">Sonidos opcionales</p>
@@ -313,97 +334,88 @@ export const Semaforo: React.FC<SemaforoProps> = ({
                 </button>
               </div>
 
-              {showOptionalRadar && (
-                <div className="space-y-4">
-                  {(() => {
-                    const item = optionalSemaforoRadar[optionalRadarStep];
-                    const result = optionalRadarResults[optionalRadarStep];
-                    const isCorrect = result?.correct;
-                    const showCorrect = result?.showCorrect ?? false;
-                    const revealed = isCorrect || showCorrect;
-                    const showButtons = !result || (!isCorrect && result?.attempts < 2 && !showCorrect);
-
-                    return item ? (
-                      <motion.div
-                        key={`optional-${optionalRadarStep}`}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0 }}
-                        className={`bg-zinc-800 border rounded-xl p-4 transition-all ${isCorrect ? 'border-emerald-500 bg-emerald-950' : showCorrect ? 'border-red-500 bg-red-950' : 'border-zinc-700 hover:bg-zinc-700'}`}
-                      >
-                        <div className="flex items-center gap-4">
-                          <div className="w-14 h-14 rounded-2xl bg-zinc-950 border border-zinc-800 flex items-center justify-center text-2xl">
-                            {revealed ? (
-                              <VisualContent content={item.img || '❓'} className="text-3xl" />
-                            ) : (
-                              <span className="text-zinc-500">?</span>
-                            )}
-                          </div>
-
-                          <div className="flex-1">
-                            <p className="text-zinc-400 uppercase tracking-widest text-[10px] font-bold">Opcional {optionalRadarStep + 1} / {optionalSemaforoRadar.length}</p>
-                            <p className="text-lg font-black text-white italic">{revealed ? item.word : 'Escucha y decide'}</p>
-                          </div>
-
-                          <button
-                            type="button"
-                            onClick={() => speakWord(item.word)}
-                            className="p-2 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white"
-                          >
-                            <Volume2 className="w-5 h-5" />
-                          </button>
-                        </div>
-
-                        <div className="mt-4 flex flex-col gap-3">
-                          {showButtons ? (
-                            <div className="flex gap-3">
-                              {(['si', 'no'] as const).map((value) => (
-                                <button
-                                  key={value}
-                                  type="button"
-                                  onClick={() => handleOptionalRadarAnswer(optionalRadarStep, value, item)}
-                                  className="flex-1 rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-3 text-sm font-bold uppercase tracking-widest text-white hover:border-indigo-500 hover:bg-zinc-800"
-                                >
-                                  {value === 'si' ? 'Sí' : 'No'}
-                                </button>
-                              ))}
-                            </div>
+              <div className="space-y-4 min-h-[260px]">
+                {showOptionalRadar && (
+                  optionalItem ? (
+                    <motion.div
+                      key={`optional-${optionalRadarStep}`}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0 }}
+                      className={`bg-zinc-800 border rounded-xl p-4 transition-all min-h-[260px] ${optionalIsCorrect ? 'border-emerald-500 bg-emerald-950' : optionalShowCorrect ? 'border-red-500 bg-red-950' : 'border-zinc-700 hover:bg-zinc-700'}`}
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="w-14 h-14 rounded-2xl bg-zinc-950 border border-zinc-800 flex items-center justify-center text-2xl">
+                          {optionalRevealed ? (
+                            <VisualContent content={optionalItem.img || '❓'} alt={optionalItem.word} className="text-3xl" />
                           ) : (
-                            <div className="space-y-3">
-                              <p className={`text-sm font-semibold ${isCorrect ? 'text-emerald-300' : 'text-red-300'}`}>
-                                {isCorrect ? 'Correcto' : 'La respuesta correcta es'} {showCorrect && !isCorrect ? (item.hasTarget ? 'Sí' : 'No') : ''}
-                              </p>
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  if (optionalRadarStep < optionalSemaforoRadar.length - 1) {
-                                    setOptionalRadarStep((prev) => prev + 1);
-                                  } else {
-                                    setOptionalRadarStep(0);
-                                    setShowOptionalRadar(false);
-                                  }
-                                }}
-                                className="w-full rounded-xl bg-indigo-600 px-4 py-3 text-sm font-bold uppercase tracking-widest text-white hover:bg-indigo-500"
-                              >
-                                {optionalRadarStep < optionalSemaforoRadar.length - 1 ? 'Siguiente extra' : 'Terminar opcional'}
-                              </button>
-                            </div>
+                            <span className="text-zinc-500">?</span>
                           )}
                         </div>
-                      </motion.div>
-                    ) : (
-                      <motion.div
-                        key="optional-empty"
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="bg-zinc-800 border border-zinc-700 rounded-xl p-6 text-center"
-                      >
-                        <p className="text-zinc-300">No hay sonidos opcionales disponibles.</p>
-                      </motion.div>
-                    );
-                  })()}
-                </div>
-              )}
+
+                        <div className="flex-1">
+                          <p className="text-zinc-400 uppercase tracking-widest text-[10px] font-bold">Opcional {optionalRadarStep + 1} / {optionalSemaforoRadar.length}</p>
+                          <p className="text-lg font-black text-white italic">{optionalRevealed ? optionalItem.word : 'Escucha y decide'}</p>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => speakWord(optionalItem.word)}
+                          className="p-2 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white"
+                        >
+                          <Volume2 className="w-5 h-5" />
+                        </button>
+                      </div>
+
+                      <div className="mt-4 flex flex-col gap-3">
+                        {optionalShowButtons ? (
+                          <div className="flex gap-3">
+                            {(['si', 'no'] as const).map((value) => (
+                              <button
+                                key={value}
+                                type="button"
+                                onClick={() => handleOptionalRadarAnswer(optionalRadarStep, value, optionalItem)}
+                                className="flex-1 rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-3 text-sm font-bold uppercase tracking-widest text-white hover:border-indigo-500 hover:bg-zinc-800"
+                              >
+                                {value === 'si' ? 'Sí' : 'No'}
+                              </button>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="space-y-3">
+                            <p className={`text-sm font-semibold ${optionalIsCorrect ? 'text-emerald-300' : 'text-red-300'}`}>
+                              {optionalIsCorrect ? 'Correcto' : 'La respuesta correcta es'} {optionalShowCorrect && !optionalIsCorrect ? (optionalItem.hasTarget ? 'Sí' : 'No') : ''}
+                            </p>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (optionalRadarStep < optionalSemaforoRadar.length - 1) {
+                                  setOptionalRadarStep((prev) => prev + 1);
+                                } else {
+                                  setOptionalRadarStep(0);
+                                  setShowOptionalRadar(false);
+                                }
+                              }}
+                              className="w-full rounded-xl bg-indigo-600 px-4 py-3 text-sm font-bold uppercase tracking-widest text-white hover:bg-indigo-500"
+                            >
+                              {optionalRadarStep < optionalSemaforoRadar.length - 1 ? 'Siguiente extra' : 'Terminar opcional'}
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="optional-empty"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="bg-zinc-800 border border-zinc-700 rounded-xl p-6 text-center min-h-[260px]"
+                    >
+                      <p className="text-zinc-300">No hay sonidos opcionales disponibles.</p>
+                    </motion.div>
+                  )
+                )}
+              </div>
             </div>
           )}
         </div>

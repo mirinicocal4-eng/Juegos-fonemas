@@ -146,7 +146,7 @@ export const Pista: React.FC<PistaProps> = ({
                         <div key={index} className="rounded-2xl p-4 bg-zinc-800 border border-zinc-700 space-y-3">
                           <div className="flex items-center gap-3 min-w-0">
                             {item.img ? (
-                              <VisualContent content={item.img} className="w-10 h-10 text-4xl rounded-xl" />
+                              <VisualContent content={item.img} alt={item.word} className="w-10 h-10 text-4xl rounded-xl" />
                             ) : (
                               <div className="w-10 h-10 rounded-xl bg-zinc-800 flex items-center justify-center text-xs text-zinc-500 uppercase">
                                 IMG

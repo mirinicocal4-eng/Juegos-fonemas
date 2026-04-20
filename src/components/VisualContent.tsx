@@ -3,9 +3,10 @@ import React from 'react';
 interface VisualContentProps {
   content?: string;
   className?: string;
+  alt?: string;
 }
 
-export const VisualContent: React.FC<VisualContentProps> = ({ content, className }) => {
+export const VisualContent: React.FC<VisualContentProps> = ({ content, className, alt }) => {
   if (!content) {
     return <span className={className} />;
   }
@@ -16,7 +17,7 @@ export const VisualContent: React.FC<VisualContentProps> = ({ content, className
     return (
       <img 
         src={content} 
-        alt="" 
+        alt={alt ?? ''} 
         className={`${className} object-contain`} 
         referrerPolicy="no-referrer" 
       />
