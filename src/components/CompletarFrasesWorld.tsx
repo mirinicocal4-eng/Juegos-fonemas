@@ -8,6 +8,7 @@ interface CompletarFrasesWorldProps {
   pistaCompletar: { phrase: string; word: string }[];
   pistaProgress?: PistaProgress;
   onPistaProgressChange?: (progress: PistaProgress) => void;
+  feedback: { type: 'success' | 'error' | 'info'; message: string } | null;
   setFeedback: (fb: { type: 'success' | 'error' | 'info'; message: string } | null) => void;
   onAdvance: () => void;
 }
@@ -17,6 +18,7 @@ export const CompletarFrasesWorld: React.FC<CompletarFrasesWorldProps> = ({
   pistaCompletar,
   pistaProgress,
   onPistaProgressChange,
+  feedback,
   setFeedback,
   onAdvance
 }) => {
@@ -24,6 +26,7 @@ export const CompletarFrasesWorld: React.FC<CompletarFrasesWorldProps> = ({
   const [currentPhraseAnswer, setCurrentPhraseAnswer] = React.useState<string>(pistaProgress?.currentPhraseAnswer ?? '');
   const [attemptCount, setAttemptCount] = React.useState<number>(0);
   const [showSolution, setShowSolution] = React.useState<boolean>(false);
+  const [pendingAdvance, setPendingAdvance] = React.useState<boolean>(false);
   const [voices, setVoices] = React.useState<SpeechSynthesisVoice[]>([]);
 
   React.useEffect(() => {
@@ -78,7 +81,7 @@ export const CompletarFrasesWorld: React.FC<CompletarFrasesWorldProps> = ({
 
     if (normalizeText(answer) === normalizeText(expected)) {
       setFeedback({ type: 'success', message: `¡Correcto! La palabra es ${expected.toUpperCase()} ✨` });
-      advanceToNextPhrase(false);
+      setPendingAdvance(true);
     } else {
       const nextAttempt = attemptCount + 1;
       setAttemptCount(nextAttempt);
@@ -98,9 +101,17 @@ export const CompletarFrasesWorld: React.FC<CompletarFrasesWorldProps> = ({
     setCurrentPhraseAnswer('');
     setAttemptCount(0);
     setShowSolution(false);
+    setPendingAdvance(false);
     onPistaProgressChange?.({ currentPhraseIndex: 0, currentPhraseAnswer: '' });
     setFeedback({ type: 'info', message: 'Práctica reiniciada.' });
   };
+
+  React.useEffect(() => {
+    if (pendingAdvance && !feedback) {
+      setPendingAdvance(false);
+      advanceToNextPhrase(false);
+    }
+  }, [feedback, pendingAdvance]);
 
   return (
     <CompletarFrases
@@ -112,6 +123,7 @@ export const CompletarFrasesWorld: React.FC<CompletarFrasesWorldProps> = ({
       onSubmit={handleSubmit}
       onResetPractice={resetPractice}
       onAdvance={onAdvance}
+      pendingAdvance={pendingAdvance}
     />
   );
 };

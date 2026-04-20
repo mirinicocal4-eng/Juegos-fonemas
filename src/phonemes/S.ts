@@ -81,7 +81,7 @@ export const S_PHONEME_DATA: PhonemeContent = {
     { word: "Baño", img: "https://static.arasaac.org/pictograms/15905/15905_300.png", hasTarget: false },
     { word: "Salón", img: "https://static.arasaac.org/pictograms/33074/33074_300.png", hasTarget: true },
     { word: "Aseo", img: "https://static.arasaac.org/pictograms/6912/6912_300.png", hasTarget: true },
-    { word: "Terraza", img: "https://static.arasaac.org/pictograms/22129/22129_300.png", hasTarget: true },
+    { word: "Terraza", img: "https://static.arasaac.org/pictograms/22129/22129_300.png", hasTarget: false },
     { word: "Sofá", img: "https://static.arasaac.org/pictograms/25479/25479_300.png", hasTarget: true },
     { word: "Unicornio", img: "https://static.arasaac.org/pictograms/6237/6237_300.png", hasTarget: false },
     { word: "Superhéroe", img: "https://static.arasaac.org/pictograms/36728/36728_300.png", hasTarget: true },

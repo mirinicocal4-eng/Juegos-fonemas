@@ -6,6 +6,7 @@ interface CompletarFrasesProps {
   currentPhraseIndex: number;
   currentPhraseAnswer: string;
   showSolution: boolean;
+  pendingAdvance?: boolean;
   onAnswerChange: (value: string) => void;
   onSubmit: () => void;
   onResetPractice: () => void;
@@ -17,6 +18,7 @@ export const CompletarFrases: React.FC<CompletarFrasesProps> = ({
   currentPhraseIndex,
   currentPhraseAnswer,
   showSolution,
+  pendingAdvance,
   onAnswerChange,
   onSubmit,
   onResetPractice,
@@ -73,15 +75,16 @@ export const CompletarFrases: React.FC<CompletarFrasesProps> = ({
                   value={currentPhraseAnswer}
                   onChange={(e) => onAnswerChange(e.target.value)}
                   placeholder="Escribe aquí"
-                  disabled={showSolution}
+                  disabled={showSolution || pendingAdvance}
                   className="w-full rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-3 text-sm text-white outline-none focus:border-yellow-500 disabled:cursor-not-allowed disabled:opacity-60"
                 />
                 <button
                   type="button"
                   onClick={onSubmit}
-                  className="w-full px-4 py-3 bg-yellow-600 hover:bg-yellow-500 text-black font-black rounded-lg text-xs uppercase italic transition-colors"
+                  disabled={pendingAdvance}
+                  className="w-full px-4 py-3 bg-yellow-600 hover:bg-yellow-500 disabled:bg-zinc-700 disabled:text-zinc-400 text-black font-black rounded-lg text-xs uppercase italic transition-colors"
                 >
-                  {showSolution ? 'Siguiente frase' : 'Comprobar'}
+                  {pendingAdvance ? 'Correcto...' : showSolution ? 'Siguiente frase' : 'Comprobar'}
                 </button>
               </div>
             </div>

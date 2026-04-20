@@ -845,7 +845,7 @@ export default function App() {
       </AnimatePresence>
 
       <main className="max-w-2xl mx-auto p-6 pb-24">
-        <AnimatePresence mode="wait">
+        <AnimatePresence>
           {feedback && (
             <motion.div 
               key="feedback-toast"
@@ -865,7 +865,9 @@ export default function App() {
               <span className="text-[10px] opacity-50 ml-2">(Toca para cerrar)</span>
             </motion.div>
           )}
+        </AnimatePresence>
 
+        <AnimatePresence mode="wait">
           {state.world === 'PHONEME_SELECT' && (
             <motion.div 
               key="phoneme-select"
@@ -1103,6 +1105,7 @@ export default function App() {
               pistaCompletar={pistaCompletar}
               pistaProgress={pistaProgress[state.phoneme] || { currentPhraseIndex: 0, currentPhraseAnswer: '' }}
               onPistaProgressChange={(progress) => setPistaProgress(prev => ({ ...prev, [state.phoneme]: progress }))}
+              feedback={feedback}
               setFeedback={setFeedback}
               onAdvance={() => goToWorld('GRAN_PREMIO')}
             />
