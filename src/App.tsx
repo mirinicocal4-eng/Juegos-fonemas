@@ -8,7 +8,6 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Trophy, 
-  Settings, 
   RotateCcw, 
   ChevronRight,
   AlertCircle,
@@ -21,15 +20,12 @@ import { STORAGE_KEY, worldRules } from './constants';
 
 import { useGameState } from './hooks/useGameState';
 import { GameRouter } from './components/GameRouter';
-import { DataEditor } from './components/DataEditor';
 
 export default function App() {
   const game = useGameState();
   const {
     state,
     persistentData,
-    editingPhoneme,
-    setEditingPhoneme,
     feedback,
     setFeedback,
     currentData,
@@ -65,7 +61,6 @@ export default function App() {
     pistaResetKey,
     setPistaResetKey,
     selectPhoneme,
-    saveCustomPhoneme,
     goToWorld,
     selectPlayers,
     rollDice,
@@ -276,16 +271,6 @@ if (isWinner) {
         </p>
       </footer>
 
-      <AnimatePresence>
-        {editingPhoneme && (
-          <DataEditor 
-            key="data-editor-modal"
-            data={currentData}
-            onSave={saveCustomPhoneme}
-            onClose={() => setEditingPhoneme(null)}
-          />
-        )}
-      </AnimatePresence>
     </div>
   );
 }

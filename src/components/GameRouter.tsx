@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Trophy, ChevronRight, Sparkles, Settings } from 'lucide-react';
+import { Trophy, ChevronRight, Sparkles } from 'lucide-react';
 import { Library } from './Library';
 import { Taller } from './Taller';
 import { Semaforo } from './Semaforo';
@@ -61,7 +61,6 @@ export const GameRouter: React.FC<GameRouterProps> = ({ game, onUpload, onDelete
     pistaResetKey,
     setPistaResetKey,
     selectPhoneme,
-    saveCustomPhoneme,
     goToWorld,
     selectPlayers,
     rollDice,
@@ -80,7 +79,6 @@ export const GameRouter: React.FC<GameRouterProps> = ({ game, onUpload, onDelete
     drawDominoPiece,
     resetGame,
     setState,
-    setEditingPhoneme,
     setPersistentData
   } = game;
 
@@ -209,12 +207,6 @@ export const GameRouter: React.FC<GameRouterProps> = ({ game, onUpload, onDelete
                   </button>
                   <button onClick={() => setState({ ...state, world: 'PLAYER_COUNT' })} className="px-4 py-1 bg-zinc-800 text-zinc-400 rounded-full text-xs font-bold uppercase hover:text-white transition-colors">
                     Jugadores ({state.playerCount})
-                  </button>
-                  <button 
-                    onClick={() => setEditingPhoneme(state.phoneme)} 
-                    className="px-4 py-1 bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 rounded-full text-xs font-bold uppercase hover:bg-indigo-600 hover:text-white transition-all flex items-center gap-2"
-                  >
-                    <Settings className="w-3 h-3" /> Editar Contenido
                   </button>
                 </div>
                 <h2 className="text-4xl font-black text-white italic uppercase tracking-tighter">

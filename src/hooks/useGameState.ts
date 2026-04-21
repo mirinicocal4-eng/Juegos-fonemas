@@ -43,7 +43,6 @@ export const useGameState = () => {
 
   const [persistentData, setPersistentData] = useState<PersistentData>(DEFAULT_PERSISTENT_DATA);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [editingPhoneme, setEditingPhoneme] = useState<Phoneme | null>(null);
   const [pistaProgress, setPistaProgress] = useState<Partial<Record<Phoneme, PistaProgress>>>({});
   const [pistaResetKey, setPistaResetKey] = useState(0);
 
@@ -191,18 +190,6 @@ export const useGameState = () => {
       }
     }));
     setFeedback(null);
-  };
-
-  const saveCustomPhoneme = (newData: PhonemeContent) => {
-    if (!editingPhoneme) return;
-    setPersistentData(prev => ({
-      ...prev,
-      customPhonemes: {
-        ...(prev.customPhonemes || {}),
-        [editingPhoneme]: newData
-      }
-    }));
-    setFeedback({ type: 'success', message: `¡Contenido de ${newData.name} actualizado!` });
   };
 
   const goToWorld = (world: World) => {
@@ -656,8 +643,6 @@ export const useGameState = () => {
   return {
     state,
     persistentData,
-    editingPhoneme,
-    setEditingPhoneme,
     feedback,
     setFeedback,
     currentData,
@@ -690,7 +675,6 @@ export const useGameState = () => {
     dobbleCards,
     dobbleTarget,
     selectPhoneme,
-    saveCustomPhoneme,
     goToWorld,
     selectPlayers,
     rollDice,
