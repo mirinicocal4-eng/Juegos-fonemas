@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { motion } from 'motion/react';
+import { Mic, Volume2 } from 'lucide-react';
 import { Phoneme, PistaEcoItem, PistaDecirItem, GameImage } from '../types';
 import { VisualContent } from './VisualContent';
 import { setupSpeechVoices, speakText } from '../utils/speech';
@@ -33,6 +34,9 @@ export const Pista: React.FC<PistaProps> = ({
   const [diceValue, setDiceValue] = React.useState<number | null>(null);
   const [selectedSpace, setSelectedSpace] = React.useState<number | null>(null);
   const [playerPositions, setPlayerPositions] = React.useState<number[]>([]);
+  const [visitedSpaces, setVisitedSpaces] = React.useState<Set<number>>(new Set());
+  const [showResults, setShowResults] = React.useState(false);
+  const [gameCompleted, setGameCompleted] = React.useState(false);
   const [activePlayer, setActivePlayer] = React.useState(0);
 
   React.useEffect(() => {
@@ -50,6 +54,28 @@ export const Pista: React.FC<PistaProps> = ({
   const speakWord = (word: string) => {
     speakText(word, voices, () => setFeedback({ type: 'error', message: 'Este navegador no soporta voz sintética.' }));
   };
+
+  const groupedDecir = React.useMemo(() =>
+    pistaDecir.reduce<Record<string, PistaDecirItem[]>>((acc, item) => {
+      const key = item.category || 'contiene';
+      if (!acc[key]) acc[key] = [];
+      acc[key].push(item);
+      return acc;
+    }, { inicio: [], contiene: [], inversa: [], final: [] }),
+    [pistaDecir]
+  );
+
+  const ecoWordSet = React.useMemo(
+    () => new Set((pistaEco || []).map((item) => normalizeText(item.word || ''))),
+    [pistaEco]
+  );
+
+  const articulationDecirGroups = React.useMemo(() => ({
+    inicio: (groupedDecir.inicio || []).filter((item) => !ecoWordSet.has(normalizeText(item.word || ''))),
+    contiene: (groupedDecir.contiene || []).filter((item) => !ecoWordSet.has(normalizeText(item.word || ''))),
+    inversa: (groupedDecir.inversa || []).filter((item) => !ecoWordSet.has(normalizeText(item.word || ''))),
+    final: (groupedDecir.final || []).filter((item) => !ecoWordSet.has(normalizeText(item.word || '')))
+  }), [ecoWordSet, groupedDecir]);
 
   const normalizeSearch = (text: string) =>
     text
@@ -71,21 +97,52 @@ export const Pista: React.FC<PistaProps> = ({
   };
 
   const boardCells = React.useMemo<BoardSpace[]>(() => {
+    const availableImages = [...new Set(gameImages.map((img) => img.img))];
+    const usedImages = new Set<string>();
+
+    const getUniqueImage = () => {
+      const nextImage = availableImages.find((img) => !usedImages.has(img));
+      if (nextImage) {
+        usedImages.add(nextImage);
+        return nextImage;
+      }
+      return undefined;
+    };
+
+    const getTextMatchedImage = (text: string) => {
+      const words = normalizeSearch(text).split(/[^A-ZÑÁÉÍÓÚÜ]+/).filter(Boolean);
+      const matches = gameImages
+        .filter((img) => words.includes(normalizeSearch(img.name)))
+        .map((img) => img.img)
+        .filter(Boolean);
+      return matches.find((img) => !usedImages.has(img));
+    };
+
     const phraseCells = pistaFrases
       .filter((phrase) => typeof phrase === 'string' && phrase.trim() !== '')
-      .map((phrase, index) => ({
-        id: index,
-        type: 'Frase' as const,
-        content: phrase,
-        image: findImageForText(phrase) || (gameImages.length > 0 ? gameImages[index % gameImages.length]?.img : undefined)
-      }));
+      .map((phrase, index) => {
+        const matchedImage = getTextMatchedImage(phrase);
+        const image = matchedImage ?? getUniqueImage();
+        if (image) usedImages.add(image);
+        return {
+          id: index,
+          type: 'Frase' as const,
+          content: phrase,
+          image
+        };
+      });
 
-    const trabalenguasCells = (pistaTrabalenguas || []).map((traba, index) => ({
-      id: phraseCells.length + index,
-      type: 'Trabalenguas' as const,
-      content: traba,
-      image: findImageForText(traba) || (gameImages.length > 0 ? gameImages[(phraseCells.length + index) % gameImages.length]?.img : undefined)
-    }));
+    const trabalenguasCells = (pistaTrabalenguas || []).map((traba, index) => {
+      const matchedImage = getTextMatchedImage(traba);
+      const image = matchedImage ?? getUniqueImage();
+      if (image) usedImages.add(image);
+      return {
+        id: phraseCells.length + index,
+        type: 'Trabalenguas' as const,
+        content: traba,
+        image
+      };
+    });
 
     return [...phraseCells, ...trabalenguasCells];
   }, [pistaFrases, pistaTrabalenguas, gameImages]);
@@ -93,8 +150,21 @@ export const Pista: React.FC<PistaProps> = ({
   React.useEffect(() => {
     const initialPositions = Array.from({ length: Math.max(1, playerCount) }, (_, index) => index % Math.max(1, boardCells.length));
     setPlayerPositions(initialPositions);
+    setVisitedSpaces(new Set());
     setActivePlayer(0);
   }, [playerCount, boardCells.length]);
+
+  const pendingBoardCells = React.useMemo(() => boardCells.filter((cell) => !visitedSpaces.has(cell.id)), [boardCells, visitedSpaces]);
+  const pendingPhraseCells = React.useMemo(
+    () => pendingBoardCells.filter((cell) => cell.type === 'Frase'),
+    [pendingBoardCells]
+  );
+  const pendingTrabalenguasCells = React.useMemo(
+    () => pendingBoardCells.filter((cell) => cell.type === 'Trabalenguas'),
+    [pendingBoardCells]
+  );
+  const boardPlayed = visitedSpaces.size > 0;
+  const currentPlayerPosition = playerPositions[activePlayer] ?? null;
 
   const getDiceFace = (value: number) => {
     const pips: Record<number, number[]> = {
@@ -109,6 +179,11 @@ export const Pista: React.FC<PistaProps> = ({
   };
 
   const rollDice = () => {
+    if (gameCompleted) {
+      setFeedback({ type: 'info', message: 'El juego ya llegó a la casilla final. Pulsa "Volver a jugar" si quieres empezar otra vez.' });
+      return;
+    }
+
     if (boardCells.length === 0) {
       setDiceValue(null);
       setSelectedSpace(null);
@@ -116,26 +191,64 @@ export const Pista: React.FC<PistaProps> = ({
       return;
     }
 
+    const finalSpaceIndex = Math.min(20, boardCells.length - 1);
     const value = Math.floor(Math.random() * 6) + 1;
     let nextIndex = 0;
 
     setPlayerPositions((prev) => {
       const next = [...prev];
       const current = typeof prev[activePlayer] === 'number' ? prev[activePlayer] : 0;
-      nextIndex = (current + value) % boardCells.length;
+      nextIndex = Math.min(current + value, finalSpaceIndex);
       next[activePlayer] = nextIndex;
       return next;
+    });
+
+    setVisitedSpaces((prev) => {
+      const nextVisited = new Set(prev);
+      nextVisited.add(nextIndex);
+      return nextVisited;
     });
 
     setDiceValue(value);
     setSelectedSpace(nextIndex);
     setFeedback({ type: 'info', message: `Jugador P${activePlayer + 1} avanza ${value} casillas.` });
+
+    if (nextIndex === finalSpaceIndex) {
+      setGameCompleted(true);
+      setFeedback({ type: 'success', message: '¡Has alcanzado la casilla final! Usa "Terminar Práctica" o "Volver a jugar".' });
+      return;
+    }
+
     setActivePlayer((prev) => (prev + 1) % Math.max(1, playerCount));
   };
 
   const clearDice = () => {
     setDiceValue(null);
     setSelectedSpace(null);
+  };
+
+  const handleFinish = () => {
+    if (!showResults) {
+      setShowResults(true);
+      setDiceValue(null);
+      setSelectedSpace(null);
+      setFeedback({ type: 'info', message: 'Resultados finales activados. Revisa las frases y trabalenguas pendientes.' });
+      return;
+    }
+
+    onFinish();
+  };
+
+  const restartGame = () => {
+    const initialPositions = Array.from({ length: Math.max(1, playerCount) }, (_, index) => index % Math.max(1, boardCells.length));
+    setPlayerPositions(initialPositions);
+    setVisitedSpaces(new Set());
+    setSelectedSpace(null);
+    setDiceValue(null);
+    setActivePlayer(0);
+    setGameCompleted(false);
+    setShowResults(false);
+    setFeedback({ type: 'success', message: 'Juego reiniciado. ¡A jugar otra vez!' });
   };
 
   return (
@@ -172,8 +285,70 @@ export const Pista: React.FC<PistaProps> = ({
           </div>
         )}
 
+        <div className="bg-indigo-950 border border-indigo-900 rounded-3xl p-6 space-y-4">
+          <div className="flex items-center gap-2 text-amber-400 font-bold uppercase tracking-widest text-xs">
+            <Mic className="w-4 h-4" /> Palabras para decir
+          </div>
+          <p className="text-zinc-300 text-sm">
+            Repite en voz alta estas palabras clasificadas por posición del sonido <strong>{phoneme}</strong>.
+          </p>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {(['inicio', 'contiene', 'inversa', 'final'] as const).map((category) => {
+              const soundLabel = phoneme === 'RR' ? 'RR' : phoneme;
+              const labels: Record<typeof category, string> = {
+                inicio: `Empiezan por ${soundLabel}`,
+                contiene: `Contienen ${soundLabel}`,
+                inversa: `Contienen ${soundLabel} inversa`,
+                final: `Acaban con ${soundLabel}`
+              };
+              const items = articulationDecirGroups[category] || [];
+
+              return (
+                <div key={category} className="bg-zinc-900 border border-zinc-800 rounded-3xl p-4 space-y-4">
+                  <div className="text-white font-bold uppercase tracking-widest text-[11px]">
+                    {labels[category]}
+                  </div>
+                  <div className="grid grid-cols-1 gap-3">
+                    {items.length > 0 ? (
+                      items.map((item, index) => (
+                        <div key={index} className="rounded-2xl p-4 bg-zinc-800 border border-zinc-700 space-y-3">
+                          <div className="flex items-center gap-3 min-w-0">
+                            {item.img ? (
+                              <VisualContent content={item.img} alt={item.word} className="w-10 h-10 text-4xl rounded-xl" />
+                            ) : (
+                              <div className="w-10 h-10 rounded-xl bg-zinc-800 flex items-center justify-center text-xs text-zinc-500 uppercase">
+                                IMG
+                              </div>
+                            )}
+                            <span className="text-sm font-black text-white uppercase tracking-tighter truncate">{item.word}</span>
+                          </div>
+                          <div className="flex justify-end">
+                            <button
+                              type="button"
+                              onClick={() => speakWord(item.word)}
+                              className="p-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full flex items-center justify-center"
+                              title="Escuchar"
+                              aria-label="Escuchar palabra"
+                            >
+                              <Volume2 className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="rounded-2xl p-4 bg-zinc-950 border border-dashed border-zinc-700 text-sm text-zinc-500 uppercase tracking-widest text-center">
+                        No hay palabras en esta categoría.
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
         <div className="bg-indigo-600/10 border border-indigo-500/30 rounded-3xl p-6 space-y-6">
-<div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <p className="text-indigo-500 uppercase tracking-widest text-xs font-bold">Juego de tablero</p>
                 <h3 className="text-xl font-black text-white">Dado de frases</h3>
@@ -182,7 +357,8 @@ export const Pista: React.FC<PistaProps> = ({
                 <button
                   type="button"
                   onClick={rollDice}
-                  className="relative inline-flex h-20 w-20 items-center justify-center rounded-3xl bg-indigo-700 text-white shadow-xl shadow-indigo-900/40 hover:bg-indigo-600"
+                  disabled={gameCompleted}
+                  className={`relative inline-flex h-20 w-20 items-center justify-center rounded-3xl bg-indigo-700 text-white shadow-xl shadow-indigo-900/40 hover:bg-indigo-600 ${gameCompleted ? 'cursor-not-allowed opacity-50' : ''}`}
                 >
                   <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 gap-1 p-3">
                     {Array.from({ length: 9 }, (_, idx) => (
@@ -240,6 +416,7 @@ export const Pista: React.FC<PistaProps> = ({
                 const playersHere = playerPositions
                   .map((pos, idx) => pos === index ? idx : -1)
                   .filter((idx) => idx !== -1);
+                const isHighlighted = selectedSpace === index || currentPlayerPosition === index;
 
                 return (
                 <button
@@ -249,7 +426,7 @@ export const Pista: React.FC<PistaProps> = ({
                     setSelectedSpace(index);
                     setFeedback({ type: 'info', message: `Has seleccionado la casilla ${index + 1}.` });
                   }}
-                  className={`relative aspect-square rounded-3xl border p-3 transition-all ${selectedSpace === index ? 'border-indigo-400 bg-indigo-600/20' : 'border-zinc-700 bg-zinc-900 hover:border-indigo-500 hover:bg-zinc-800'}`}
+                  className={`relative aspect-square rounded-3xl border p-3 transition-all ${isHighlighted ? 'border-indigo-400 bg-indigo-600/20' : 'border-zinc-700 bg-zinc-900 hover:border-indigo-500 hover:bg-zinc-800'}`}
                 >
                   <div className="flex h-full flex-col items-center justify-center gap-2">
                     <div className="flex h-16 w-16 flex-col items-center justify-center rounded-3xl bg-zinc-950 text-3xl">
@@ -272,6 +449,7 @@ export const Pista: React.FC<PistaProps> = ({
                 </button>
               );})}
             </div>
+
           </div>
 
           <div className="rounded-3xl border border-indigo-500/20 bg-zinc-950 p-4 text-sm text-zinc-300">
@@ -279,7 +457,11 @@ export const Pista: React.FC<PistaProps> = ({
             {diceValue ? (
               <div className="space-y-3">
                 <p className="text-white">Número: {diceValue}</p>
-                <p className="text-zinc-200 font-black">{boardCells[selectedSpace ?? 0]?.content}</p>
+                {selectedSpace !== null && boardCells[selectedSpace] ? (
+                  <p className="text-zinc-200 font-black">{boardCells[selectedSpace].content}</p>
+                ) : (
+                  <p className="text-zinc-200 font-black">Selecciona la casilla para ver su frase o trabalenguas.</p>
+                )}
                 <button
                   type="button"
                   onClick={clearDice}
@@ -289,18 +471,59 @@ export const Pista: React.FC<PistaProps> = ({
                 </button>
               </div>
             ) : (
-              <p>Tira el dado para descubrir una frase o trabalenguas del reto.</p>
+              <p>Tira el dado para avanzar tu ficha. Selecciona la casilla para leer su contenido.</p>
             )}
           </div>
         </div>
 
       </div>
+      {showResults && (
+        <div className="rounded-3xl border border-amber-500/20 bg-amber-950/10 p-6 space-y-5">
+          <div className="space-y-3">
+            <p className="text-amber-300 uppercase tracking-[0.3em] text-[11px] font-bold">Resultados finales</p>
+            <p className="text-zinc-400 text-sm">Estas frases y trabalenguas no se visitaron durante el juego de tablero.</p>
+          </div>
+          {pendingPhraseCells.length > 0 ? (
+            <div className="grid grid-cols-1 gap-3">
+              {pendingPhraseCells.map((cell) => (
+                <div key={cell.id} className="rounded-3xl border border-amber-500/20 bg-zinc-950 p-4 text-sm text-white">
+                  <p className="font-bold text-amber-200">Frase</p>
+                  <p>{cell.content}</p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-3xl border border-emerald-500/20 bg-zinc-950 p-4 text-sm text-emerald-200">Todas las frases del tablero ya fueron visitadas.</div>
+          )}
+          {pendingTrabalenguasCells.length > 0 ? (
+            <div className="grid grid-cols-1 gap-3">
+              {pendingTrabalenguasCells.map((cell) => (
+                <div key={cell.id} className="rounded-3xl border border-amber-500/20 bg-zinc-950 p-4 text-sm text-white">
+                  <p className="font-bold text-amber-200">Trabalenguas</p>
+                  <p>{cell.content}</p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-3xl border border-emerald-500/20 bg-zinc-950 p-4 text-sm text-emerald-200">Todos los trabalenguas del tablero ya fueron visitados.</div>
+          )}
+          <div className="flex flex-col gap-3 pt-4">
+            <button
+              type="button"
+              onClick={restartGame}
+              className="w-full py-3 bg-emerald-600 text-white font-black rounded-2xl uppercase tracking-[0.2em] shadow-lg shadow-emerald-900/30"
+            >
+              Volver a jugar
+            </button>
+          </div>
+        </div>
+      )}
       <button 
         type="button"
-        onClick={onFinish}
+        onClick={handleFinish}
         className="w-full py-4 bg-indigo-600 text-white font-black rounded-xl italic uppercase shadow-lg shadow-indigo-900/40"
       >
-        Terminar Práctica
+        {showResults ? 'Salir' : 'Terminar Práctica'}
       </button>
     </motion.div>
   );

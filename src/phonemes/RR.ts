@@ -43,7 +43,7 @@ export const RR_PHONEME_DATA: PhonemeContent = {
     { word: "Verde", img: "https://static.arasaac.org/pictograms/4887/4887_300.png", hasTarget: false },
     { word: "Caballero", img: "https://static.arasaac.org/pictograms/5406/5406_300.png", hasTarget: false },
     { word: "Rana", img: "https://static.arasaac.org/pictograms/28473/28473_300.png", hasTarget: false },
-    { word: "Camiseta", img: "", hasTarget: false },
+    { word: "Camiseta", img: "https://static.arasaac.org/pictograms/2309/2309_300.png", hasTarget: false },
     { word: "Lechuga", img: "", hasTarget: false },
     { word: "Armadura", img: "", hasTarget: false },
     { word: "Caballo", img: "", hasTarget: false },
