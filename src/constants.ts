@@ -20,7 +20,7 @@ export const worlds = [
   { id: 'TALLER', name: '1. Laboratorio', icon: React.createElement(FlaskConical, { className: "w-6 h-6" }), desc: 'Prepara tu voz y calienta tu lengua.' },
   { id: 'SEMAFORO', name: '2. El Radar', icon: React.createElement(Ear, { className: "w-6 h-6" }), desc: 'Entrena tu oído para detectar los sonidos.' },
   { id: 'PISTA', name: '3. El Escenario', icon: React.createElement(Mic, { className: "w-6 h-6" }), desc: 'Practica palabras y frases con claridad.' },
-  { id: 'COMPLETAR', name: '3.5 El Reto de Frases', icon: React.createElement(Mic, { className: "w-6 h-6" }), desc: 'Pon a prueba tus frases antes de seguir a la aventura.' },
+  { id: 'COMPLETAR', name: '3.5 El Reto de Frases', icon: React.createElement(Mic, { className: "w-6 h-6" }), desc: 'Reordena sujeto, verbo y complemento para crear frases divertidas.' },
   { id: 'GRAN_PREMIO', name: '4. La Aventura', icon: React.createElement(Map, { className: "w-6 h-6" }), desc: 'El desafío final para demostrar lo aprendido.' },
   { id: 'LIBRARY', name: 'Biblioteca', icon: React.createElement(BookOpen, { className: "w-6 h-6" }), desc: 'Consulta y sube tus materiales de apoyo.' },
 ];
@@ -38,7 +38,7 @@ export const worldRules: Record<World, string> = {
   TALLER: "CONSEJO: Mantén la lengua relajada y en la posición correcta. ¡Sigue las instrucciones del laboratorio!",
   SEMAFORO: "Escucha con atención. ¿Cómo suena la palabra? Ayuda al radar a clasificar los sonidos correctamente.",
   PISTA: "Repite las palabras y frases con claridad. ¡Demuestra tu dominio del lenguaje en el escenario!",
-  COMPLETAR: "Completa frases en un reto independiente antes de llegar a la aventura.",
+  COMPLETAR: "Reordena sujeto, verbo y complemento para crear frases locas y divertidas.",
   GRAN_PREMIO: "Tira el dado y avanza por el mapa. Responde a las preguntas para completar la aventura.",
   MEMORY: "Encuentra las parejas de imágenes que contienen el sonido.",
   BINGO: "Juego para 2 exploradores. Cada uno tiene su cartón. ¡El primero en marcar todas sus imágenes gana!",

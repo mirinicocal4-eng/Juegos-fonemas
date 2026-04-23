@@ -1,6 +1,17 @@
 export type World = 'PHONEME_SELECT' | 'PLAYER_COUNT' | 'MENU' | 'TALLER' | 'SEMAFORO' | 'PISTA' | 'COMPLETAR' | 'GRAN_PREMIO' | 'MEMORY' | 'BINGO' | 'LINCE' | 'DOMINO' | 'DOBBLE' | 'LIBRARY';
 export type Phoneme = 'R' | 'RR' | 'S' | 'Z' | 'BR' | 'PR' | 'TR' | 'DR' | 'GR' | 'CR' | 'FR';
 
+export interface FraseLoca {
+  id: number;
+  sujeto: string;
+  verbo: string;
+  complemento: string;
+  sujetoImg?: string;
+  verboImg?: string;
+  complementoImg?: string;
+  tipo?: string;
+}
+
 export interface TallerStep {
   title: string;
   instruction: string;

@@ -83,6 +83,7 @@ export default function App() {
   } = game;
 
   const [showRules, setShowRules] = useState(false);
+
 if (isWinner) {
     return (
       <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-6 text-center">
@@ -260,7 +261,11 @@ if (isWinner) {
           )}
         </AnimatePresence>
 
-        <GameRouter game={game} onUpload={handleUpload} onDeleteUserResource={handleDeleteUserResource} />
+        <GameRouter
+          game={game}
+          onUpload={handleUpload}
+          onDeleteUserResource={handleDeleteUserResource}
+        />
 
       </main>
 

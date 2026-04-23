@@ -295,6 +295,8 @@ export const GameRouter: React.FC<GameRouterProps> = ({ game, onUpload, onDelete
               pistaDecir={pistaDecir}
               pistaFrases={pistaFrases}
               pistaTrabalenguas={pistaTrabalenguas}
+              gameImages={currentData.gameImages || []}
+              playerCount={state.playerCount}
               pdfUrl={currentData.pdfUrl}
               onFinish={() => {
                 setPersistentData(prev => {
