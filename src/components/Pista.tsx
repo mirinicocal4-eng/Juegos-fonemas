@@ -55,6 +55,10 @@ export const Pista: React.FC<PistaProps> = ({
     speakText(word, voices, () => setFeedback({ type: 'error', message: 'Este navegador no soporta voz sintética.' }));
   };
 
+  const speakTextContent = (text: string) => {
+    speakText(text, voices, () => setFeedback({ type: 'error', message: 'Este navegador no soporta voz sintética.' }));
+  };
+
   const groupedDecir = React.useMemo(() =>
     pistaDecir.reduce<Record<string, PistaDecirItem[]>>((acc, item) => {
       const key = item.category || 'contiene';
@@ -402,9 +406,19 @@ export const Pista: React.FC<PistaProps> = ({
                   <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-zinc-900 text-3xl">
                     <VisualContent content={boardCells[selectedSpace].image ?? '🎲'} alt={boardCells[selectedSpace].content} className="w-12 h-12" />
                   </div>
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.35em] text-indigo-400">{boardCells[selectedSpace].type === 'Frase' ? 'Frase' : 'Trabalenguas'}</p>
-                    <p className="text-2xl font-black text-white leading-tight mt-2">{boardCells[selectedSpace].content}</p>
+                  <div className="space-y-4">
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.35em] text-indigo-400">{boardCells[selectedSpace].type === 'Frase' ? 'Frase' : 'Trabalenguas'}</p>
+                      <p className="text-2xl font-black text-white leading-tight mt-2">{boardCells[selectedSpace].content}</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => speakTextContent(boardCells[selectedSpace].content)}
+                      className="inline-flex items-center justify-center rounded-full bg-indigo-600 px-4 py-2 text-sm font-bold text-white hover:bg-indigo-500"
+                    >
+                      <Volume2 className="w-4 h-4 mr-2" />
+                      Escuchar
+                    </button>
                   </div>
                   <p className="text-zinc-400 text-xs uppercase tracking-[0.2em]">Casilla {selectedSpace + 1}</p>
                 </div>
@@ -487,8 +501,19 @@ export const Pista: React.FC<PistaProps> = ({
             <div className="grid grid-cols-1 gap-3">
               {pendingPhraseCells.map((cell) => (
                 <div key={cell.id} className="rounded-3xl border border-amber-500/20 bg-zinc-950 p-4 text-sm text-white">
-                  <p className="font-bold text-amber-200">Frase</p>
-                  <p>{cell.content}</p>
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <p className="font-bold text-amber-200">Frase</p>
+                      <p>{cell.content}</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => speakTextContent(cell.content)}
+                      className="inline-flex items-center justify-center rounded-full bg-amber-500 px-3 py-2 text-xs font-bold uppercase tracking-[0.2em] text-zinc-950 hover:bg-amber-400"
+                    >
+                      <Volume2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
@@ -499,8 +524,19 @@ export const Pista: React.FC<PistaProps> = ({
             <div className="grid grid-cols-1 gap-3">
               {pendingTrabalenguasCells.map((cell) => (
                 <div key={cell.id} className="rounded-3xl border border-amber-500/20 bg-zinc-950 p-4 text-sm text-white">
-                  <p className="font-bold text-amber-200">Trabalenguas</p>
-                  <p>{cell.content}</p>
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <p className="font-bold text-amber-200">Trabalenguas</p>
+                      <p>{cell.content}</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => speakTextContent(cell.content)}
+                      className="inline-flex items-center justify-center rounded-full bg-amber-500 px-3 py-2 text-xs font-bold uppercase tracking-[0.2em] text-zinc-950 hover:bg-amber-400"
+                    >
+                      <Volume2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>

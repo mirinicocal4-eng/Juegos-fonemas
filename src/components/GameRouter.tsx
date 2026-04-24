@@ -271,16 +271,18 @@ export const GameRouter: React.FC<GameRouterProps> = ({ game, onUpload, onDelete
                       setFeedback(null);
                       return { ...prev, semaforoPairStep: prev.semaforoPairStep + 1 };
                     }
-                    goToWorld('MENU');
-                    return prev;
+
+                    setFeedback(null);
+                    return { ...prev, world: 'MENU', step: 0, subStep: 0 };
                   }
 
                   if (prev.semaforoRadarStep < rLen - 1) {
                     setFeedback(null);
                     return { ...prev, semaforoRadarStep: prev.semaforoRadarStep + 1 };
                   }
-                  goToWorld('MENU');
-                  return prev;
+
+                  setFeedback(null);
+                  return { ...prev, world: 'MENU', step: 0, subStep: 0 };
                 });
               }}
               setFeedback={setFeedback}
