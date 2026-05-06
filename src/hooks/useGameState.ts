@@ -81,7 +81,7 @@ export const useGameState = () => {
     color: 'zinc',
     taller: [],
     semaforoPares: [],
-    pistaEco: [],
+    semaforoRadar: { title: '', items: [] },
     pistaDecir: [],
     gameImages: [],
     pistaFrases: [],
@@ -231,19 +231,16 @@ export const useGameState = () => {
   const semaforoPares = currentData.semaforoPares || [];
 
   const { mainRadarItems: semaforoRadar, optionalRadarItems: optionalSemaforoRadar } = React.useMemo(() => {
-    const allRadarItems = currentData.semaforoRadar && currentData.semaforoRadar.length > 0
-      ? currentData.semaforoRadar
-      : (currentData.pistaEco || []).map(p => ({ word: p.word || '', hasTarget: p.hasTarget ?? true, img: p.img }));
-
+    const allRadarItems = currentData.semaforoRadar?.items || [];
     return splitSemaforoRadarItems(allRadarItems);
-  }, [currentData.semaforoRadar, currentData.pistaEco]);
+  }, [currentData.semaforoRadar]);
 
   const semaforoStep = state.subStep === 0 ? state.semaforoPairStep : state.semaforoRadarStep;
 
   // --- MUNDO 3: PISTA ---
   const pistaEco = React.useMemo(
-    () => getBalancedRandomPistaEco(currentData.pistaEco || [], state.phoneme),
-    [currentData.pistaEco, state.world, state.phoneme]
+    () => getBalancedRandomPistaEco(currentData.semaforoRadar?.items || [], state.phoneme),
+    [currentData.semaforoRadar, state.world, state.phoneme]
   );
   const pistaDecir = currentData.pistaDecir || [];
   const pistaFrases = currentData.pistaFrases || [];
@@ -650,6 +647,7 @@ export const useGameState = () => {
     semaforoPares,
     semaforoRadar,
     optionalSemaforoRadar,
+    semaforoRadarTitle: currentData.semaforoRadar?.title,
     pistaEco,
     pistaDecir,
     pistaFrases,

@@ -57,15 +57,17 @@ export interface GameImage {
   name: string;
 }
 
+export interface SemaforoRadarData {
+  title: string;
+  items: SemaforoRadarItem[];
+}
+
 export interface PhonemeContent {
   name: string;
   color: string;
-  pistaEcoTitle?: string;
   taller: TallerStep[];
   semaforoPares: SemaforoPair[];
-  semaforoRadarTitle?: string;
-  semaforoRadar?: SemaforoRadarItem[];
-  pistaEco: PistaEcoItem[];
+  semaforoRadar: SemaforoRadarData;
   pistaDecir?: PistaDecirItem[];
   gameImages: GameImage[];
   pistaFrases: string[];

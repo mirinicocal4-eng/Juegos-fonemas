@@ -226,7 +226,7 @@ export const GameRouter: React.FC<GameRouterProps> = ({ game, onUpload, onDelete
               semaforoPares={semaforoPares}
               semaforoRadar={semaforoRadar}
               optionalSemaforoRadar={optionalSemaforoRadar}
-              semaforoRadarTitle={currentData.semaforoRadarTitle}
+              semaforoRadarTitle={semaforoRadarTitle}
               onSetSubStep={(ss) => setState((prev) => ({ ...prev, subStep: ss }))}
               onNextStep={() => {
                 const pLen = (semaforoPares || []).length;
