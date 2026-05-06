@@ -18,7 +18,48 @@ export const RR_PHONEME_DATA: PhonemeContent = {
     { w1: "BORRA", s1: "R suave", i1_img: "https://static.arasaac.org/pictograms/2409/2409_300.png", w2: "BOLA", s2: "Con B", i2_img: "https://static.arasaac.org/pictograms/27612/27612_300.png", target: 1 },
     { w1: "RANA", s1: "R fuerte", i1_img: "https://static.arasaac.org/pictograms/28473/28473_300.png", w2: "LANA", s2: "Con L", i2_img: "https://static.arasaac.org/pictograms/2948/2948_300.png", target: 1 }
   ],
-  semaforoRadar: [],
+  semaforoRadar: [
+    { word: "Burro", img: "https://static.arasaac.org/pictograms/2291/2291_300.png", hasTarget: true },
+    { word: "Ropa", img: "https://static.arasaac.org/pictograms/7233/7233_300.png", hasTarget: true },
+    { word: "Marrón", img: "https://static.arasaac.org/pictograms/2923/2923_300.png", hasTarget: true },
+    { word: "Blanco", img: "https://static.arasaac.org/pictograms/8043/8043_300.png", hasTarget: false },
+    { word: "Gorro", img: "https://static.arasaac.org/pictograms/39395/39395_300.png", hasTarget: true },
+    { word: "Sardina", img: "https://static.arasaac.org/pictograms/7809/7809_300.png", hasTarget: false },
+    { word: "Gorra", img: "https://static.arasaac.org/pictograms/2411/2411_300.png", hasTarget: true },
+    { word: "Guantes", img: "https://static.arasaac.org/pictograms/2415/2415_300.png", hasTarget: false },
+    { word: "Macarrones", img: "https://static.arasaac.org/pictograms/2455/2455_300.png", hasTarget: true },
+    { word: "Héroe", img: "https://static.arasaac.org/pictograms/36728/36728_300.png", hasTarget: false },
+    { word: "Borraja", img: "https://static.arasaac.org/pictograms/2996/2996_300.png", hasTarget: true },
+    { word: "Armadillo", img: "https://static.arasaac.org/pictograms/8031/8031_300.png", hasTarget: false },
+    { word: "Pizarra", img: "https://static.arasaac.org/pictograms/2526/2526_300.png", hasTarget: true },
+    { word: "Plateado", img: "https://static.arasaac.org/pictograms/2827/2827_300.png", hasTarget: false },
+    { word: "Arroz", img: "https://static.arasaac.org/pictograms/25556/25556_300.png", hasTarget: true },
+    { word: "Gnomo", img: "https://static.arasaac.org/pictograms/5450/5450_300.png", hasTarget: false },
+    { word: "Borrador", img: "https://static.arasaac.org/pictograms/16341/16341_300.png", hasTarget: true },
+    { word: "Saltamontes", img: "https://static.arasaac.org/pictograms/2805/2805_300.png", hasTarget: false },
+    { word: "Calcetines", img: "https://static.arasaac.org/pictograms/2298/2298_300.png", hasTarget: false },
+    { word: "Verde", img: "https://static.arasaac.org/pictograms/4887/4887_300.png", hasTarget: false },
+    { word: "Caballero", img: "https://static.arasaac.org/pictograms/5406/5406_300.png", hasTarget: false },
+    { word: "Rana", img: "https://static.arasaac.org/pictograms/28473/28473_300.png", hasTarget: true },
+    { word: "Camiseta", img: "https://static.arasaac.org/pictograms/2309/2309_300.png", hasTarget: false },
+    { word: "Lechuga", img: "https://static.arasaac.org/pictograms/2446/2446_300.png", hasTarget: false },
+    { word: "Armadura", img: "https://static.arasaac.org/pictograms/5406/5406_300.png", hasTarget: false },
+    { word: "Caballo", img: "https://static.arasaac.org/pictograms/2294/2294_300.png", hasTarget: false },
+    { word: "Espejo", img: "https://static.arasaac.org/pictograms/8573/8573_300.png", hasTarget: false },
+    { word: "Recreo", img: "https://static.arasaac.org/pictograms/33064/33064_300.png", hasTarget: true },
+    { word: "Horquilla", img: "https://static.arasaac.org/pictograms/2975/2975_300.png", hasTarget: false },
+    { word: "Montaña", img: "https://static.arasaac.org/pictograms/2909/2909_300.png", hasTarget: false },
+    { word: "Mesa", img: "https://static.arasaac.org/pictograms/3129/3129_300.png", hasTarget: false },
+    { word: "Rosa", img: "https://static.arasaac.org/pictograms/3151/3151_300.png", hasTarget: true },
+    { word: "Acelga", img: "https://static.arasaac.org/pictograms/2981/2981_300.png", hasTarget: false },
+    { word: "Pirata", img: "https://static.arasaac.org/pictograms/6180/6180_300.png", hasTarget: false },
+    { word: "Silla", img: "https://static.arasaac.org/pictograms/3155/3155_300.png", hasTarget: false },
+    { word: "Azul", img: "https://static.arasaac.org/pictograms/4869/4869_300.png", hasTarget: false },
+    { word: "Canelones", img: "https://static.arasaac.org/pictograms/3005/3005_300.png", hasTarget: false },
+    { word: "Pato", img: "https://static.arasaac.org/pictograms/28479/28479_300.png", hasTarget: false },
+    { word: "Tiza", img: "https://static.arasaac.org/pictograms/36602/36602_300.png", hasTarget: false },
+    { word: "Armario", img: "https://static.arasaac.org/pictograms/2258/2258_300.png", hasTarget: false }
+  ],
   pistaEcoTitle: "Suena o no suena con RR",
   pistaEco: [
     { word: "Burro", img: "https://static.arasaac.org/pictograms/2291/2291_300.png", hasTarget: true },
@@ -52,7 +93,7 @@ export const RR_PHONEME_DATA: PhonemeContent = {
     { word: "Horquilla", img: "https://static.arasaac.org/pictograms/2975/2975_300.png", hasTarget: false },
     { word: "Montaña", img: "https://static.arasaac.org/pictograms/2909/2909_300.png", hasTarget: false },
     { word: "Mesa", img: "https://static.arasaac.org/pictograms/3129/3129_300.png", hasTarget: false },
-    { word: "Rosa", img: "https://static.arasaac.org/pictograms/3151/3151_300.png", hasTarget: false },
+    { word: "Rosa", img: "https://static.arasaac.org/pictograms/3151/3151_300.png", hasTarget: true },
     { word: "Acelga", img: "https://static.arasaac.org/pictograms/2981/2981_300.png", hasTarget: false },
     { word: "Pirata", img: "https://static.arasaac.org/pictograms/6180/6180_300.png", hasTarget: false },
     { word: "Silla", img: "https://static.arasaac.org/pictograms/3155/3155_300.png", hasTarget: false },
@@ -60,9 +101,7 @@ export const RR_PHONEME_DATA: PhonemeContent = {
     { word: "Canelones", img: "https://static.arasaac.org/pictograms/3005/3005_300.png", hasTarget: false },
     { word: "Pato", img: "https://static.arasaac.org/pictograms/28479/28479_300.png", hasTarget: false },
     { word: "Tiza", img: "https://static.arasaac.org/pictograms/36602/36602_300.png", hasTarget: false },
-    { word: "Armario", img: "https://static.arasaac.org/pictograms/2258/2258_300.png", hasTarget: false },
-
-
+    { word: "Armario", img: "https://static.arasaac.org/pictograms/2258/2258_300.png", hasTarget: false }
   ],
   pistaDecir: [
     { word: "Rana", img: "https://static.arasaac.org/pictograms/28473/28473_300.png", category: "inicio" },
@@ -101,7 +140,7 @@ export const RR_PHONEME_DATA: PhonemeContent = {
     { img: "https://static.arasaac.org/pictograms/23757/23757_300.png", name: "ARROYO" }, { img: "https://static.arasaac.org/pictograms/2494/2494_300.png", name: "BARRA" }, { img: "https://static.arasaac.org/pictograms/30014/30014_300.png", name: "TIERRA" }, { img: "https://static.arasaac.org/pictograms/37961/37961_300.png", name: "RULETA" }
   ],
   pistaFrases: [
-    "La rana Renata roe pan.", 
+    "La rana Renata roe pan.",
     "Felipe mueve el remo en el río.",
     "Ramón sierra el árbol.",
     "Rita tiende el vestido rosa.",
@@ -113,14 +152,11 @@ export const RR_PHONEME_DATA: PhonemeContent = {
     "El arreglo quedó muy bien hecho.",
     "El perro corre muy rápido por el parque.",
     "Pepe borra los dibujos con el borrador.",
-
   ],
   pistaTrabalenguas: [
-    "Un burro comía berros y un perro se los robó, el burro lanzó un rebuzno y el perro al barro cayó.", 
+    "Un burro comía berros y un perro se los robó, el burro lanzó un rebuzno y el perro al barro cayó.",
     "El perrito de Rita me irrita. Dile a Rita que cambie el perrito por una perrita.",
     "Rasputín era un ratón que rascaba en una risca con un tosco rasca risca rascador, rasca que rasca acabó con el risco, rasca la risca rascó un rincón.",
-  
-
   ],
   pistaCompletar: [
     { phrase: "El trineo de Papá Noel es conducido por ...", word: "RENOS" },
@@ -128,9 +164,8 @@ export const RR_PHONEME_DATA: PhonemeContent = {
     { phrase: "El coche tiene cuatro...", word: "RUEDAS" },
     { phrase: "Lo contrario de pobre es...", word: "RICO" },
     { phrase: "La hora se mira en el ...", word: "RELOJ" },
-    { phrase: "El perro ladra y la", word: "GORRA" },
     { phrase: "Para pintar lineas rectas necesitamos una ", word: "REGLA" },
-    { phrase: "Lo contrario de llorar es reír.", word: "REÍR" },
+    { phrase: "Lo contrario de llorar es ...", word: "REÍR" },
     { phrase: "Un animal pequeño al que le gusta mucho el queso es el...", word: "RATÓN" },
     { phrase: "Al tenis se juega con una pelota y una...", word: "RAQUETA" }
   ]

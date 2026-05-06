@@ -12,6 +12,7 @@ interface SemaforoProps {
   semaforoPares: SemaforoPair[];
   semaforoRadar: SemaforoRadarItem[];
   optionalSemaforoRadar: SemaforoRadarItem[];
+  semaforoRadarTitle?: string;
   onSetSubStep: (subStep: number) => void;
   onNextStep: () => void;
   setFeedback: (fb: { type: 'success' | 'error' | 'info', message: string } | null) => void;
@@ -24,6 +25,7 @@ export const Semaforo: React.FC<SemaforoProps> = ({
   semaforoPares,
   semaforoRadar,
   optionalSemaforoRadar,
+  semaforoRadarTitle,
   onSetSubStep,
   onNextStep,
   setFeedback
@@ -220,8 +222,8 @@ export const Semaforo: React.FC<SemaforoProps> = ({
       ) : (
         <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 space-y-8">
           <div className="text-center space-y-4">
-            <p className="text-zinc-400 uppercase tracking-widest text-xs font-bold">Radar de Sonidos</p>
-            <p className="text-lg text-white italic">¿Contiene el sonido {phoneme === 'RR' ? 'fuerte' : phoneme}?</p>
+            <p className="text-zinc-400 uppercase tracking-widest text-xs font-bold">{semaforoRadarTitle || 'Radar de Sonidos'}</p>
+            <p className="text-lg text-white italic">¿Contiene el sonido {phoneme === 'RR' ? 'fuerte' : (phoneme === 'SINFONES' ? 'trabado' : phoneme)}?</p>
           </div>
 
           <div className="grid grid-cols-1 gap-4" style={{ overflowAnchor: 'none' }}>

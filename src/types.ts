@@ -1,5 +1,5 @@
 export type World = 'PHONEME_SELECT' | 'PLAYER_COUNT' | 'MENU' | 'TALLER' | 'SEMAFORO' | 'PISTA' | 'COMPLETAR' | 'GRAN_PREMIO' | 'MEMORY' | 'BINGO' | 'LINCE' | 'DOMINO' | 'DOBBLE' | 'LIBRARY';
-export type Phoneme = 'R' | 'RR' | 'S' | 'Z' | 'BR' | 'PR' | 'TR' | 'DR' | 'GR' | 'CR' | 'FR';
+export type Phoneme = 'R' | 'RR' | 'S' | 'Z' | 'SINFONES';
 
 export interface FraseLoca {
   id: number;
@@ -63,6 +63,7 @@ export interface PhonemeContent {
   pistaEcoTitle?: string;
   taller: TallerStep[];
   semaforoPares: SemaforoPair[];
+  semaforoRadarTitle?: string;
   semaforoRadar?: SemaforoRadarItem[];
   pistaEco: PistaEcoItem[];
   pistaDecir?: PistaDecirItem[];

@@ -104,63 +104,29 @@ export const GameRouter: React.FC<GameRouterProps> = ({ game, onUpload, onDelete
                 </p>
               </div>
 
-              {!state.showTrabadas ? (
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                  {(['R', 'RR', 'S', 'Z'] as Phoneme[]).map((p) => (
-                    <button
-                      key={p}
-                      onClick={() => selectPhoneme(p)}
-                      className={`p-6 rounded-3xl border-4 transition-all hover:scale-105 flex flex-col items-center justify-center relative ${
-                        p === 'R' ? 'bg-red-600/10 border-red-600 text-red-500' :
-                        p === 'RR' ? 'bg-rose-600/10 border-rose-600 text-rose-500' :
-                        p === 'S' ? 'bg-blue-600/10 border-blue-600 text-blue-500' :
-                        'bg-emerald-600/10 border-emerald-600 text-emerald-500'
-                      }`}
-                    >
-                      {(persistentData.completedPhonemes || []).includes(p) && (
-                        <div className="absolute -top-2 -right-2 bg-yellow-500 text-black p-1 rounded-full shadow-lg">
-                          <Trophy className="w-4 h-4" />
-                        </div>
-                      )}
-                      <span className="text-5xl font-black italic">{p}</span>
-                      <p className="mt-4 font-bold uppercase tracking-widest text-[10px]">{PHONEME_DATA[p]?.name || 'Cargando...'}</p>
-                    </button>
-                  ))}
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                {(['R', 'RR', 'S', 'Z', 'SINFONES'] as Phoneme[]).map((p) => (
                   <button
-                    onClick={() => setState({ ...state, showTrabadas: true })}
-                    className="p-6 rounded-3xl border-4 transition-all hover:scale-105 flex flex-col items-center justify-center bg-orange-600/10 border-orange-600 text-orange-500"
+                    key={p}
+                    onClick={() => selectPhoneme(p)}
+                    className={`p-6 rounded-3xl border-4 transition-all hover:scale-105 flex flex-col items-center justify-center relative ${
+                      p === 'R' ? 'bg-red-600/10 border-red-600 text-red-500' :
+                      p === 'RR' ? 'bg-rose-600/10 border-rose-600 text-rose-500' :
+                      p === 'S' ? 'bg-blue-600/10 border-blue-600 text-blue-500' :
+                      p === 'Z' ? 'bg-emerald-600/10 border-emerald-600 text-emerald-500' :
+                      'bg-orange-600/10 border-orange-600 text-orange-500'
+                    }`}
                   >
-                    <span className="text-5xl font-black italic">BR...</span>
-                    <p className="mt-4 font-bold uppercase tracking-widest text-[10px]">Trabadas con R</p>
+                    {(persistentData.completedPhonemes || []).includes(p) && (
+                      <div className="absolute -top-2 -right-2 bg-yellow-500 text-black p-1 rounded-full shadow-lg">
+                        <Trophy className="w-4 h-4" />
+                      </div>
+                    )}
+                    <span className="text-5xl font-black italic">{p === 'SINFONES' ? 'BR...' : p}</span>
+                    <p className="mt-4 font-bold uppercase tracking-widest text-[10px]">{PHONEME_DATA[p]?.name || 'Cargando...'}</p>
                   </button>
-                </div>
-              ) : (
-                <div className="space-y-6">
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                    {(['BR', 'PR', 'TR', 'DR', 'GR', 'CR', 'FR'] as Phoneme[]).map((p) => (
-                      <button
-                        key={p}
-                        onClick={() => selectPhoneme(p)}
-                        className="p-6 rounded-3xl border-4 transition-all hover:scale-105 flex flex-col items-center justify-center bg-orange-600/10 border-orange-600 text-orange-500 relative"
-                      >
-                        {(persistentData.completedPhonemes || []).includes(p) && (
-                          <div className="absolute -top-2 -right-2 bg-yellow-500 text-black p-1 rounded-full shadow-lg">
-                            <Trophy className="w-4 h-4" />
-                          </div>
-                        )}
-                        <span className="text-4xl font-black italic">{p}</span>
-                        <p className="mt-4 font-bold uppercase tracking-widest text-[10px]">{PHONEME_DATA[p].name}</p>
-                      </button>
-                    ))}
-                  </div>
-                  <button 
-                    onClick={() => setState({ ...state, showTrabadas: false })}
-                    className="text-zinc-500 hover:text-white font-bold uppercase text-xs tracking-widest flex items-center gap-2 mx-auto"
-                  >
-                    <ChevronRight className="rotate-180 w-4 h-4" /> Volver atrás
-                  </button>
-                </div>
-              )}
+                ))}
+              </div>
             </motion.div>
           )}
 
@@ -260,6 +226,7 @@ export const GameRouter: React.FC<GameRouterProps> = ({ game, onUpload, onDelete
               semaforoPares={semaforoPares}
               semaforoRadar={semaforoRadar}
               optionalSemaforoRadar={optionalSemaforoRadar}
+              semaforoRadarTitle={currentData.semaforoRadarTitle}
               onSetSubStep={(ss) => setState((prev) => ({ ...prev, subStep: ss }))}
               onNextStep={() => {
                 const pLen = (semaforoPares || []).length;
