@@ -33,6 +33,7 @@ export default function App() {
     semaforoPares,
     semaforoRadar,
     optionalSemaforoRadar,
+    semaforoRadarTitle,
     pistaEco,
     pistaDecir,
     pistaFrases,
@@ -105,10 +106,10 @@ if (isWinner) {
           
           <div className="space-y-4">
             <h2 className="text-5xl font-black text-white italic uppercase tracking-tighter">
-              ¡CAMPEÓN DEL MUNDO! 🏆
+              ¡CAMPEÓN DE {currentData.name}! 🏆
             </h2>
             <p className="text-zinc-400 text-xl max-w-md mx-auto">
-              Has dominado la <span className="text-indigo-500 font-bold italic">/RR/</span> vibrante alveolar. ¡Tu voz suena perfecta!
+              Has dominado el sonido <span className={`text-${currentData.color}-500 font-bold italic`}>/{state.phoneme}/</span>. ¡Tu voz suena perfecta!
             </p>
           </div>
 

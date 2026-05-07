@@ -34,6 +34,7 @@ export const GameRouter: React.FC<GameRouterProps> = ({ game, onUpload, onDelete
     semaforoPares,
     semaforoRadar,
     optionalSemaforoRadar,
+    semaforoRadarTitle,
     pistaEco,
     pistaDecir,
     pistaFrases,
@@ -189,9 +190,9 @@ export const GameRouter: React.FC<GameRouterProps> = ({ game, onUpload, onDelete
                   <button
                     key={w.id}
                     onClick={() => goToWorld(w.id as World)}
-                    className="group relative p-6 bg-zinc-900 border border-zinc-800 rounded-2xl text-left hover:border-red-500/50 transition-all hover:shadow-2xl hover:shadow-red-900/10 overflow-hidden"
+                    className={`group relative p-6 bg-zinc-900 border border-zinc-800 rounded-2xl text-left hover:border-${currentData.color}-500/50 transition-all hover:shadow-2xl hover:shadow-${currentData.color}-900/10 overflow-hidden`}
                   >
-                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <div className={`absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity text-${currentData.color}-500`}>
                       {w.icon}
                     </div>
                     <div className="relative z-10 flex flex-col gap-1">
