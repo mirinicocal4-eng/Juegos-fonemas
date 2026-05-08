@@ -117,6 +117,38 @@ export const Library: React.FC<LibraryProps> = ({ resources, userResources, onUp
           <p className="text-zinc-500 text-sm">Arrastra tus PDFs o haz clic para seleccionar archivos</p>
         </div>
       </div>
+      
+      {/* Recommended Resources */}
+      <div className="space-y-4">
+        <h4 className="text-sm font-black text-zinc-500 uppercase tracking-[0.2em] italic">Materiales Recomendados</h4>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {(resources || []).map((res, idx) => (
+            <div 
+              key={`res-${idx}`}
+              className="p-6 bg-zinc-900 border border-zinc-800 rounded-3xl flex items-center justify-between group hover:border-indigo-500/30 transition-all"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-indigo-600/10 rounded-2xl flex items-center justify-center text-indigo-500">
+                  {res.icon}
+                </div>
+                <div>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">{res.type}</span>
+                  <h4 className="text-lg font-bold text-white uppercase italic tracking-tight">{res.title}</h4>
+                  <p className="text-zinc-500 text-xs">{res.desc}</p>
+                </div>
+              </div>
+              <a 
+                href={res.url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="p-3 bg-zinc-800 hover:bg-indigo-600 text-white rounded-xl transition-all"
+              >
+                <ExternalLink className="w-5 h-5" />
+              </a>
+            </div>
+          ))}
+        </div>
+      </div>
 
       {/* User Resources */}
       {(userResources || []).length > 0 && (

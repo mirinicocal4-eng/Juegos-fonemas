@@ -41,13 +41,14 @@ export const SINFONES_PHONEME_DATA: PhonemeContent = {
     }
   ],
   semaforoPares: [
-    { w1: "BAZO", s1: "Sin R", i1: "🩸", w2: "BRAZO", s2: "Con BR", i2: "🦾", target: 2 },
-    { w1: "PISA", s1: "Sin R", i1: "👣", w2: "PRISA", s2: "Con PR", i2: "🏃‍♂️", target: 2 },
-    { w1: "TONO", s1: "Sin R", i1: "🎵", w2: "TRONO", s2: "Con TR", i2: "👑", target: 2 },
-    { w1: "DADO", s1: "Sin R", i1: "🎲", w2: "DRAGÓN", s2: "Con DR", i2: "🐉", target: 2 },
-    { w1: "GATO", s1: "Sin R", i1: "🐱", w2: "GRATO", s2: "Con GR", i2: "😊", target: 2 },
-    { w1: "COCO", s1: "Sin R", i1: "🥥", w2: "CROMO", s2: "Con CR", i2: "🃏", target: 2 },
-    { w1: "FUTA", s1: "Sin R", i1: "❓", w2: "FRUTA", s2: "Con FR", i2: "🍎", target: 2 }
+    { w1: "GRANO", s1: "Con GR", i1: "grano", w2: "GANO", s2: "Sin R", i2: "ganar", target: 1 },
+    { w1: "PESO", s1: "Sin R", i1: "peso", w2: "PRESO", s2: "Con PR", i2: "preso", target: 2 },
+    { w1: "VAGA", s1: "Sin R", i1: "perezoso", w2: "BRAGA", s2: "Con BR", i2: "braga", target: 2 },
+    { w1: "CABRA", s1: "Con  CR", i1: "cabra", w2: "CAVA", s2: "Sin R", i2: "cavar", target: 1 },
+    { w1: "CROMO", s1: "Con CR", i1: "cromo", w2: "LOMO", s2: "Sin R", i2: "lomo", target: 1 },
+    { w1: "TRONCA", s1: "Con TR", i1: "tronco", w2: "BRONCA", s2: "Sin TR", i2: "pelea", target: 1 },
+    { w1: "PIEDRA", s1: "Con DR", i1: "piedra", w2: "PIEZA", s2: "Sin DR", i2: "pieza", target: 1 },
+    { w1: "OJO ", s1: "Sin GR", i1: "ojo", w2: "OGRO", s2: "Con GR", i2: "ogro", target: 2 }
   ],
   semaforoRadar: {
     title: "Suena o no suena con SINFONES",
@@ -69,40 +70,135 @@ export const SINFONES_PHONEME_DATA: PhonemeContent = {
     ]
   },
   pistaDecir: [
-    { word: "Príncipe", img: "PRÍNCIPE", category: "contiene" },
-    { word: "Libro", img: "LIBRO", category: "contiene" },
-    { word: "Tractor", img: "TRACTOR", category: "contiene" },
-    { word: "Cuadro", img: "CUADRO", category: "contiene" },
-    { word: "Fruta", img: "FRUTA", category: "contiene" },
-    { word: "Grillo", img: "GRILLO", category: "contiene" }
+    // BR
+    { word: "Brazo", img: "brazo", category: "inicio" },
+    { word: "Cebra", img: "cebra", category: "contiene" },
+    { word: "Broche", img: "broche", category: "inicio" },
+    { word: "Libro", img: "libro", category: "contiene" },
+    { word: "Bruja", img: "bruja", category: "inicio" },
+    { word: "Brújula", img: "brújula", category: "inicio" },
+    { word: "Brea", img: "brea", category: "inicio" },
+    { word: "Sobre", img: "sobre", category: "contiene" },
+    { word: "Brillante", img: "brillante", category: "inicio" },
+    { word: "Abrigo", img: "abrigo", category: "contiene" },
+    // PR
+    { word: "Prado", img: "prado", category: "inicio" },
+    { word: "Compra", img: "compra", category: "contiene" },
+    { word: "Profesora", img: "profesora", category: "inicio" },
+    { word: "Aprobar", img: "aprobar", category: "contiene" },
+    { word: "Prueba", img: "prueba", category: "inicio" },
+    { word: "Impresora", img: "impresora", category: "contiene" },
+    { word: "Premio", img: "premio", category: "inicio" },
+    { word: "Sorpresa", img: "sorpresa", category: "contiene" },
+    { word: "Princesa", img: "princesa", category: "inicio" },
+    { word: "Exprimidor", img: "exprimidor", category: "contiene" },
+    // TR
+    { word: "Traje", img: "traje", category: "inicio" },
+    { word: "Retrato", img: "retrato", category: "contiene" },
+    { word: "Trompa", img: "trompa", category: "inicio" },
+    { word: "Potro", img: "potro", category: "contiene" },
+    { word: "Trueno", img: "trueno", category: "inicio" },
+    { word: "Ogro", img: "ogro", category: "contiene" },
+    { word: "Tren", img: "tren", category: "inicio" },
+    { word: "Estrella", img: "estrella", category: "contiene" },
+    { word: "Tripa", img: "tripa", category: "inicio" },
+    { word: "Rastrillo", img: "rastrillo", category: "contiene" },
+    // DR
+    { word: "Dragón", img: "dragón", category: "inicio" },
+    { word: "Almendra", img: "almendra", category: "contiene" },
+    { word: "Cuadro", img: "cuadro", category: "contiene" },
+    { word: "Ladrón", img: "ladrón", category: "contiene" },
+    { word: "Druida", img: "druida", category: "inicio" },
+    { word: "Madrugar", img: "madrugar", category: "contiene" },
+    { word: "Ajedrez", img: "ajedrez", category: "contiene" },
+    { word: "Edredón", img: "edredón", category: "contiene" },
+    { word: "Ladrillo", img: "ladrillo", category: "contiene" },
+    { word: "Cocodrilo", img: "cocodrilo", category: "contiene" },
+    // GR
+    { word: "Granja", img: "granja", category: "inicio" },
+    { word: "Bolígrafo", img: "bolígrafo", category: "contiene" },
+    { word: "Negro", img: "negro", category: "contiene" },
+    { word: "Ogro", img: "ogro", category: "contiene" },
+    { word: "Grúa", img: "grúa", category: "inicio" },
+    { word: "Grupo", img: "grupo", category: "inicio" },
+    { word: "Sangre", img: "sangre", category: "contiene" },
+    { word: "Tigre", img: "tigre", category: "contiene" },
+    { word: "Grifo", img: "grifo", category: "inicio" },
+    { word: "Lágrima", img: "lágrima", category: "contiene" },
+    // CR
+    { word: "Cráter", img: "cráter", category: "inicio" },
+    { word: "Alacrán", img: "alacrán", category: "contiene" },
+    { word: "Croqueta", img: "croqueta", category: "inicio" },
+    { word: "Micrófono", img: "micrófono", category: "contiene" },
+    { word: "Cruz", img: "cruz", category: "inicio" },
+    { word: "Crucero", img: "crucero", category: "inicio" },
+    { word: "Cremallera", img: "cremallera", category: "inicio" },
+    { word: "Secreto", img: "secreto", category: "contiene" },
+    { word: "Cristal", img: "cristal", category: "inicio" },
+    { word: "Escribir", img: "escribir", category: "contiene" },
+    // FR
+    { word: "Frasco", img: "frasco", category: "inicio" },
+    { word: "Disfraz", img: "disfraz", category: "contiene" },
+    { word: "Frotar", img: "frotar", category: "inicio" },
+    { word: "Frontón", img: "fronton", category: "inicio" },
+    { word: "Fruta", img: "fruta", category: "inicio" },
+    { word: "Fruteria", img: "frutería", category: "inicio" },
+    { word: "Fregona", img: "fregona", category: "inicio" },
+    { word: "Cofre", img: "cofre", category: "contiene" },
+    { word: "África", img: "áfrica", category: "contiene" },
+    { word: "Frigorífico", img: "frigorífico", category: "inicio" }
   ],
   gameImages: [
-    { img: "BRAZO", name: "BRAZO" }, { img: "TREN", name: "TREN" }, { img: "DRAGÓN", name: "DRAGÓN" }, { img: "FRESA", name: "FRESA" },
-    { img: "GRÚA", name: "GRÚA" }, { img: "CRISTAL", name: "CRISTAL" }, { img: "PRÍNCIPE", name: "PRÍNCIPE" }, { img: "LIBRO", name: "LIBRO" },
-    { img: "TRACTOR", name: "TRACTOR" }, { img: "CUADRO", name: "CUADRO" }, { img: "FRUTA", name: "FRUTA" }, { img: "GRILLO", name: "GRILLO" }
+    // BR
+    { img: "brazo", name: "BRAZO" }, { img: "bruja", name: "BRUJA" }, { img: "libro", name: "LIBRO" },
+    // PR
+    { img: "prado", name: "PRADO" }, { img: "premio", name: "PREMIO" }, { img: "princesa", name: "PRINCESA" },
+    // TR
+    { img: "traje", name: "TRAJE" }, { img: "tren", name: "TREN" }, { img: "estrella", name: "ESTRELLA" },
+    // DR
+    { img: "dragón", name: "DRAGÓN" }, { img: "cuadro", name: "CUADRO" }, { img: "ladrillo", name: "LADRILLO" },
+    // GR
+    { img: "granja", name: "GRANJA" }, { img: "grúa", name: "GRÚA" }, { img: "tigre", name: "TIGRE" },
+    // CR
+    { img: "cristal", name: "CRISTAL" }, { img: "cruz", name: "CRUZ" }, { img: "cremallera", name: "CREMALLERA" },
+    // FR
+    { img: "fruta", name: "FRUTA" }, { img: "fresa", name: "FRESA" }, { img: "cofre", name: "COFRE" }
   ],
   pistaFrases: [
-    "El príncipe tiene un brazo muy fuerte.",
-    "El tren va por la vía con mucha prisa.",
-    "El dragón echa fuego sobre el prado.",
+    "Tú sombrero es gris.",
+    "El ladrón entró en la fábrica.",
+    "Hay cabras en la granja.",
+    "Mi madre es frutera",
+    "Juan viaja con sus padres a África.",
+    "A Carmen le gustan las fresas",
+    "El dragón triunfó en la pelea",
     "Me gusta comer fresas y mucha fruta.",
+    "A mi primo le gustan las croquetas.",
+    "Necesito un taladro para colgar un cuadro",
+    "Ayer le preparé una sorpresa a mi padre",
+    "Andrés construyó la casa con ladrillos",
+    "Mi hermano toca la trompeta desde los cinco años",
+    "En la orilla de la playa hay un cangrejo",
+    "La abuela prepara una tarta con fresas.",
+    "El carpintero necesitó un taladro para arreglar la estantería.",
+    "La bruja vive en una cabaña en el bosque",
     "La grúa levanta un cristal muy grande."
   ],
   pistaTrabalenguas: [
-    "Tres tristes tigres comen trigo en un trigal.",
-    "El príncipe de Prusia tiene mucha prisa por el prado.",
-    "Brilla el brillo del brazalete de bronce de Cristina."
+    "Cristina crea croquetas crocantes con cremas, ¡qué creativa es Cristina creando!",
+    "Gracia grita con gracia mientras graba a los grandes grillos grises en el granero.",
+    "Francisco fríe frutas frescas frente al fresno, mientras frota su frente con frío."
   ],
   pistaCompletar: [
-    { phrase: "El hijo del rey es el", word: "PRÍNCIPE" },
-    { phrase: "El transporte que va por vías es el", word: "TREN" },
-    { phrase: "El animal que echa fuego es el", word: "DRAGÓN" },
-    { phrase: "La fruta roja pequeña es la", word: "FRESA" },
-    { phrase: "Para levantar cosas pesadas uso la", word: "GRÚA" },
-    { phrase: "En la pared cuelgo un", word: "CUADRO" },
-    { phrase: "Para leer uso un", word: "LIBRO" },
-    { phrase: "La ventana es de", word: "CRISTAL" },
-    { phrase: "En el campo trabaja el", word: "TRACTOR" },
-    { phrase: "La manzana y la pera son", word: "FRUTA" }
+    { phrase: "Para lavarse las manos hay que abrir el...", word: "GRIFO" },
+    { phrase: "La ventana está hecha de...", word: "CRISTAL" },
+    { phrase: "Lo contrario de alegre es...", word: "TRISTE" },
+    { phrase: "Despúes del dos va el númer...", word: "TRES" },
+    { phrase: "Una fruta pequeña y roja con motitas negras es la... ", word: "FRESA" },
+    { phrase: "El señor que trabaja en la granja es el ...", word: "GRANJERO" },
+    { phrase: "El vehículo que sirve para arar el campo es el...", word: "TRACTOR" },
+    { phrase: "Lo contrario de calor es ", word: "FRIO" },
+    { phrase: "Cuando ganamos un concurso nos dan un...", word: "PREMIO" },
+    { phrase: "Para grapar las hojas utilizamos la...", word: "GRAPADORA" },
   ]
 };

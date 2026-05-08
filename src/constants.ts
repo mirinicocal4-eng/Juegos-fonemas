@@ -55,18 +55,28 @@ export const resources = [
     title: "Guía de Articulación /R/", 
     type: "PDF", 
     desc: "Ejercicios visuales para colocar la lengua correctamente.",
+    url: "https://arasaac.org/materials/es/1",
     icon: React.createElement(FileText, { className: "w-6 h-6" })
+  },
+  { 
+    title: "Trabalenguas Sinfones con R", 
+    type: "Scribd", 
+    desc: "Colección de trabalenguas para practicar sinfones con R.",
+    url: "https://es.scribd.com/document/340690342/Trabalenguas-Sinfones-R",
+    icon: React.createElement(BookOpen, { className: "w-6 h-6" })
   },
   { 
     title: "Cuentos para Hablar", 
     type: "Libro", 
     desc: "Historias divertidas centradas en fonemas específicos.",
+    url: "https://arasaac.org/materials/es/2",
     icon: React.createElement(BookOpen, { className: "w-6 h-6" })
   },
   { 
     title: "Fichas de Generalización", 
     type: "Material", 
     desc: "Actividades para casa y el aula.",
+    url: "https://arasaac.org/materials/es/3",
     icon: React.createElement(FileText, { className: "w-6 h-6" })
   }
 ];
