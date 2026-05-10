@@ -47,7 +47,8 @@ export const worldRules: Record<World, string> = {
   DOBBLE: "¡Sé el más rápido! Encuentra la única imagen que se repite en las dos cartas circulares.",
   PHONEME_SELECT: "Selecciona el sonido que quieres practicar hoy.",
   PLAYER_COUNT: "Selecciona cuántos exploradores van a participar en la aventura.",
-  LIBRARY: "Consulta materiales, libros y guías para complementar tu aprendizaje."
+  LIBRARY: "Consulta materiales, libros y guías para complementar tu aprendizaje.",
+  SIMULATOR: "Observa la posición de los órganos y escucha cómo se produce el sonido antes de empezar."
 };
 
 export const resources = [

@@ -180,5 +180,8 @@ export const S_PHONEME_DATA: PhonemeContent = {
     { phrase: "Después del mes de agosto va el mes de...", word: "SEPTIEMBRE" },
     { phrase: "Las cartas se envían por correo con un", word: "SELLO" },
     { phrase: "El lunes, martes, miércoles, jueves, viernes, sábado y domingo forman una...", word: "SEMANA" }
-  ]
+  ],
+  simulatorDescription: "Mandíbula: apertura mínima. Dientes: apertura mínima. Labios: entreabiertos, dejando ver los dientes. Lengua: el ápex lingual toca los alveolos inferiores. Los bordes de la lengua rozan las encías y los molares superiores. El aire sale por la zona central.",
+  videoUrl: "https://www.youtube.com/watch?v=Nc_CwhmzfbA",
+  referenceUrl: "https://soundsofspeech.uiowa.edu/spanish/details"
 };

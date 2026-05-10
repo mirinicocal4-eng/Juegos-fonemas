@@ -1,4 +1,4 @@
-export type World = 'PHONEME_SELECT' | 'PLAYER_COUNT' | 'MENU' | 'TALLER' | 'SEMAFORO' | 'PISTA' | 'COMPLETAR' | 'GRAN_PREMIO' | 'MEMORY' | 'BINGO' | 'LINCE' | 'DOMINO' | 'DOBBLE' | 'LIBRARY';
+export type World = 'PHONEME_SELECT' | 'PLAYER_COUNT' | 'MENU' | 'TALLER' | 'SEMAFORO' | 'PISTA' | 'COMPLETAR' | 'GRAN_PREMIO' | 'MEMORY' | 'BINGO' | 'LINCE' | 'DOMINO' | 'DOBBLE' | 'LIBRARY' | 'SIMULATOR';
 export type Phoneme = 'R' | 'RR' | 'S' | 'Z' | 'SINFONES';
 
 export interface FraseLoca {
@@ -74,6 +74,9 @@ export interface PhonemeContent {
   pistaTrabalenguas: string[];
   pistaCompletar: { phrase: string; word: string }[];
   pdfUrl?: string;
+  simulatorDescription?: string;
+  videoUrl?: string;
+  referenceUrl?: string;
 }
 
 export interface PistaProgress {

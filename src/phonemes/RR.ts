@@ -128,5 +128,8 @@ export const RR_PHONEME_DATA: PhonemeContent = {
     { phrase: "Lo contrario de llorar es ...", word: "REÍR" },
     { phrase: "Un animal pequeño al que le gusta mucho el queso es el...", word: "RATÓN" },
     { phrase: "Al tenis se juega con una pelota y una...", word: "RAQUETA" }
-  ]
+  ],
+  simulatorDescription: "Mandíbula: apertura media. Dientes: entreabiertos. Labios: entreabiertos. Lengua: el ápex lingual presiona los alveolos superiores y los bordes laterales se apoyan en la parte interna de los molares superiores. El ápice lingual desciende repetidas veces permitiendo la salida de aire acumulado (vibración).",
+  videoUrl: "https://www.youtube.com/watch?v=P_AQZl1A1hU",
+  referenceUrl: "https://soundsofspeech.uiowa.edu/spanish/details"
 };

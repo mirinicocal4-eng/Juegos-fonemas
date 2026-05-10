@@ -130,5 +130,8 @@ export const R_PHONEME_DATA: PhonemeContent = {
     { phrase: "En el reloj miramos la...", word: "HORA" },
     { phrase: "Para que no se nos caigan los pantalones nos ponemos el...", word: "CINTURÓN" },
 
-  ]
+  ],
+  simulatorDescription: "Mandíbula: apertura media. Dientes: entreabiertos. Labios: entreabiertos. Lengua: el ápex lingual presiona los alveolos superiores y los bordes laterales se apoyan en la parte interna de los molares superiores. El ápice desciende permitiendo la salida de aire acumulado.",
+  videoUrl: "https://www.youtube.com/watch?v=LJ7-REF1a9E",
+  referenceUrl: "https://soundsofspeech.uiowa.edu/spanish/details"
 };

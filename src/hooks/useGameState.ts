@@ -180,7 +180,7 @@ export const useGameState = () => {
   }, [feedback]);
 
   const selectPhoneme = (phoneme: Phoneme) => {
-    setState({ ...state, phoneme, world: 'PLAYER_COUNT', step: 0, subStep: 0, semaforoPairStep: 0, semaforoRadarStep: 0 });
+    setState({ ...state, phoneme, world: 'SIMULATOR', step: 0, subStep: 0, semaforoPairStep: 0, semaforoRadarStep: 0 });
     setPersistentData(prev => ({ ...prev, lastPhoneme: phoneme }));
     setPistaProgress((prev) => ({
       ...prev,

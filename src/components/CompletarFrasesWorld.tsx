@@ -61,13 +61,7 @@ export const CompletarFrasesWorld: React.FC<CompletarFrasesWorldProps> = ({
     Z: 'z',
     R: 'r_suave',
     RR: 'rr_fuerte',
-    BR: 'sinfones_r',
-    PR: 'sinfones_r',
-    TR: 'sinfones_r',
-    DR: 'sinfones_r',
-    GR: 'sinfones_r',
-    CR: 'sinfones_r',
-    FR: 'sinfones_r'
+    SINFONES: 'sinfones_r'
   };
 
   const frasesLocas = DATA_LOGOPEDIA[fraseBlockMap[phoneme]] || [];

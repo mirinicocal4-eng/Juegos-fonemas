@@ -138,5 +138,8 @@ export const Z_PHONEME_DATA: PhonemeContent = {
     { phrase: "Cuadrado, rectángulo, triángulo y lo redondo se llama...", word: "CÍRCULO" },
     { phrase: "Las personas que no pueden ver están", word: "CIEGAS" },
     { phrase: "Cuando vamos a la piscina, después de bañarnos nos tumbamos en el...", word: "CÉSPED" },
-  ]
+  ],
+  simulatorDescription: "Mandíbula: apertura media. Dientes: separados levemente. Labios: entreabiertos. Lengua: el ápice lingual se coloca entre los incisivos superiores e inferiores, presionando con mayor fuerza los superiores, aunque dejando pasar el aire entre la lengua y los incisivos superiores.",
+  videoUrl: "https://www.youtube.com/watch?v=N1wt62pABpM",
+  referenceUrl: "https://soundsofspeech.uiowa.edu/spanish/details"
 };

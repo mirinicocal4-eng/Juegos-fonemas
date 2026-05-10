@@ -54,11 +54,11 @@ export const SINFONES_PHONEME_DATA: PhonemeContent = {
     title: "Suena o no suena con SINFONES",
     items: [
       // BR
-      { word: "Barco", img: "barco", hasTarget: false }, { word: "Bruto", img: "bruto", hasTarget: true }, { word: "Cabra", img: "cabra", hasTarget: true }, { word: "Bebida", img: "bebida", hasTarget: false }, { word: "Brócoli", img: "brócoli", hasTarget: true }, { word: "Fiebre", img: "fiebre", hasTarget: true }, { word: "Copa", img: "copa", hasTarget: false },
+      { word: "Barco", img: "barco", hasTarget: false }, { word: "Bruma", img: "niebla", hasTarget: true }, { word: "Cabra", img: "cabra", hasTarget: true }, { word: "Bebida", img: "bebida", hasTarget: false }, { word: "Brócoli", img: "brócoli", hasTarget: true }, { word: "Fiebre", img: "fiebre", hasTarget: true }, { word: "Copa", img: "copa", hasTarget: false },
       // PR
       { word: "Premio", img: "premio", hasTarget: true }, { word: "Pesado", img: "pesado", hasTarget: false }, { word: "Prisma", img: "prisma", hasTarget: true }, { word: "Capri", img: "capri", hasTarget: true }, { word: "Pirata", img: "pirata", hasTarget: false }, { word: "Apretar", img: "apretar", hasTarget: true }, { word: "Exprimir", img: "exprimir", hasTarget: true },
       // TR
-      { word: "Traje", img: "Traje", hasTarget: true }, { word: "Tijeras", img: "tijeras", hasTarget: false }, { word: "Trébol", img: "trébol", hasTarget: true }, { word: "Tejado", img: "tejado", hasTarget: false }, { word: "Estrella", img: "estrella", hasTarget: true }, { word: "Trozo", img: "trozo", hasTarget: true }, { word: "Catre", img: "catre", hasTarget: true },
+      { word: "Traje", img: "Traje de vestir", hasTarget: true }, { word: "Tijeras", img: "tijeras", hasTarget: false }, { word: "Trébol", img: "trébol", hasTarget: true }, { word: "Tejado", img: "tejado", hasTarget: false }, { word: "Estrella", img: "estrella", hasTarget: true }, { word: "Trozo", img: "trozo", hasTarget: true }, { word: "Catre", img: "catre", hasTarget: true },
       // DR
       { word: "Madre", img: "Madre", hasTarget: true }, { word: "Dromedario", img: "dromedario", hasTarget: true }, { word: "Cadera", img: "Cadera", hasTarget: false }, { word: "Abril", img: "Abril", hasTarget: false }, { word: "Padre", img: "Padre", hasTarget: true }, { word: "Piedra", img: "Piedra", hasTarget: true }, { word: "Pasta", img: "Pasta", hasTarget: false },
       // GR
@@ -66,7 +66,7 @@ export const SINFONES_PHONEME_DATA: PhonemeContent = {
       // CR
       { word: "Carta", img: "Carta", hasTarget: false }, { word: "Cruzada", img: "cruzada", hasTarget: true }, { word: "Alacrán", img: "alacrán", hasTarget: true }, { word: "Crujiente", img: "crujiente", hasTarget: true }, { word: "Acortar", img: "acortar", hasTarget: false }, { word: "Corteza", img: "corteza", hasTarget: false }, { word: "Crema", img: "crema", hasTarget: true },
       // FR
-      { word: "Fernando", img: "Fernando", hasTarget: false }, { word: "Francia", img: "Francia", hasTarget: true }, { word: "Cofre", img: "Cofre", hasTarget: true }, { word: "Sopa", img: "Sopa", hasTarget: false }, { word: "Frutería", img: "Frutería", hasTarget: true }, { word: "África", img: "África", hasTarget: true }, { word: "Café", img: "café", hasTarget: false }
+      { word: "portal", img: "portal", hasTarget: false }, { word: "Francia", img: "Francia", hasTarget: true }, { word: "Cofre", img: "Cofre", hasTarget: true }, { word: "Sopa", img: "Sopa", hasTarget: false }, { word: "Frutería", img: "Frutería", hasTarget: true }, { word: "África", img: "África", hasTarget: true }, { word: "Café", img: "café", hasTarget: false }
     ]
   },
   pistaDecir: [
@@ -77,7 +77,7 @@ export const SINFONES_PHONEME_DATA: PhonemeContent = {
     { word: "Libro", img: "libro", category: "contiene" },
     { word: "Bruja", img: "bruja", category: "inicio" },
     { word: "Brújula", img: "brújula", category: "inicio" },
-    { word: "Brea", img: "brea", category: "inicio" },
+    { word: "Brea", img: "petróleo", category: "inicio" },
     { word: "Sobre", img: "sobre", category: "contiene" },
     { word: "Brillante", img: "brillante", category: "inicio" },
     { word: "Abrigo", img: "abrigo", category: "contiene" },
@@ -200,5 +200,8 @@ export const SINFONES_PHONEME_DATA: PhonemeContent = {
     { phrase: "Lo contrario de calor es ", word: "FRIO" },
     { phrase: "Cuando ganamos un concurso nos dan un...", word: "PREMIO" },
     { phrase: "Para grapar las hojas utilizamos la...", word: "GRAPADORA" },
-  ]
+  ],
+  simulatorDescription: "Los sinfones son grupos de dos consonantes seguidas (como BR, PR, TR). La clave es la transición rápida. Se recomienda usar la técnica de la 'vocal puente': articular por separado y luego unir aumentando la velocidad (ej: P-a-R-a -> PARA -> PRA).",
+  videoUrl: "https://www.youtube.com/watch?v=E2tdB3kvNZ8",
+  referenceUrl: "https://soundsofspeech.uiowa.edu/spanish/details"
 };

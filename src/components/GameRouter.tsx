@@ -12,6 +12,7 @@ import { Bingo } from './Bingo';
 import { Lince } from './Lince';
 import { Domino } from './Domino';
 import { Dobble } from './Dobble';
+import PhonemeSimulator from './PhonemeSimulator';
 import { PHONEME_DATA } from '../phonemes';
 import { World, Phoneme } from '../types';
 import { useGameState } from '../hooks/useGameState';
@@ -130,7 +131,6 @@ export const GameRouter: React.FC<GameRouterProps> = ({ game, onUpload, onDelete
               </div>
             </motion.div>
           )}
-
           {state.world === 'PLAYER_COUNT' && (
             <motion.div 
               key="world-player-count"
@@ -159,6 +159,32 @@ export const GameRouter: React.FC<GameRouterProps> = ({ game, onUpload, onDelete
             </motion.div>
           )}
 
+          {state.world === 'SIMULATOR' && (
+            <motion.div
+              key="world-simulator"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="space-y-6"
+            >
+              <PhonemeSimulator 
+                phoneme={state.phoneme}
+                description={currentData.simulatorDescription || "Posición básica de reposo."}
+                soundText={state.phoneme === 'Z' ? 'z z z z' : state.phoneme === 'S' ? 's s s s' : state.phoneme}
+                videoUrl={currentData.videoUrl}
+                referenceUrl={currentData.referenceUrl}
+              />
+              
+              <div className="flex gap-4">
+                <button 
+                  onClick={() => setState({ ...state, world: state.playerCount > 0 ? 'MENU' : 'PLAYER_COUNT' })}
+                  className="flex-1 bg-white text-black font-black py-4 rounded-xl hover:bg-zinc-200 transition-all flex items-center justify-center gap-2 uppercase italic"
+                >
+                  {state.playerCount > 0 ? 'Volver al menú' : 'Continuar a la aventura'} <ChevronRight className="w-5 h-5" />
+                </button>
+              </div>
+            </motion.div>
+          )}
+
           {state.world === 'MENU' && (
             <motion.div 
               key="menu"
@@ -174,6 +200,9 @@ export const GameRouter: React.FC<GameRouterProps> = ({ game, onUpload, onDelete
                   </button>
                   <button onClick={() => setState({ ...state, world: 'PLAYER_COUNT' })} className="px-4 py-1 bg-zinc-800 text-zinc-400 rounded-full text-xs font-bold uppercase hover:text-white transition-colors">
                     Jugadores ({state.playerCount})
+                  </button>
+                  <button onClick={() => setState({ ...state, world: 'SIMULATOR' })} className="px-4 py-1 bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 rounded-full text-xs font-bold uppercase hover:bg-indigo-600/30 transition-colors">
+                    Ver articulación 🎙️
                   </button>
                 </div>
                 <h2 className="text-4xl font-black text-white italic uppercase tracking-tighter">
