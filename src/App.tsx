@@ -150,7 +150,7 @@ export default function App() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-6"
+            className="fixed inset-0 z-100 bg-black/80 backdrop-blur-sm flex items-center justify-center p-6"
           >
             <motion.div 
               initial={{ scale: 0.9, y: 20 }}
@@ -184,7 +184,7 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               onClick={() => setFeedback(null)}
-              className={`fixed top-24 left-1/2 -translate-x-1/2 z-[60] p-4 rounded-2xl shadow-2xl border-2 backdrop-blur-xl flex items-center gap-3 min-w-[300px] justify-center cursor-pointer hover:scale-105 transition-transform ${
+              className={`fixed top-24 left-1/2 -translate-x-1/2 z-60 p-4 rounded-2xl shadow-2xl border-2 backdrop-blur-xl flex items-center gap-3 min-w-75 justify-center cursor-pointer hover:scale-105 transition-transform ${
                 feedback.type === 'success' ? 'bg-green-600/20 border-green-500 text-green-400' :
                 feedback.type === 'error' ? 'bg-red-600/20 border-red-500 text-red-400' :
                 'bg-zinc-900/80 border-zinc-700 text-zinc-300'

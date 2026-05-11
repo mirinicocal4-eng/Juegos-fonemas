@@ -269,7 +269,7 @@ export const Semaforo: React.FC<SemaforoProps> = ({
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0 }}
-                      className={`bg-zinc-800 border rounded-xl p-4 transition-all min-h-[340px] ${isCorrect ? 'border-emerald-500 bg-emerald-950' : showCorrect ? 'border-red-500 bg-red-950' : 'border-zinc-700 hover:bg-zinc-700'}`}
+                      className={`bg-zinc-800 border rounded-xl p-4 transition-all min-h-85 ${isCorrect ? 'border-emerald-500 bg-emerald-950' : showCorrect ? 'border-red-500 bg-red-950' : 'border-zinc-700 hover:bg-zinc-700'}`}
                     >
                       <div className="flex items-center gap-4">
                         <div className="w-14 h-14 rounded-2xl bg-zinc-950 border border-zinc-800 flex items-center justify-center text-2xl">
@@ -329,7 +329,7 @@ export const Semaforo: React.FC<SemaforoProps> = ({
                       key="radar-empty"
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="bg-zinc-800 border border-zinc-700 rounded-xl p-6 text-center min-h-[340px]"
+                      className="bg-zinc-800 border border-zinc-700 rounded-xl p-6 text-center min-h-85"
                     >
                       <p className="text-zinc-300">No hay sonidos disponibles en radar.</p>
                     </motion.div>
@@ -363,7 +363,7 @@ export const Semaforo: React.FC<SemaforoProps> = ({
                   </button>
                 </div>
 
-                <div className="space-y-4 min-h-[260px]">
+                <div className="space-y-4 min-h-65">
                   {showOptionalRadar && (
                     optionalItem ? (
                       <motion.div
@@ -371,7 +371,7 @@ export const Semaforo: React.FC<SemaforoProps> = ({
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0 }}
-                        className={`bg-zinc-800 border rounded-xl p-4 transition-all min-h-[260px] ${optionalIsCorrect ? 'border-emerald-500 bg-emerald-950' : optionalShowCorrect ? 'border-red-500 bg-red-950' : 'border-zinc-700 hover:bg-zinc-700'}`}
+                        className={`bg-zinc-800 border rounded-xl p-4 transition-all min-h-65 ${optionalIsCorrect ? 'border-emerald-500 bg-emerald-950' : optionalShowCorrect ? 'border-red-500 bg-red-950' : 'border-zinc-700 hover:bg-zinc-700'}`}
                       >
                         <div className="flex items-center gap-4">
                           <div className="w-14 h-14 rounded-2xl bg-zinc-950 border border-zinc-800 flex items-center justify-center text-2xl">
@@ -438,7 +438,7 @@ export const Semaforo: React.FC<SemaforoProps> = ({
                         key="optional-empty"
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="bg-zinc-800 border border-zinc-700 rounded-xl p-6 text-center min-h-[260px]"
+                        className="bg-zinc-800 border border-zinc-700 rounded-xl p-6 text-center min-h-65"
                       >
                         <p className="text-zinc-300">No hay sonidos opcionales disponibles.</p>
                       </motion.div>
