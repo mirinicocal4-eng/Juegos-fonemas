@@ -2,85 +2,65 @@ import * as React from 'react';
 import { FrasesLocas } from './FrasesLocas';
 import { FraseLoca } from '../types';
 
-type PieceKey = 'sujeto' | 'verbo' | 'complemento';
-
-type FrasesLocasWorldProps = {
+interface FrasesLocasWorldProps {
   phrases: FraseLoca[];
   setFeedback: (fb: { type: 'success' | 'error' | 'info'; message: string } | null) => void;
   onAdvance: () => void;
-};
+}
 
-const shuffleArray = <T,>(items: T[]) => [...items].sort(() => Math.random() - 0.5);
+export type PhrasePiece = { text: string; img?: string };
 
 export const FrasesLocasWorld: React.FC<FrasesLocasWorldProps> = ({
   phrases,
   setFeedback,
   onAdvance
 }) => {
-  const [originalPhrases, setOriginalPhrases] = React.useState<FraseLoca[]>([]);
-  const [currentPhrases, setCurrentPhrases] = React.useState<FraseLoca[]>([]);
+  // Extraemos todas las piezas únicas del pool de frases
+  const pieces = React.useMemo(() => {
+    const sujetosMap = new Map<string, string | undefined>();
+    const verbosMap = new Map<string, string | undefined>();
+    const complementosMap = new Map<string, string | undefined>();
 
-  React.useEffect(() => {
-    setOriginalPhrases(phrases.map((phrase) => ({ ...phrase })));
-    setCurrentPhrases(phrases.map((phrase) => ({ ...phrase })));
-  }, [phrases]);
-
-  const getImageKey = (piece: PieceKey) =>
-    piece === 'sujeto' ? 'sujetoImg' : piece === 'verbo' ? 'verboImg' : 'complementoImg';
-
-  const handleSwapGroup = (piece: PieceKey) => {
-    const keys = currentPhrases.map((phrase) => phrase[piece]);
-    const imgs = currentPhrases.map((phrase) => phrase[getImageKey(piece) as keyof FraseLoca]);
-    const shuffledKeys = shuffleArray(keys);
-    const shuffledImgs = shuffleArray(imgs);
-
-    const nextPhrases = currentPhrases.map((phrase, index) => {
-      const nextPhrase = { ...phrase };
-      const nextImage = shuffledImgs[index] as string | undefined;
-
-      if (piece === 'sujeto') {
-        nextPhrase.sujeto = shuffledKeys[index];
-        nextPhrase.sujetoImg = nextImage;
-      } else if (piece === 'verbo') {
-        nextPhrase.verbo = shuffledKeys[index];
-        nextPhrase.verboImg = nextImage;
-      } else {
-        nextPhrase.complemento = shuffledKeys[index];
-        nextPhrase.complementoImg = nextImage;
-      }
-
-      return nextPhrase;
+    phrases.forEach(p => {
+      sujetosMap.set(p.sujeto, p.sujetoImg);
+      verbosMap.set(p.verbo, p.verboImg);
+      complementosMap.set(p.complemento, p.complementoImg);
     });
 
-    setCurrentPhrases(nextPhrases);
-    setFeedback({ type: 'info', message: `Se mezclaron los ${piece} entre todas las frases.` });
-  };
+    return {
+      sujetos: Array.from(sujetosMap.entries()).map(([text, img]) => ({ text, img })),
+      verbos: Array.from(verbosMap.entries()).map(([text, img]) => ({ text, img })),
+      complementos: Array.from(complementosMap.entries()).map(([text, img]) => ({ text, img }))
+    };
+  }, [phrases]);
 
-  const handleShuffleAll = () => {
-    const subjects = shuffleArray(currentPhrases.map((phrase) => phrase.sujeto));
-    const verbs = shuffleArray(currentPhrases.map((phrase) => phrase.verbo));
-    const complements = shuffleArray(currentPhrases.map((phrase) => phrase.complemento));
-    const sujetoImgs = shuffleArray(currentPhrases.map((phrase) => phrase.sujetoImg));
-    const verboImgs = shuffleArray(currentPhrases.map((phrase) => phrase.verboImg));
-    const complementoImgs = shuffleArray(currentPhrases.map((phrase) => phrase.complementoImg));
+  const [selectedSujeto, setSelectedSujeto] = React.useState<PhrasePiece | null>(null);
+  const [selectedVerbo, setSelectedVerbo] = React.useState<PhrasePiece | null>(null);
+  const [selectedComplemento, setSelectedComplemento] = React.useState<PhrasePiece | null>(null);
+  const [history, setHistory] = React.useState<string[]>([]);
 
-    const nextPhrases = currentPhrases.map((phrase, index) => ({
-      ...phrase,
-      sujeto: subjects[index],
-      verbo: verbs[index],
-      complemento: complements[index],
-      sujetoImg: sujetoImgs[index],
-      verboImg: verboImgs[index],
-      complementoImg: complementoImgs[index]
-    }));
-
-    setCurrentPhrases(nextPhrases);
-    setFeedback({ type: 'info', message: 'Se mezclaron todas las partes entre las frases.' });
+  const handleSelect = (type: 'sujeto' | 'verbo' | 'complemento', piece: PhrasePiece) => {
+    if (type === 'sujeto') setSelectedSujeto(piece);
+    else if (type === 'verbo') setSelectedVerbo(piece);
+    else setSelectedComplemento(piece);
+    
+    setFeedback({ type: 'info', message: `Has seleccionado: ${piece.text}` });
   };
 
   const handleReset = () => {
-    setCurrentPhrases(originalPhrases.map((phrase) => ({ ...phrase })));
-    setFeedback({ type: 'info', message: 'Frases originales restauradas.' });
+    setSelectedSujeto(null);
+    setSelectedVerbo(null);
+    setSelectedComplemento(null);
+    setFeedback({ type: 'info', message: 'Selección reiniciada.' });
+  };
+
+  const handleFinalize = () => {
+    if (selectedSujeto && selectedVerbo && selectedComplemento) {
+      const newPhrase = `${selectedSujeto.text} ${selectedVerbo.text} ${selectedComplemento.text}.`;
+      setHistory(prev => [newPhrase, ...prev]);
+      handleReset();
+      setFeedback({ type: 'success', message: '¡Frase guardada en tu colección!' });
+    }
   };
 
   if (phrases.length === 0) {
@@ -93,11 +73,17 @@ export const FrasesLocasWorld: React.FC<FrasesLocasWorldProps> = ({
 
   return (
     <FrasesLocas
-      phrases={currentPhrases}
-      onSwapGroup={handleSwapGroup}
-      onShuffleAll={handleShuffleAll}
+      pieces={pieces}
+      selected={{
+        sujeto: selectedSujeto,
+        verbo: selectedVerbo,
+        complemento: selectedComplemento
+      }}
+      history={history}
+      onSelect={handleSelect}
       onReset={handleReset}
-      onAdvance={onAdvance}
+      onFinalize={handleFinalize}
+      onClose={onAdvance}
     />
   );
 };

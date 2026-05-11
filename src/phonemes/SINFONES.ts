@@ -41,14 +41,14 @@ export const SINFONES_PHONEME_DATA: PhonemeContent = {
     }
   ],
   semaforoPares: [
-    { w1: "GRANO", s1: "Con GR", i1: "grano", w2: "GANO", s2: "Sin R", i2: "ganar", target: 1 },
-    { w1: "PESO", s1: "Sin R", i1: "peso", w2: "PRESO", s2: "Con PR", i2: "preso", target: 2 },
-    { w1: "VAGA", s1: "Sin R", i1: "perezoso", w2: "BRAGA", s2: "Con BR", i2: "braga", target: 2 },
-    { w1: "CABRA", s1: "Con  CR", i1: "cabra", w2: "CAVA", s2: "Sin R", i2: "cavar", target: 1 },
-    { w1: "CROMO", s1: "Con CR", i1: "cromo", w2: "LOMO", s2: "Sin R", i2: "lomo", target: 1 },
-    { w1: "TRONCA", s1: "Con TR", i1: "tronco", w2: "BRONCA", s2: "Sin TR", i2: "pelea", target: 1 },
-    { w1: "PIEDRA", s1: "Con DR", i1: "piedra", w2: "PIEZA", s2: "Sin DR", i2: "pieza", target: 1 },
-    { w1: "OJO ", s1: "Sin GR", i1: "ojo", w2: "OGRO", s2: "Con GR", i2: "ogro", target: 2 }
+    { w1: "GRANO", s1: "Con GR", i1_img: "grano", w2: "GANO", s2: "Sin R", i2_img: "ganar", target: 1 },
+    { w1: "PESO", s1: "Sin R", i1_img: "peso", w2: "PRESO", s2: "Con PR", i2_img: "preso", target: 2 },
+    { w1: "VAGA", s1: "Sin R", i1_img: "perezoso", w2: "BRAGA", s2: "Con BR", i2_img: "braga", target: 2 },
+    { w1: "CABRA", s1: "Con  CR", i1_img: "cabra", w2: "CAVA", s2: "Sin R", i2_img: "cavar", target: 1 },
+    { w1: "CROMO", s1: "Con CR", i1_img: "cromo", w2: "LOMO", s2: "Sin R", i2_img: "lomo", target: 1 },
+    { w1: "TRONCA", s1: "Con TR", i1_img: "tronco", w2: "BRONCA", s2: "Sin TR", i2_img: "pelea", target: 1 },
+    { w1: "PIEDRA", s1: "Con DR", i1_img: "piedra", w2: "PIEZA", s2: "Sin DR", i2_img: "pieza", target: 1 },
+    { w1: "OJO ", s1: "Sin GR", i1_img: "ojo", w2: "OGRO", s2: "Con GR", i2_img: "ogro", target: 2 }
   ],
   semaforoRadar: {
     title: "Suena o no suena con SINFONES",
@@ -150,19 +150,20 @@ export const SINFONES_PHONEME_DATA: PhonemeContent = {
   ],
   gameImages: [
     // BR
-    { img: "brazo", name: "BRAZO" }, { img: "bruja", name: "BRUJA" }, { img: "libro", name: "LIBRO" },
+    { img: "brazo", name: "BRAZO" }, { img: "bruja", name: "BRUJA" }, { img: "libro", name: "LIBRO" }, { img: "abrigo", name: "ABRIGO" },
     // PR
-    { img: "prado", name: "PRADO" }, { img: "premio", name: "PREMIO" }, { img: "princesa", name: "PRINCESA" },
+    { img: "prado", name: "PRADO" }, { img: "premio", name: "PREMIO" }, { img: "princesa", name: "PRINCESA" }, { img: "impresora", name: "IMPRESORA" },
     // TR
-    { img: "traje", name: "TRAJE" }, { img: "tren", name: "TREN" }, { img: "estrella", name: "ESTRELLA" },
+    { img: "traje", name: "TRAJE" }, { img: "tren", name: "TREN" }, { img: "estrella", name: "ESTRELLA" }, { img: "trompa", name: "TROMPA" },
     // DR
-    { img: "dragón", name: "DRAGÓN" }, { img: "cuadro", name: "CUADRO" }, { img: "ladrillo", name: "LADRILLO" },
+    { img: "dragón", name: "DRAGÓN" }, { img: "cuadro", name: "CUADRO" }, { img: "ladrillo", name: "LADRILLO" }, { img: "cocodrilo", name: "COCODRILO" },
     // GR
-    { img: "granja", name: "GRANJA" }, { img: "grúa", name: "GRÚA" }, { img: "tigre", name: "TIGRE" },
+    { img: "granja", name: "GRANJA" }, { img: "grúa", name: "GRÚA" }, { img: "tigre", name: "TIGRE" }, { img: "grifo", name: "GRIFO" },
     // CR
-    { img: "cristal", name: "CRISTAL" }, { img: "cruz", name: "CRUZ" }, { img: "cremallera", name: "CREMALLERA" },
+    { img: "cristal", name: "CRISTAL" }, { img: "cruz", name: "CRUZ" }, { img: "cremallera", name: "CREMALLERA" }, { img: "micrófono", name: "MICRÓFONO" },
     // FR
-    { img: "fruta", name: "FRUTA" }, { img: "fresa", name: "FRESA" }, { img: "cofre", name: "COFRE" }
+    { img: "fruta", name: "FRUTA" }, { img: "fresa", name: "FRESA" }, { img: "cofre", name: "COFRE" }, { img: "frasco", name: "FRASCO" },
+    { img: "disfraz", name: "DISFRAZ" }, { img: "fregona", name: "FREGONA" }
   ],
   pistaFrases: [
     "Tú sombrero es gris.",

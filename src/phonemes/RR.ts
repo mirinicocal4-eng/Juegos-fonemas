@@ -97,7 +97,10 @@ export const RR_PHONEME_DATA: PhonemeContent = {
     { img: "BURRO", name: "BURRO" }, { img: "BARRO", name: "BARRO" }, { img: "CORRER", name: "CORRER" }, { img: "CORRO", name: "CORRO" },
     { img: "BECERRO", name: "BECERRO" }, { img: "ZORRA", name: "ZORRA" }, { img: "CARRETERA", name: "CARRETERA" }, { img: "BARRIL", name: "BARRIL" },
     { img: "CARRETA", name: "CARRETA" }, { img: "ARREGLAR", name: "ARREGLAR" }, { img: "JARRÓN", name: "JARRÓN" }, { img: "CATARRO", name: "CATARRO" },
-    { img: "ARROYO", name: "ARROYO" }, { img: "BARRA", name: "BARRA" }, { img: "TIERRA", name: "TIERRA" }, { img: "RULETA", name: "RULETA" }
+    { img: "ARROYO", name: "ARROYO" }, { img: "BARRA", name: "BARRA" }, { img: "TIERRA", name: "TIERRA" }, { img: "RULETA", name: "RULETA" },
+    { img: "RANA", name: "RANA" }, { img: "RADIO", name: "RADIO" }, { img: "ROSA", name: "ROSA" }, { img: "REY", name: "REY" },
+    { img: "RELOJ", name: "RELOJ" }, { img: "RÍO", name: "RÍO" }, { img: "RISA", name: "RISA" }, { img: "JARRA", name: "JARRA" },
+    { img: "GORRO", name: "GORRO" }, { img: "SERRUCHO", name: "SERRUCHO" }
   ],
   pistaFrases: [
     "La rana Renata roe pan.",

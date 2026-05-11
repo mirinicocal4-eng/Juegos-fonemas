@@ -96,7 +96,10 @@ export const R_PHONEME_DATA: PhonemeContent = {
     { img: "ORUGA", name: "ORUGA" }, { img: "PIRULETA", name: "PIRULETA" }, { img: "PARED", name: "PARED" }, { img: "SIRENA", name: "SIRENA" },
     { img: "NARIZ", name: "NARIZ" }, { img: "MARIQUITA", name: "MARIQUITA" }, { img: "CARTA", name: "CARTA" }, { img: "ÁRBOL", name: "ÁRBOL" },
     { img: "CORBATA", name: "CORBATA" }, { img: "TORTUGA", name: "TORTUGA" }, { img: "CURVA", name: "CURVA" }, { img: "BURBUJA", name: "BURBUJA" },
-    { img: "CERDO", name: "CERDO" }, { img: "SERPIENTE", name: "SERPIENTE" }, { img: "CIRCO", name: "CIRCO" }, { img: "CÍRCULO", name: "CÍRCULO" }
+    { img: "CERDO", name: "CERDO" }, { img: "SERPIENTE", name: "SERPIENTE" }, { img: "CIRCO", name: "CIRCO" }, { img: "CÍRCULO", name: "CÍRCULO" },
+    { img: "PARAGUAS", name: "PARAGUAS" }, { img: "SALERO", name: "SALERO" }, { img: "CABALLERO", name: "CABALLERO" }, { img: "BIBERÓN", name: "BIBERÓN" },
+    { img: "PIRÁMIDE", name: "PIRÁMIDE" }, { img: "CARACOL", name: "CARACOL" }, { img: "CANGURO", name: "CANGURO" }, { img: "JIRAFA", name: "JIRAFA" },
+    { img: "TIBURÓN", name: "TIBURÓN" }, { img: "ARAÑA", name: "ARAÑA" }
   ],
   pistaFrases: [
     "En el campo hay gusanos,mariquitas, orugas, mariposas y hormigas.",

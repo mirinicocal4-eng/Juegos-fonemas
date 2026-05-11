@@ -9,14 +9,14 @@ export const Z_PHONEME_DATA: PhonemeContent = {
     { title: "¡Zumbido final!", instruction: "Di las sílabas mágicas:", sound: "ZA-CE-CI-ZO-ZU", tip: "¡No escondas la lengua!", img: "zumbido" }
   ],
   semaforoPares: [
-    { w1: "ABRAZO", s1: "Con Z", i1_img: "https://static.arasaac.org/pictograms/4550/4550_300.png", w2: "ABRASO", s2: "Con S", i2_img: "https://static.arasaac.org/pictograms/6196/6196_300.png", target: 1 },
-    { w1: "CAZA", s1: "Con Z", i1_img: "https://static.arasaac.org/pictograms/8533/8533_300.png", w2: "CASA", s2: "Con S", i2_img: "https://static.arasaac.org/pictograms/2317/2317_300.png", target: 1 },
-    { w1: "COCER", s1: "Con C", i1_img: "https://static.arasaac.org/pictograms/6984/6984_300.png", w2: "COSER", s2: "Con S", i2_img: "https://static.arasaac.org/pictograms/2722/2722_300.png", target: 1 },
-    { w1: "CAZO", s1: "Con Z", i1_img: "https://static.arasaac.org/pictograms/3230/3230_300.png", w2: "CASO", s2: "Con S", i2_img: "https://static.arasaac.org/pictograms/6965/6965_300.png", target: 1 },
-    { w1: "CENA", s1: "Con C", i1_img: "https://static.arasaac.org/pictograms/4592/4592_300.png", w2: "PENA", s2: "Con P", i2_img: "https://static.arasaac.org/pictograms/31939/31939_300.png", target: 1 },
-    { w1: "ZORRO", s1: "Con Z/C", i1_img: "https://static.arasaac.org/pictograms/2623/2623_300.png", w2: "CORRO", s2: "Con C", i2_img: "https://static.arasaac.org/pictograms/16739/16739_300.png", target: 1 },
-    { w1: "MAZO", s1: "Con Z", i1_img: "https://static.arasaac.org/pictograms/36937/36937_300.png", w2: "MANO", s2: "Con S", i2_img: "https://static.arasaac.org/pictograms/2928/2928_300.png", target: 1 },
-    { w1: "COZ", s1: "Con Z", i1_img: "https://static.arasaac.org/pictograms/16617/16617_300.png", w2: "COL", s2: "Con S", i2_img: "https://static.arasaac.org/pictograms/2708/2708_300.png", target: 1 },
+    { w1: "ABRAZO", s1: "Con Z", i1_img: "ABRAZO", w2: "ABRASO", s2: "Con S", i2_img: "FUEGO", target: 1 },
+    { w1: "CAZA", s1: "Con Z", i1_img: "CAZA", w2: "CASA", s2: "Con S", i2_img: "CASA", target: 1 },
+    { w1: "COCER", s1: "Con C", i1_img: "COCINAR", w2: "COSER", s2: "Con S", i2_img: "COSER", target: 1 },
+    { w1: "CAZO", s1: "Con Z", i1_img: "CAZO", w2: "CASO", s2: "Con S", i2_img: "DUDAR", target: 1 },
+    { w1: "CENA", s1: "Con C", i1_img: "CENA", w2: "PENA", s2: "Con P", i2_img: "TRISTE", target: 1 },
+    { w1: "ZORRO", s1: "Con Z/C", i1_img: "ZORRO", w2: "CORRO", s2: "Con C", i2_img: "NIÑOS", target: 1 },
+    { w1: "MAZO", s1: "Con Z", i1_img: "MAZO", w2: "MANO", s2: "Con S", i2_img: "MANO", target: 1 },
+    { w1: "COZ", s1: "Con Z", i1_img: "COZ", w2: "COL", s2: "Con S", i2_img: "COL", target: 1 }
     
 
   ],
@@ -95,7 +95,8 @@ export const Z_PHONEME_DATA: PhonemeContent = {
     { img: "CEREZA", name: "CEREZA" }, { img: "CEBOLLA", name: "CEBOLLA" }, { img: "CAZO", name: "CAZO" }, { img: "MAÍZ", name: "MAÍZ" },
     { img: "NARIZ", name: "NARIZ" }, { img: "CINE", name: "CINE" }, { img: "COCINA", name: "COCINA" }, { img: "AZÚCAR", name: "AZÚCAR" },
     { img: "CESTA", name: "CESTA" }, { img: "ZAPATERÍA", name: "ZAPATERÍA" }, { img: "ARROZ", name: "ARROZ" }, { img: "AZUL", name: "AZUL" },
-    { img: "ZOO", name: "ZOO" }, { img: "MAZA", name: "MAZA" }, { img: "CEPILLO", name: "CEPILLO" }, { img: "CERILLA", name: "CERILLA" }
+    { img: "ZOO", name: "ZOO" }, { img: "MAZA", name: "MAZA" }, { img: "CEPILLO", name: "CEPILLO" }, { img: "CERILLA", name: "CERILLA" },
+    { img: "CISNE", name: "CISNE" }, { img: "BICICLETA", name: "BICICLETA" }
   ],
   pistaFrases: [
     "Celia cepilla a su perro.",
