@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { motion } from 'motion/react';
-import { ChevronRight, Volume2 } from 'lucide-react';
-import { Phoneme, SemaforoPair, SemaforoRadarItem } from '../types';
+import { ChevronRight, Volume2, Mic } from 'lucide-react';
+import { Phoneme, SemaforoPair, SemaforoRadarItem, PistaEcoItem } from '../types';
 import { VisualContent } from './VisualContent';
 import { setupSpeechVoices, speakText } from '../utils/speech';
 
@@ -12,6 +12,7 @@ interface SemaforoProps {
   semaforoPares: SemaforoPair[];
   semaforoRadar: SemaforoRadarItem[];
   optionalSemaforoRadar: SemaforoRadarItem[];
+  pistaEco: PistaEcoItem[];
   semaforoRadarTitle?: string;
   onSetSubStep: (subStep: number) => void;
   onNextStep: () => void;
@@ -25,6 +26,7 @@ export const Semaforo: React.FC<SemaforoProps> = ({
   semaforoPares,
   semaforoRadar,
   optionalSemaforoRadar,
+  pistaEco,
   semaforoRadarTitle,
   onSetSubStep,
   onNextStep,
@@ -220,149 +222,72 @@ export const Semaforo: React.FC<SemaforoProps> = ({
           </button>
         </div>
       ) : (
-        <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 space-y-8">
-          <div className="text-center space-y-4">
-            <p className="text-zinc-400 uppercase tracking-widest text-xs font-bold">{semaforoRadarTitle || 'Radar de Sonidos'}</p>
-            <p className="text-lg text-white italic">¿Contiene el sonido {phoneme === 'RR' ? 'fuerte' : (phoneme === 'SINFONES' ? 'trabado' : phoneme)}?</p>
-          </div>
-
-          <div className="grid grid-cols-1 gap-4" style={{ overflowAnchor: 'none' }}>
-            {semaforoRadar && semaforoRadar.length > 0 ? (
-              (() => {
-                const item = semaforoRadar[step];
-                const result = radarResults[step];
-                const isCorrect = result?.correct;
-                const showCorrect = result?.showCorrect ?? false;
-                const revealed = isCorrect || showCorrect;
-                const showButtons = !result || (!isCorrect && result?.attempts < 2 && !showCorrect);
-
-                return item ? (
-                  <motion.div
-                    key={step}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0 }}
-                    className={`bg-zinc-800 border rounded-xl p-4 transition-all min-h-[340px] ${isCorrect ? 'border-emerald-500 bg-emerald-950' : showCorrect ? 'border-red-500 bg-red-950' : 'border-zinc-700 hover:bg-zinc-700'}`}
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="w-14 h-14 rounded-2xl bg-zinc-950 border border-zinc-800 flex items-center justify-center text-2xl">
-                        {revealed ? (
-                          <VisualContent content={item.img || '❓'} alt={item.word} className="text-3xl" />
-                        ) : (
-                          <span className="text-zinc-500">?</span>
-                        )}
-                      </div>
-
-                      <div className="flex-1">
-                        <p className="text-zinc-400 uppercase tracking-widest text-[10px] font-bold">Radar {step + 1} / {semaforoRadar.length}</p>
-                        <p className="text-lg font-black text-white italic">{revealed ? item.word : 'Escucha y decide'}</p>
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={() => speakWord(item.word)}
-                        className="p-2 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white"
-                      >
-                        <Volume2 className="w-5 h-5" />
-                      </button>
-                    </div>
-
-                    <div className="mt-4 flex flex-col gap-3">
-                      {showButtons ? (
-                        <div className="flex gap-3">
-                          {(['si', 'no'] as const).map((value) => (
-                            <button
-                              key={value}
-                              type="button"
-                              onClick={() => handleRadarAnswer(step, value, item)}
-                              className="flex-1 rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-3 text-sm font-bold uppercase tracking-widest text-white hover:border-indigo-500 hover:bg-zinc-800"
-                            >
-                              {value === 'si' ? 'Sí' : 'No'}
-                            </button>
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="space-y-3">
-                          <p className={`text-sm font-semibold ${isCorrect ? 'text-emerald-300' : 'text-red-300'}`}>
-                            {isCorrect ? 'Correcto' : 'La respuesta correcta es'} {showCorrect && !isCorrect ? (item.hasTarget ? 'Sí' : 'No') : ''}
-                          </p>
-                          <button
-                            type="button"
-                            onClick={onNextStep}
-                            className="w-full rounded-xl bg-indigo-600 px-4 py-3 text-sm font-bold uppercase tracking-widest text-white hover:bg-indigo-500"
-                          >
-                            {step < semaforoRadar.length - 1 ? 'Siguiente sonido' : 'Finalizar radar'}
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="radar-empty"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="bg-zinc-800 border border-zinc-700 rounded-xl p-6 text-center min-h-[340px]"
-                  >
-                    <p className="text-zinc-300">No hay sonidos disponibles en radar.</p>
-                  </motion.div>
-                );
-              })()
-            ) : (
-              <motion.div
-                key="radar-empty"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-zinc-800 border border-zinc-700 rounded-xl p-6 text-center"
-              >
-                <p className="text-zinc-300">No hay sonidos disponibles en radar.</p>
-              </motion.div>
-            )}
-          </div>
-
-          {optionalSemaforoRadar.length > 0 && (
-            <div className="border-t border-zinc-800 pt-6" style={{ overflowAnchor: 'none' }}>
-              <div className="flex items-center justify-between gap-4 mb-4">
-                <div>
-                  <p className="text-zinc-400 uppercase tracking-widest text-[10px] font-bold">Sonidos opcionales</p>
-                  <p className="text-sm text-zinc-500">Practica más palabras si quieres reforzar el oído.</p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setShowOptionalRadar((prev) => !prev)}
-                  className="rounded-xl bg-zinc-800 px-4 py-3 text-sm font-bold uppercase tracking-widest text-white hover:bg-zinc-700"
-                >
-                  {showOptionalRadar ? 'Ocultar extra' : `Mostrar ${optionalSemaforoRadar.length} extras`}
-                </button>
+        <div className="space-y-8">
+          {/* SECCIÓN DE ECO (Movida aquí) */}
+          {(pistaEco || []).length > 0 && (
+            <section className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 space-y-4">
+              <div className="flex items-center gap-2 text-indigo-500 font-bold uppercase tracking-widest text-xs">
+                <Mic className="w-4 h-4" /> Nivel de Eco
               </div>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {(pistaEco || []).slice(0, 8).map((item, i) => (
+                  <button 
+                    key={i}
+                    onClick={() => {
+                      speakWord(item.word);
+                      setFeedback({ type: 'info', message: `¡Repite conmigo: ${item.word.toUpperCase()}! ✨` });
+                    }}
+                    className="p-4 bg-zinc-800 hover:bg-zinc-700 rounded-xl flex flex-col items-center gap-2 transition-all group border border-transparent hover:border-indigo-500"
+                  >
+                    <VisualContent content={item.img} className="w-12 h-12 group-hover:scale-110 transition-transform" />
+                    <span className="text-[10px] font-bold text-white uppercase tracking-tight">{item.word}</span>
+                  </button>
+                ))}
+              </div>
+            </section>
+          )}
 
-              <div className="space-y-4 min-h-[260px]">
-                {showOptionalRadar && (
-                  optionalItem ? (
+          <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 space-y-8">
+            <div className="text-center space-y-4">
+              <p className="text-zinc-400 uppercase tracking-widest text-xs font-bold">{semaforoRadarTitle || 'Radar de Sonidos'}</p>
+              <p className="text-lg text-white italic">¿Contiene el sonido {phoneme === 'RR' ? 'fuerte' : (phoneme === 'SINFONES' ? 'trabado' : phoneme)}?</p>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4" style={{ overflowAnchor: 'none' }}>
+              {semaforoRadar && semaforoRadar.length > 0 ? (
+                (() => {
+                  const item = semaforoRadar[step];
+                  const result = radarResults[step];
+                  const isCorrect = result?.correct;
+                  const showCorrect = result?.showCorrect ?? false;
+                  const revealed = isCorrect || showCorrect;
+                  const showButtons = !result || (!isCorrect && result?.attempts < 2 && !showCorrect);
+
+                  return item ? (
                     <motion.div
-                      key={`optional-${optionalRadarStep}`}
+                      key={step}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0 }}
-                      className={`bg-zinc-800 border rounded-xl p-4 transition-all min-h-[260px] ${optionalIsCorrect ? 'border-emerald-500 bg-emerald-950' : optionalShowCorrect ? 'border-red-500 bg-red-950' : 'border-zinc-700 hover:bg-zinc-700'}`}
+                      className={`bg-zinc-800 border rounded-xl p-4 transition-all min-h-[340px] ${isCorrect ? 'border-emerald-500 bg-emerald-950' : showCorrect ? 'border-red-500 bg-red-950' : 'border-zinc-700 hover:bg-zinc-700'}`}
                     >
                       <div className="flex items-center gap-4">
                         <div className="w-14 h-14 rounded-2xl bg-zinc-950 border border-zinc-800 flex items-center justify-center text-2xl">
-                          {optionalRevealed ? (
-                            <VisualContent content={optionalItem.img || '❓'} alt={optionalItem.word} className="text-3xl" />
+                          {revealed ? (
+                            <VisualContent content={item.img || '❓'} alt={item.word} className="text-3xl" />
                           ) : (
                             <span className="text-zinc-500">?</span>
                           )}
                         </div>
 
                         <div className="flex-1">
-                          <p className="text-zinc-400 uppercase tracking-widest text-[10px] font-bold">Opcional {optionalRadarStep + 1} / {optionalSemaforoRadar.length}</p>
-                          <p className="text-lg font-black text-white italic">{optionalRevealed ? optionalItem.word : 'Escucha y decide'}</p>
+                          <p className="text-zinc-400 uppercase tracking-widest text-[10px] font-bold">Radar {step + 1} / {semaforoRadar.length}</p>
+                          <p className="text-lg font-black text-white italic">{revealed ? item.word : 'Escucha y decide'}</p>
                         </div>
 
                         <button
                           type="button"
-                          onClick={() => speakWord(optionalItem.word)}
+                          onClick={() => speakWord(item.word)}
                           className="p-2 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white"
                         >
                           <Volume2 className="w-5 h-5" />
@@ -370,13 +295,13 @@ export const Semaforo: React.FC<SemaforoProps> = ({
                       </div>
 
                       <div className="mt-4 flex flex-col gap-3">
-                        {optionalShowButtons ? (
+                        {showButtons ? (
                           <div className="flex gap-3">
                             {(['si', 'no'] as const).map((value) => (
                               <button
                                 key={value}
                                 type="button"
-                                onClick={() => handleOptionalRadarAnswer(optionalRadarStep, value, optionalItem)}
+                                onClick={() => handleRadarAnswer(step, value, item)}
                                 className="flex-1 rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-3 text-sm font-bold uppercase tracking-widest text-white hover:border-indigo-500 hover:bg-zinc-800"
                               >
                                 {value === 'si' ? 'Sí' : 'No'}
@@ -385,22 +310,15 @@ export const Semaforo: React.FC<SemaforoProps> = ({
                           </div>
                         ) : (
                           <div className="space-y-3">
-                            <p className={`text-sm font-semibold ${optionalIsCorrect ? 'text-emerald-300' : 'text-red-300'}`}>
-                              {optionalIsCorrect ? 'Correcto' : 'La respuesta correcta es'} {optionalShowCorrect && !optionalIsCorrect ? (optionalItem.hasTarget ? 'Sí' : 'No') : ''}
+                            <p className={`text-sm font-semibold ${isCorrect ? 'text-emerald-300' : 'text-red-300'}`}>
+                              {isCorrect ? 'Correcto' : 'La respuesta correcta es'} {showCorrect && !isCorrect ? (item.hasTarget ? 'Sí' : 'No') : ''}
                             </p>
                             <button
                               type="button"
-                              onClick={() => {
-                                if (optionalRadarStep < optionalSemaforoRadar.length - 1) {
-                                  setOptionalRadarStep((prev) => prev + 1);
-                                } else {
-                                  setOptionalRadarStep(0);
-                                  setShowOptionalRadar(false);
-                                }
-                              }}
+                              onClick={onNextStep}
                               className="w-full rounded-xl bg-indigo-600 px-4 py-3 text-sm font-bold uppercase tracking-widest text-white hover:bg-indigo-500"
                             >
-                              {optionalRadarStep < optionalSemaforoRadar.length - 1 ? 'Siguiente extra' : 'Terminar opcional'}
+                              {step < semaforoRadar.length - 1 ? 'Siguiente sonido' : 'Finalizar radar'}
                             </button>
                           </div>
                         )}
@@ -408,18 +326,128 @@ export const Semaforo: React.FC<SemaforoProps> = ({
                     </motion.div>
                   ) : (
                     <motion.div
-                      key="optional-empty"
+                      key="radar-empty"
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="bg-zinc-800 border border-zinc-700 rounded-xl p-6 text-center min-h-[260px]"
+                      className="bg-zinc-800 border border-zinc-700 rounded-xl p-6 text-center min-h-[340px]"
                     >
-                      <p className="text-zinc-300">No hay sonidos opcionales disponibles.</p>
+                      <p className="text-zinc-300">No hay sonidos disponibles en radar.</p>
                     </motion.div>
-                  )
-                )}
-              </div>
+                  );
+                })()
+              ) : (
+                <motion.div
+                  key="radar-empty"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="bg-zinc-800 border border-zinc-700 rounded-xl p-6 text-center"
+                >
+                  <p className="text-zinc-300">No hay sonidos disponibles en radar.</p>
+                </motion.div>
+              )}
             </div>
-          )}
+
+            {optionalSemaforoRadar.length > 0 && (
+              <div className="border-t border-zinc-800 pt-6" style={{ overflowAnchor: 'none' }}>
+                <div className="flex items-center justify-between gap-4 mb-4">
+                  <div>
+                    <p className="text-zinc-400 uppercase tracking-widest text-[10px] font-bold">Sonidos opcionales</p>
+                    <p className="text-sm text-zinc-500">Practica más palabras si quieres reforzar el oído.</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setShowOptionalRadar((prev) => !prev)}
+                    className="rounded-xl bg-zinc-800 px-4 py-3 text-sm font-bold uppercase tracking-widest text-white hover:bg-zinc-700"
+                  >
+                    {showOptionalRadar ? 'Ocultar extra' : `Mostrar ${optionalSemaforoRadar.length} extras`}
+                  </button>
+                </div>
+
+                <div className="space-y-4 min-h-[260px]">
+                  {showOptionalRadar && (
+                    optionalItem ? (
+                      <motion.div
+                        key={`optional-${optionalRadarStep}`}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0 }}
+                        className={`bg-zinc-800 border rounded-xl p-4 transition-all min-h-[260px] ${optionalIsCorrect ? 'border-emerald-500 bg-emerald-950' : optionalShowCorrect ? 'border-red-500 bg-red-950' : 'border-zinc-700 hover:bg-zinc-700'}`}
+                      >
+                        <div className="flex items-center gap-4">
+                          <div className="w-14 h-14 rounded-2xl bg-zinc-950 border border-zinc-800 flex items-center justify-center text-2xl">
+                            {optionalRevealed ? (
+                              <VisualContent content={optionalItem.img || '❓'} alt={optionalItem.word} className="text-3xl" />
+                            ) : (
+                              <span className="text-zinc-500">?</span>
+                            )}
+                          </div>
+
+                          <div className="flex-1">
+                            <p className="text-zinc-400 uppercase tracking-widest text-[10px] font-bold">Opcional {optionalRadarStep + 1} / {optionalSemaforoRadar.length}</p>
+                            <p className="text-lg font-black text-white italic">{optionalRevealed ? optionalItem.word : 'Escucha y decide'}</p>
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={() => speakWord(optionalItem.word)}
+                            className="p-2 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white"
+                          >
+                            <Volume2 className="w-5 h-5" />
+                          </button>
+                        </div>
+
+                        <div className="mt-4 flex flex-col gap-3">
+                          {optionalShowButtons ? (
+                            <div className="flex gap-3">
+                              {(['si', 'no'] as const).map((value) => (
+                                <button
+                                  key={value}
+                                  type="button"
+                                  onClick={() => handleOptionalRadarAnswer(optionalRadarStep, value, optionalItem)}
+                                  className="flex-1 rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-3 text-sm font-bold uppercase tracking-widest text-white hover:border-indigo-500 hover:bg-zinc-800"
+                                >
+                                  {value === 'si' ? 'Sí' : 'No'}
+                                </button>
+                              ))}
+                            </div>
+                          ) : (
+                            <div className="space-y-3">
+                              <p className={`text-sm font-semibold ${optionalIsCorrect ? 'text-emerald-300' : 'text-red-300'}`}>
+                                {optionalIsCorrect ? 'Correcto' : 'La respuesta correcta es'} {optionalShowCorrect && !optionalIsCorrect ? (optionalItem.hasTarget ? 'Sí' : 'No') : ''}
+                              </p>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  if (optionalRadarStep < optionalSemaforoRadar.length - 1) {
+                                    setOptionalRadarStep((prev) => prev + 1);
+                                  } else {
+                                    setOptionalRadarStep(0);
+                                    setShowOptionalRadar(false);
+                                  }
+                                }}
+                                className="w-full rounded-xl bg-indigo-600 px-4 py-3 text-sm font-bold uppercase tracking-widest text-white hover:bg-indigo-500"
+                              >
+                                {optionalRadarStep < optionalSemaforoRadar.length - 1 ? 'Siguiente extra' : 'Terminar opcional'}
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        key="optional-empty"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="bg-zinc-800 border border-zinc-700 rounded-xl p-6 text-center min-h-[260px]"
+                      >
+                        <p className="text-zinc-300">No hay sonidos opcionales disponibles.</p>
+                      </motion.div>
+                    )
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </motion.div>

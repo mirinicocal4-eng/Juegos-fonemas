@@ -1,13 +1,12 @@
 import * as React from 'react';
 import { motion } from 'motion/react';
-import { Mic, Volume2, Sparkles, ChevronRight } from 'lucide-react';
-import { Phoneme, PistaEcoItem, PistaDecirItem, GameImage } from '../types';
+import { Volume2, Sparkles, ChevronRight, Mic } from 'lucide-react';
+import { Phoneme, PistaDecirItem, GameImage } from '../types';
 import { VisualContent } from './VisualContent';
 import { setupSpeechVoices, speakText } from '../utils/speech';
 
 interface PistaProps {
   phoneme: Phoneme;
-  pistaEco: PistaEcoItem[];
   pistaDecir: PistaDecirItem[];
   pistaFrases: string[];
   pistaTrabalenguas: string[];
@@ -21,7 +20,6 @@ interface PistaProps {
 
 export const Pista: React.FC<PistaProps> = ({
   phoneme,
-  pistaEco,
   pistaDecir,
   pistaFrases,
   pistaTrabalenguas,
@@ -37,7 +35,6 @@ export const Pista: React.FC<PistaProps> = ({
   const [selectedSpace, setSelectedSpace] = React.useState<number | null>(null);
   const [playerPositions, setPlayerPositions] = React.useState<number[]>([]);
   const [visitedSpaces, setVisitedSpaces] = React.useState<Set<number>>(new Set());
-  const [showResults, setShowResults] = React.useState(false);
   const [gameCompleted, setGameCompleted] = React.useState(false);
   const [activePlayer, setActivePlayer] = React.useState(0);
   const [completarIndex, setCompletarIndex] = React.useState(0);
@@ -110,29 +107,7 @@ export const Pista: React.FC<PistaProps> = ({
       animate={{ opacity: 1, y: 0 }}
       className="space-y-12 pb-20"
     >
-      {/* 1. NIVEL DE ECO */}
-      <section className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 space-y-4">
-        <div className="flex items-center gap-2 text-indigo-500 font-bold uppercase tracking-widest text-xs">
-          <Mic className="w-4 h-4" /> Nivel de Eco
-        </div>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {(pistaEco || []).slice(0, 8).map((item, i) => (
-            <button 
-              key={i}
-              onClick={() => {
-                speakWord(item.word);
-                setFeedback({ type: 'info', message: `¡Repite conmigo: ${item.word.toUpperCase()}! ✨` });
-              }}
-              className="p-4 bg-zinc-800 hover:bg-zinc-700 rounded-xl flex flex-col items-center gap-2 transition-all group border border-transparent hover:border-indigo-500"
-            >
-              <VisualContent content={item.img} className="w-12 h-12 group-hover:scale-110 transition-transform" />
-              <span className="text-[10px] font-bold text-white uppercase tracking-tight">{item.word}</span>
-            </button>
-          ))}
-        </div>
-      </section>
-
-      {/* 2. DESAFÍO DE COMPLETAR */}
+      {/* 1. DESAFÍO DE COMPLETAR */}
       {(pistaCompletar || []).length > 0 && (
         <section className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 space-y-4">
           <div className="flex items-center justify-between">
@@ -185,7 +160,7 @@ export const Pista: React.FC<PistaProps> = ({
         </section>
       )}
 
-      {/* 3. JUEGO DE TABLERO */}
+      {/* 2. JUEGO DE TABLERO */}
       <section className="bg-indigo-950/20 border border-indigo-500/30 rounded-3xl p-6 space-y-6">
         <div className="flex justify-between items-center">
           <div className="space-y-1">
@@ -248,7 +223,7 @@ export const Pista: React.FC<PistaProps> = ({
         )}
       </section>
 
-      {/* 4. ARTICULACIÓN POR POSICIÓN */}
+      {/* 3. ARTICULACIÓN POR POSICIÓN */}
       <section className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 space-y-6">
         <div className="flex items-center gap-2 text-emerald-500 font-bold uppercase tracking-widest text-xs">
           <Mic className="w-4 h-4" /> Gimnasia de Sonidos
@@ -277,7 +252,7 @@ export const Pista: React.FC<PistaProps> = ({
         </div>
       </section>
 
-      {/* 5. PDF VIEWER */}
+      {/* 4. PDF VIEWER */}
       {pdfUrl && (
         <section className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 space-y-4">
           <div className="flex items-center justify-between">

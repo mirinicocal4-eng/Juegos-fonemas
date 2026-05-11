@@ -256,6 +256,7 @@ export const GameRouter: React.FC<GameRouterProps> = ({ game, onUpload, onDelete
               semaforoPares={semaforoPares}
               semaforoRadar={semaforoRadar}
               optionalSemaforoRadar={optionalSemaforoRadar}
+              pistaEco={pistaEco}
               semaforoRadarTitle={semaforoRadarTitle}
               onSetSubStep={(ss) => setState((prev) => ({ ...prev, subStep: ss }))}
               onNextStep={() => {
@@ -290,10 +291,10 @@ export const GameRouter: React.FC<GameRouterProps> = ({ game, onUpload, onDelete
             <Pista 
               key={`world-pista-${pistaResetKey}`}
               phoneme={state.phoneme}
-              pistaEco={pistaEco}
               pistaDecir={pistaDecir}
               pistaFrases={pistaFrases}
               pistaTrabalenguas={pistaTrabalenguas}
+              pistaCompletar={pistaCompletar}
               gameImages={currentData.gameImages || []}
               playerCount={state.playerCount}
               pdfUrl={currentData.pdfUrl}
