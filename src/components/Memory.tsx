@@ -53,7 +53,7 @@ export const Memory: React.FC<MemoryProps> = ({
             className={`aspect-square rounded-2xl flex items-center justify-center text-4xl shadow-xl transition-all ${card.flipped || card.matched ? 'bg-zinc-800 border-2 border-indigo-500' : 'bg-indigo-600'}`}
           >
             {card.flipped || card.matched ? (
-              <VisualContent content={card.img} alt={card.name} className="w-12 h-12" />
+              <VisualContent content={card.img} alt={card.name ?? 'Pictograma'} className="w-12 h-12" />
             ) : '✨'}
           </motion.button>
         ))}

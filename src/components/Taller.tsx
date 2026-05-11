@@ -1,7 +1,8 @@
 import React from 'react';
-import { motion } from 'motion/react';
-import { ChevronRight, CheckCircle2, Mic } from 'lucide-react';
-import { Phoneme, GameState, TallerStep } from '../types';
+import { motion, AnimatePresence } from 'motion/react';
+import { ChevronRight, CheckCircle2, Mic, Volume2 } from 'lucide-react';
+import { Phoneme, TallerStep } from '../types';
+import { setupSpeechVoices, speakText, getArasaacUrl } from '../utils';
 
 interface TallerProps {
   phoneme: Phoneme;
@@ -20,7 +21,44 @@ export const Taller: React.FC<TallerProps> = ({
   onFinish, 
   setFeedback 
 }) => {
-  const currentStep = tallerSteps[step] || { title: '', instruction: '', sound: '', tip: '' };
+  const [voices, setVoices] = React.useState<SpeechSynthesisVoice[]>([]);
+  const [apiImg, setApiImg] = React.useState<string | null>(null);
+  const currentStep = tallerSteps[step] || { title: '', instruction: '', sound: '', tip: '', img: '' };
+
+  React.useEffect(() => {
+    const cleanup = setupSpeechVoices(setVoices);
+    return cleanup;
+  }, []);
+
+  // Efecto para buscar imagen en ARASAAC si no hay una URL directa
+  React.useEffect(() => {
+    async function fetchImage() {
+      setApiImg(null); 
+      
+      if (typeof currentStep.img === 'string' && currentStep.img.startsWith('http')) {
+        return;
+      }
+
+      const searchTerm = (typeof currentStep.img === 'string' && currentStep.img) 
+        ? currentStep.img 
+        : (currentStep.title ? currentStep.title.split(' ').pop() : '');
+
+      if (searchTerm) {
+        const url = await getArasaacUrl(searchTerm);
+        setApiImg(url);
+      }
+    }
+    
+    fetchImage();
+  }, [step, currentStep]);
+
+  const speakCurrentText = (text: string) => {
+    speakText(text, voices, () => setFeedback({ type: 'error', message: 'Este navegador no soporta voz sintética.' }));
+  };
+
+  const displayImg = (typeof currentStep.img === 'string' && currentStep.img.startsWith('http')) 
+    ? currentStep.img 
+    : apiImg;
 
   return (
     <motion.div 
@@ -35,19 +73,39 @@ export const Taller: React.FC<TallerProps> = ({
             <span className="text-indigo-500 font-bold text-xs uppercase tracking-widest">Paso {step + 1} de {(tallerSteps || []).length}</span>
             <h3 className="text-3xl font-black italic text-white uppercase">{currentStep.title}</h3>
           </div>
-          <div className="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-900/40">
+          <div className="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-900/40 shrink-0">
             <Mic className="w-8 h-8 text-white" />
           </div>
         </div>
 
+        {displayImg && (
+          <div className="flex justify-center">
+            <div className="w-48 h-48 bg-zinc-950 rounded-2xl border border-zinc-800 p-4 flex items-center justify-center overflow-hidden relative">
+              {(!displayImg || !displayImg.startsWith('http')) && (
+                <div className="absolute inset-0 flex items-center justify-center bg-zinc-900 animate-pulse text-zinc-700 text-[10px] font-bold uppercase tracking-widest">
+                  Buscando...
+                </div>
+              )}
+              <img src={displayImg} alt={currentStep.title} className="max-w-full max-h-full object-contain relative z-10" />
+            </div>
+          </div>
+        )}
+
         <div className="bg-zinc-950 p-6 rounded-2xl border border-zinc-800 space-y-4">
           <p className="text-zinc-400 font-medium">{currentStep.instruction}</p>
-          <div className="text-5xl font-black italic text-white tracking-widest py-4 border-y border-zinc-800 text-center">
-            {currentStep.sound}
-          </div>
-          <div className="flex items-center gap-2 text-zinc-500 text-sm italic">
+          <div className="flex items-center justify-center gap-4 text-white py-4 border-y border-zinc-800">
+            <div className="text-5xl font-black italic tracking-widest text-center">
+              {currentStep.sound}
+            </div>
+            <button
+              type="button"
+              onClick={() => speakCurrentText(currentStep.sound)}
+              className="p-3 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white transition-all"
+            >
+              <Volume2 className="w-5 h-5" />
+            </button>
             <span className="w-2 h-2 bg-indigo-600 rounded-full animate-pulse" />
-            {currentStep.tip}
+            <span className="text-zinc-400 italic text-sm">{currentStep.tip}</span>
           </div>
         </div>
 
@@ -73,21 +131,23 @@ export const Taller: React.FC<TallerProps> = ({
         </div>
       </div>
 
-      {step < (tallerSteps || []).length - 1 ? (
-        <button 
-          onClick={onNext}
-          className="w-full bg-white text-black font-black py-4 rounded-xl hover:bg-zinc-200 transition-all flex items-center justify-center gap-2 uppercase italic"
-        >
-          Siguiente paso <ChevronRight className="w-5 h-5" />
-        </button>
-      ) : (
-        <button 
-          onClick={onFinish}
-          className="w-full border border-zinc-700 text-white font-bold py-4 rounded-xl hover:bg-zinc-800 transition-all uppercase italic"
-        >
-          Terminar Práctica
-        </button>
-      )}
+      <AnimatePresence>
+        {step < (tallerSteps || []).length - 1 ? (
+          <button 
+            onClick={onNext}
+            className="w-full bg-white text-black font-black py-4 rounded-xl hover:bg-zinc-200 transition-all flex items-center justify-center gap-2 uppercase italic"
+          >
+            Siguiente paso <ChevronRight className="w-5 h-5" />
+          </button>
+        ) : (
+          <button 
+            onClick={onFinish}
+            className="w-full border border-zinc-700 text-white font-bold py-4 rounded-xl hover:bg-zinc-800 transition-all uppercase italic"
+          >
+            Terminar Práctica
+          </button>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };

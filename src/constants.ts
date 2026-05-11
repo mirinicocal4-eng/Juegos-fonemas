@@ -20,6 +20,7 @@ export const worlds = [
   { id: 'TALLER', name: '1. Laboratorio', icon: React.createElement(FlaskConical, { className: "w-6 h-6" }), desc: 'Prepara tu voz y calienta tu lengua.' },
   { id: 'SEMAFORO', name: '2. El Radar', icon: React.createElement(Ear, { className: "w-6 h-6" }), desc: 'Entrena tu oído para detectar los sonidos.' },
   { id: 'PISTA', name: '3. El Escenario', icon: React.createElement(Mic, { className: "w-6 h-6" }), desc: 'Practica palabras y frases con claridad.' },
+  { id: 'COMPLETAR', name: '3.5 El Reto de Frases', icon: React.createElement(Mic, { className: "w-6 h-6" }), desc: 'Reordena sujeto, verbo y complemento para crear frases divertidas.' },
   { id: 'GRAN_PREMIO', name: '4. La Aventura', icon: React.createElement(Map, { className: "w-6 h-6" }), desc: 'El desafío final para demostrar lo aprendido.' },
   { id: 'LIBRARY', name: 'Biblioteca', icon: React.createElement(BookOpen, { className: "w-6 h-6" }), desc: 'Consulta y sube tus materiales de apoyo.' },
 ];
@@ -37,6 +38,7 @@ export const worldRules: Record<World, string> = {
   TALLER: "CONSEJO: Mantén la lengua relajada y en la posición correcta. ¡Sigue las instrucciones del laboratorio!",
   SEMAFORO: "Escucha con atención. ¿Cómo suena la palabra? Ayuda al radar a clasificar los sonidos correctamente.",
   PISTA: "Repite las palabras y frases con claridad. ¡Demuestra tu dominio del lenguaje en el escenario!",
+  COMPLETAR: "Reordena sujeto, verbo y complemento para crear frases locas y divertidas.",
   GRAN_PREMIO: "Tira el dado y avanza por el mapa. Responde a las preguntas para completar la aventura.",
   MEMORY: "Encuentra las parejas de imágenes que contienen el sonido.",
   BINGO: "Juego para 2 exploradores. Cada uno tiene su cartón. ¡El primero en marcar todas sus imágenes gana!",
@@ -45,7 +47,8 @@ export const worldRules: Record<World, string> = {
   DOBBLE: "¡Sé el más rápido! Encuentra la única imagen que se repite en las dos cartas circulares.",
   PHONEME_SELECT: "Selecciona el sonido que quieres practicar hoy.",
   PLAYER_COUNT: "Selecciona cuántos exploradores van a participar en la aventura.",
-  LIBRARY: "Consulta materiales, libros y guías para complementar tu aprendizaje."
+  LIBRARY: "Consulta materiales, libros y guías para complementar tu aprendizaje.",
+  SIMULATOR: "Observa la posición de los órganos y escucha cómo se produce el sonido antes de empezar."
 };
 
 export const resources = [
@@ -53,18 +56,28 @@ export const resources = [
     title: "Guía de Articulación /R/", 
     type: "PDF", 
     desc: "Ejercicios visuales para colocar la lengua correctamente.",
+    url: "https://arasaac.org/materials/es/1",
     icon: React.createElement(FileText, { className: "w-6 h-6" })
+  },
+  { 
+    title: "Trabalenguas Sinfones con R", 
+    type: "Scribd", 
+    desc: "Colección de trabalenguas para practicar sinfones con R.",
+    url: "https://es.scribd.com/document/340690342/Trabalenguas-Sinfones-R",
+    icon: React.createElement(BookOpen, { className: "w-6 h-6" })
   },
   { 
     title: "Cuentos para Hablar", 
     type: "Libro", 
     desc: "Historias divertidas centradas en fonemas específicos.",
+    url: "https://arasaac.org/materials/es/2",
     icon: React.createElement(BookOpen, { className: "w-6 h-6" })
   },
   { 
     title: "Fichas de Generalización", 
     type: "Material", 
     desc: "Actividades para casa y el aula.",
+    url: "https://arasaac.org/materials/es/3",
     icon: React.createElement(FileText, { className: "w-6 h-6" })
   }
 ];

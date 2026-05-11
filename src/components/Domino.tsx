@@ -3,8 +3,8 @@ import { motion } from 'motion/react';
 import { VisualContent } from './VisualContent';
 
 interface DominoProps {
-  chain: { left: string, right: string }[];
-  hands: { left: string, right: string }[][];
+  chain: { left: string, right: string, leftName: string, rightName: string }[];
+  hands: { left: string, right: string, leftName: string, rightName: string }[][];
   poolCount: number;
   playerCount: number;
   currentPlayer: number;
@@ -53,10 +53,10 @@ export const Domino: React.FC<DominoProps> = ({
           {(chain || []).map((piece, i) => (
             <div key={`chain-${i}`} className="flex bg-zinc-800 border-2 border-zinc-700 rounded-xl overflow-hidden shadow-lg">
               <div className="w-12 h-16 flex items-center justify-center text-2xl border-r border-zinc-700 bg-zinc-900/50">
-                <VisualContent content={piece.left} className="w-8 h-8" />
+                <VisualContent content={piece.left} alt={piece.leftName} className="w-8 h-8" />
               </div>
               <div className="w-12 h-16 flex items-center justify-center text-2xl bg-zinc-900/50">
-                <VisualContent content={piece.right} className="w-8 h-8" />
+                <VisualContent content={piece.right} alt={piece.rightName} className="w-8 h-8" />
               </div>
             </div>
           ))}
@@ -82,10 +82,10 @@ export const Domino: React.FC<DominoProps> = ({
               className="flex bg-zinc-800 border-2 border-indigo-600/30 rounded-xl overflow-hidden hover:scale-110 hover:border-indigo-600 transition-all shadow-xl"
             >
               <div className="w-14 h-20 flex items-center justify-center text-3xl border-r border-zinc-700 bg-zinc-900/50">
-                <VisualContent content={piece.left} className="w-10 h-10" />
+                <VisualContent content={piece.left} alt={piece.leftName} className="w-10 h-10" />
               </div>
               <div className="w-14 h-20 flex items-center justify-center text-3xl bg-zinc-900/50">
-                <VisualContent content={piece.right} className="w-10 h-10" />
+                <VisualContent content={piece.right} alt={piece.rightName} className="w-10 h-10" />
               </div>
             </button>
           ))}
