@@ -7,7 +7,7 @@ interface VisualContentProps {
   alt?: string;
 }
 
-export const VisualContent: React.FC<VisualContentProps> = ({ content, className, alt }) => {
+export const VisualContent: React.FC<VisualContentProps> = ({ content, className, alt = '' }) => {
   const [apiImg, setApiImg] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -75,7 +75,7 @@ export const VisualContent: React.FC<VisualContentProps> = ({ content, className
     return (
       <img 
         src={displaySrc} 
-        alt={alt ?? ''} 
+        alt={alt} 
         className={`${className} object-contain`} 
         referrerPolicy="no-referrer"
         onError={() => setError(true)}

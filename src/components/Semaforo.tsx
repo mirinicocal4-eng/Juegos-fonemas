@@ -29,7 +29,7 @@ export const Semaforo: React.FC<SemaforoProps> = ({
   onSetSubStep,
   onNextStep,
   setFeedback
-}: SemaforoProps) => {
+}) => {
   const [voices, setVoices] = React.useState<SpeechSynthesisVoice[]>([]);
   const [pairResults, setPairResults] = React.useState<Record<number, { selected: number; correct: boolean; attempts: number; showCorrect?: boolean }>>({});
   const [radarResults, setRadarResults] = React.useState<Record<number, { answer: 'si' | 'no'; correct: boolean; attempts: number; showCorrect?: boolean }>>({});

@@ -15,9 +15,7 @@ import {
   Sparkles
 } from 'lucide-react';
 
-import { World, Phoneme } from './types';
-import { STORAGE_KEY, worldRules } from './constants';
-
+import { worldRules } from './constants';
 import { useGameState } from './hooks/useGameState';
 import { GameRouter } from './components/GameRouter';
 
@@ -29,63 +27,15 @@ export default function App() {
     feedback,
     setFeedback,
     currentData,
-    semaforoStep,
-    semaforoPares,
-    semaforoRadar,
-    optionalSemaforoRadar,
-    semaforoRadarTitle,
-    pistaEco,
-    pistaDecir,
-    pistaFrases,
-    pistaTrabalenguas,
-    pistaCompletar,
-    granPremioBoard,
-    gameImages,
-    diceValue,
     isWinner,
-    memoryCards,
-    bingoBoards,
-    bingoPlayerCount,
-    bingoCurrent,
-    bingoWinner,
-    linceBoard,
-    linceTarget,
-    lincePool,
-    linceScore,
-    dominoChain,
-    dominoHands,
-    dominoPool,
-    dobbleCards,
-    dobbleTarget,
-    pistaProgress,
-    setPistaProgress,
-    pistaResetKey,
-    setPistaResetKey,
-    selectPhoneme,
     goToWorld,
-    selectPlayers,
-    rollDice,
-    nextTurn,
-    initMemory,
-    initBingo,
-    initLince,
-    initDomino,
-    initDobble,
-    handleMemoryClick,
-    nextBingoBall,
-    markBingo,
-    checkLince,
-    handleDominoClick,
-    handleDobbleClick,
-    drawDominoPiece,
     resetGame,
-    setState,
     setPersistentData
   } = game;
 
   const [showRules, setShowRules] = useState(false);
 
-if (isWinner) {
+  if (isWinner) {
     return (
       <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-6 text-center">
         <motion.div 
@@ -220,20 +170,6 @@ if (isWinner) {
               >
                 ¡Entendido!
               </button>
-
-              <div className="pt-6 border-t border-zinc-800">
-                <button 
-                  onClick={() => {
-                    if (confirm("¿Seguro que quieres borrar todo tu progreso?")) {
-                      localStorage.removeItem(STORAGE_KEY);
-                      window.location.reload();
-                    }
-                  }}
-                  className="text-[10px] text-zinc-600 hover:text-indigo-500 font-bold uppercase tracking-widest transition-colors w-full text-center"
-                >
-                  Reiniciar memoria de aprendizaje
-                </button>
-              </div>
             </motion.div>
           </motion.div>
         )}
