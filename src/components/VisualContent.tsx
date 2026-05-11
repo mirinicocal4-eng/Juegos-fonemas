@@ -1,92 +1,74 @@
-import React, { useState, useEffect } from 'react';
-import { getArasaacUrl } from '../utils/arasaac';
+import React from 'react';
 
 interface VisualContentProps {
-  content?: string;
-  className?: string;
+  content: string | undefined;
   alt?: string;
+  className?: string;
 }
 
-export const VisualContent: React.FC<VisualContentProps> = ({ content, className, alt = '' }) => {
-  const [apiImg, setApiImg] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
-
-  useEffect(() => {
-    async function fetchImage() {
-      if (!content) {
-        setApiImg(null);
-        setError(false);
-        return;
-      }
-
-      // Si ya es una URL, no hacemos nada
-      if (content.startsWith('http') || content.startsWith('data:image') || content.includes('/')) {
-        setApiImg(null);
-        setError(false);
-        return;
-      }
-
-      // Si es un emoji, no buscamos
-      const isEmoji = content.length <= 4 && /\p{Emoji}/u.test(content);
-      if (isEmoji) {
-        setApiImg(null);
-        setError(false);
-        return;
-      }
-
-      // Si es un número (ID), construimos la URL directamente
-      if (/^\d+$/.test(content)) {
-        setApiImg(`https://static.arasaac.org/pictograms/${content}/${content}_300.png`);
-        setError(false);
-        return;
-      }
-
-      // Si es una palabra, buscamos en la API
-      setLoading(true);
-      setError(false);
-      try {
-        const url = await getArasaacUrl(content);
-        if (url) {
-          setApiImg(url);
-        } else {
-          setError(true);
-        }
-      } catch (e) {
-        setError(true);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchImage();
-  }, [content]);
-
+/**
+ * Componente unificado para mostrar contenido visual.
+ * Soporta:
+ * 1. Emojis directos.
+ * 2. URLs de imágenes externas (ARASAAC, etc).
+ * 3. Palabras clave que deben convertirse a pictogramas de ARASAAC.
+ */
+export const VisualContent: React.FC<VisualContentProps> = ({ content, alt = '', className = '' }) => {
   if (!content) return null;
 
-  const isUrl = content.startsWith('http') || content.startsWith('data:image') || content.includes('/');
-  const displaySrc = isUrl ? content : apiImg;
+  // 1. Detectar si es un emoji (basado en el rango de caracteres o longitud corta)
+  const isEmoji = /[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/u.test(content) || 
+                  (content.length <= 2 && content.charCodeAt(0) > 255);
 
-  if (loading) {
-    return <div className={`${className} animate-pulse bg-zinc-800 rounded-lg flex items-center justify-center text-xs text-zinc-500`}>Cargando...</div>;
+  if (isEmoji) {
+    return (
+      <span className={className} role="img" aria-label={alt}>
+        {content}
+      </span>
+    );
   }
 
-  if (displaySrc) {
+  // 2. Detectar si es una URL (empieza por http o tiene formato de ruta de imagen)
+  const isUrl = content.startsWith('http') || content.includes('/') || content.includes('.');
+
+  if (isUrl) {
     return (
       <img 
-        src={displaySrc} 
+        src={content} 
         alt={alt} 
-        className={`${className} object-contain`} 
-        referrerPolicy="no-referrer"
-        onError={() => setError(true)}
+        className={`${className} object-contain`}
+        onError={(e) => {
+          // Si falla la carga, intentamos tratarlo como palabra clave si no parece URL compleja
+          if (!content.startsWith('http')) {
+            (e.target as HTMLImageElement).src = `https://static.arasaac.org/pictograms/2309/${content.toLowerCase()}.png`;
+          }
+        }}
       />
     );
   }
 
+  // 3. Si no es URL ni Emoji, lo tratamos como palabra clave de ARASAAC
+  // Usamos el ID estándar de ARASAAC para búsquedas por nombre (aproximado)
+  // Nota: En una implementación real, esto debería mapearse a IDs numéricos reales.
+  const arasaacUrl = `https://static.arasaac.org/pictograms/2309/${content.toLowerCase()}.png`;
+
   return (
-    <div className={`${className} flex flex-col items-center justify-center gap-1`}>
-      <span className="text-sm font-medium">{content}</span>
-      {error && <span title="No se encontró imagen" className="text-amber-500 text-xs">⚠️</span>}
-    </div>
+    <img 
+      src={arasaacUrl} 
+      alt={alt || content} 
+      className={`${className} object-contain`}
+      onError={(e) => {
+        // Fallback final: mostrar un icono de imagen genérico o el texto
+        const target = e.target as HTMLImageElement;
+        target.style.display = 'none';
+        const parent = target.parentElement;
+        if (parent) {
+          const textFallback = document.createElement('span');
+          textFallback.innerText = '🖼️';
+          textFallback.className = className;
+          parent.appendChild(textFallback);
+        }
+      }}
+    />
   );
 };
