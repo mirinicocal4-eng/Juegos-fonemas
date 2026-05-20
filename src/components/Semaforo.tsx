@@ -223,29 +223,7 @@ export const Semaforo: React.FC<SemaforoProps> = ({
         </div>
       ) : (
         <div className="space-y-8">
-          {/* SECCIÓN DE ECO (Movida aquí) */}
-          {(pistaEco || []).length > 0 && (
-            <section className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 space-y-4">
-              <div className="flex items-center gap-2 text-indigo-500 font-bold uppercase tracking-widest text-xs">
-                <Mic className="w-4 h-4" /> Nivel de Eco
-              </div>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {(pistaEco || []).slice(0, 8).map((item, i) => (
-                  <button 
-                    key={i}
-                    onClick={() => {
-                      speakWord(item.word);
-                      setFeedback({ type: 'info', message: `¡Repite conmigo: ${item.word.toUpperCase()}! ✨` });
-                    }}
-                    className="p-4 bg-zinc-800 hover:bg-zinc-700 rounded-xl flex flex-col items-center gap-2 transition-all group border border-transparent hover:border-indigo-500"
-                  >
-                    <VisualContent content={item.img} className="w-12 h-12 group-hover:scale-110 transition-transform" />
-                    <span className="text-[10px] font-bold text-white uppercase tracking-tight">{item.word}</span>
-                  </button>
-                ))}
-              </div>
-            </section>
-          )}
+
 
           <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 space-y-8">
             <div className="text-center space-y-4">
