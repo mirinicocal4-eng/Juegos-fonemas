@@ -362,7 +362,7 @@ export const GameRouter: React.FC<GameRouterProps> = ({ game, onUpload, onDelete
               currentBall={bingoCurrent}
               onNextBall={nextBingoBall}
               onToggle={markBingo}
-              onReset={(count?: number) => initBingo(count || bingoPlayerCount)}
+              onReset={(count?: number) => initBingo(count ?? bingoPlayerCount)}
               onBack={() => goToWorld('GRAN_PREMIO')}
             />
           )}

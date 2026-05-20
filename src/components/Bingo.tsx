@@ -22,6 +22,8 @@ export const Bingo: React.FC<BingoProps> = ({
   onBack 
 }) => {
   const playerColors = ['indigo', 'blue', 'emerald', 'orange'];
+  const playerTextClasses = ['text-indigo-500', 'text-blue-500', 'text-emerald-500', 'text-orange-500'];
+  const playerBgClasses = ['bg-indigo-600', 'bg-blue-600', 'bg-emerald-600', 'bg-orange-600'];
 
   return (
     <motion.div 
@@ -38,6 +40,7 @@ export const Bingo: React.FC<BingoProps> = ({
             {[1, 2, 3, 4].map(num => (
               <button
                 key={num}
+                type="button"
                 onClick={() => onReset(num)}
                 className="w-16 h-16 bg-zinc-800 hover:bg-indigo-600 text-white text-2xl font-black rounded-2xl transition-all hover:scale-110"
               >
@@ -82,6 +85,7 @@ export const Bingo: React.FC<BingoProps> = ({
             )}
 
             <button 
+              type="button"
               onClick={onNextBall}
               className="px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-black rounded-2xl uppercase italic tracking-widest shadow-lg shadow-indigo-900/20 transition-all hover:scale-105 active:scale-95"
             >
@@ -92,19 +96,23 @@ export const Bingo: React.FC<BingoProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {boards.map((board, pIdx) => (
               <div key={pIdx} className="space-y-4">
-                <h3 className={`text-xl font-black italic uppercase text-${playerColors[pIdx]}-500`}>
+                <h3 className={"text-xl font-black italic uppercase text-" + playerColors[pIdx] + "-500"}>
                   Explorador {pIdx + 1}
                 </h3>
                 <div className="grid grid-cols-3 gap-2">
                   {(board || []).map((item: any, i: number) => (
                     <button 
-                      key={`p${pIdx}-${i}`}
+                      key={"p" + pIdx + "-" + i}
+                      type="button"
+                      title={item.name}
+                      aria-label={item.name}
                       onClick={() => onToggle(pIdx, i)}
-                      className={`aspect-square rounded-xl flex items-center justify-center text-3xl border-2 transition-all ${
-                        item.marked 
-                          ? `bg-${playerColors[pIdx]}-600 border-white scale-95 opacity-50` 
-                          : 'bg-zinc-900 border-zinc-800 hover:border-zinc-600'
-                      }`}
+                      className={
+                        "aspect-square rounded-xl flex items-center justify-center text-3xl border-2 transition-all " +
+                        (item.marked 
+                          ? "bg-" + playerColors[pIdx] + "-600 border-white scale-95 opacity-50"
+                          : "bg-zinc-900 border-zinc-800 hover:border-zinc-600")
+                      }
                     >
                       <VisualContent content={item.img} alt={item.name} className="w-10 h-10" />
                     </button>
@@ -117,11 +125,11 @@ export const Bingo: React.FC<BingoProps> = ({
       )}
 
       <div className="flex gap-4">
-        <button onClick={() => onReset()} className="flex-1 py-4 bg-zinc-800 text-white font-bold rounded-xl uppercase">Nuevos Cartones</button>
+        <button type="button" onClick={() => onReset()} className="flex-1 py-4 bg-zinc-800 text-white font-bold rounded-xl uppercase">Nuevos Cartones</button>
         {boards.length > 0 && (
-          <button onClick={() => onReset(0)} className="flex-1 py-4 bg-zinc-800/50 text-zinc-400 font-bold rounded-xl uppercase text-xs">Cambiar Jugadores</button>
+          <button type="button" onClick={() => onReset(0)} className="flex-1 py-4 bg-zinc-800/50 text-zinc-400 font-bold rounded-xl uppercase text-xs">Cambiar Jugadores</button>
         )}
-        <button onClick={onBack} className="flex-1 py-4 bg-white text-black font-black rounded-xl uppercase italic">Volver</button>
+        <button type="button" onClick={onBack} className="flex-1 py-4 bg-white text-black font-black rounded-xl uppercase italic">Volver</button>
       </div>
     </motion.div>
   );
