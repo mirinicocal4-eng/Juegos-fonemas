@@ -37,9 +37,7 @@ export const FrasesLocas: React.FC<FrasesLocasProps> = ({
     <div className="space-y-8">
       {/* 1. EL ESCENARIO: LA FRASE EN CONSTRUCCIÓN */}
       <section className="bg-zinc-900 border border-zinc-800 rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 p-8 opacity-5">
-          <span className="text-9xl font-black italic uppercase tracking-tighter">LOCA</span>
-        </div>
+
 
         <div className="relative z-10 space-y-6">
           <div className="flex items-center justify-between">
