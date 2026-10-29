@@ -2,7 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronRight, CheckCircle2, Mic, Volume2 } from 'lucide-react';
 import { Phoneme, TallerStep } from '../types';
-import { setupSpeechVoices, speakText, getArasaacUrl } from '../utils';
+import { setupSpeechVoices, speakText, getArasaacUrl, startListening, isSpeechRecognitionSupported } from '../utils';
 
 interface TallerProps {
   phoneme: Phoneme;
@@ -22,8 +22,18 @@ export const Taller: React.FC<TallerProps> = ({
   setFeedback 
 }) => {
   const [voices, setVoices] = React.useState<SpeechSynthesisVoice[]>([]);
-  const [apiImg, setApiImg] = React.useState<string | null>(null);
+  const [apiImgs, setApiImgs] = React.useState<string[]>([]);
   const currentStep = tallerSteps[step] || { title: '', instruction: '', sound: '', tip: '', img: '' };
+  const [isListening, setIsListening] = React.useState(false);
+  const [recStatus, setRecStatus] = React.useState<'idle' | 'success' | 'error'>('idle');
+  const cancelListeningRef = React.useRef<(() => void) | null>(null);
+
+  React.useEffect(() => {
+    // Reset listening state on step change
+    if (cancelListeningRef.current) cancelListeningRef.current();
+    setIsListening(false);
+    setRecStatus('idle');
+  }, [step]);
 
   React.useEffect(() => {
     const cleanup = setupSpeechVoices(setVoices);
@@ -32,33 +42,82 @@ export const Taller: React.FC<TallerProps> = ({
 
   // Efecto para buscar imagen en ARASAAC si no hay una URL directa
   React.useEffect(() => {
-    async function fetchImage() {
-      setApiImg(null); 
-      
-      if (typeof currentStep.img === 'string' && currentStep.img.startsWith('http')) {
+    async function fetchImages() {
+      setApiImgs([]);
+
+      const rawImgs = Array.isArray(currentStep.img)
+        ? currentStep.img
+        : currentStep.img ? [currentStep.img] : [];
+
+      if (rawImgs.length === 0) {
         return;
       }
 
-      const searchTerm = (typeof currentStep.img === 'string' && currentStep.img) 
-        ? currentStep.img 
-        : (currentStep.title ? currentStep.title.split(' ').pop() : '');
+      const urls = await Promise.all(
+        rawImgs.map(async (item) => {
+          if (typeof item === 'string' && item.startsWith('http')) {
+            return item;
+          }
+          return await getArasaacUrl(item);
+        })
+      );
 
-      if (searchTerm) {
-        const url = await getArasaacUrl(searchTerm);
-        setApiImg(url);
-      }
+      setApiImgs(urls.filter((u): u is string => Boolean(u)));
     }
-    
-    fetchImage();
+
+    fetchImages();
   }, [step, currentStep]);
+
+  const handleMicClick = () => {
+    if (isListening) {
+      if (cancelListeningRef.current) cancelListeningRef.current();
+      setIsListening(false);
+      return;
+    }
+
+    if (!currentStep.sound) return;
+
+    setIsListening(true);
+    setRecStatus('idle');
+    setFeedback({ type: 'info', message: '🎙️ Escuchando... ¡Habla ahora!' });
+
+    cancelListeningRef.current = startListening(
+      currentStep.sound,
+      (isMatch, recognizedText) => {
+        setIsListening(false);
+        if (isMatch) {
+          setRecStatus('success');
+          setFeedback({ type: 'success', message: `¡Genial! Has dicho: "${recognizedText}" ✨` });
+        } else {
+          setRecStatus('error');
+          setFeedback({ type: 'error', message: `He oído "${recognizedText}". ¡Inténtalo de nuevo! ⚠️` });
+        }
+      },
+      (error) => {
+        setIsListening(false);
+        setRecStatus('error');
+        setFeedback({ type: 'error', message: error });
+      },
+      () => {
+        setIsListening(false);
+      }
+    );
+  };
 
   const speakCurrentText = (text: string) => {
     speakText(text, voices, () => setFeedback({ type: 'error', message: 'Este navegador no soporta voz sintética.' }));
   };
 
-  const displayImg = (typeof currentStep.img === 'string' && currentStep.img.startsWith('http')) 
-    ? currentStep.img 
-    : apiImg;
+  const displayImgs: string[] = React.useMemo(() => {
+    if (Array.isArray(currentStep.img)) {
+      if (currentStep.img.every(i => typeof i === 'string' && i.startsWith('http'))) return currentStep.img;
+      return apiImgs;
+    }
+    if (typeof currentStep.img === 'string' && currentStep.img.startsWith('http')) {
+      return [currentStep.img];
+    }
+    return apiImgs;
+  }, [currentStep.img, apiImgs]);
 
   return (
     <motion.div 
@@ -78,35 +137,39 @@ export const Taller: React.FC<TallerProps> = ({
           </div>
         </div>
 
-        {displayImg && (
-          <div className="flex justify-center">
-            <div className="w-48 h-48 bg-zinc-950 rounded-2xl border border-zinc-800 p-4 flex items-center justify-center overflow-hidden relative">
-              {(!displayImg || !displayImg.startsWith('http')) && (
-                <div className="absolute inset-0 flex items-center justify-center bg-zinc-900 animate-pulse text-zinc-700 text-[10px] font-bold uppercase tracking-widest">
-                  Buscando...
-                </div>
-              )}
-              <img src={displayImg} alt={currentStep.title} className="max-w-full max-h-full object-contain relative z-10" />
-            </div>
+        {displayImgs.length > 0 && (
+          <div className="flex justify-center gap-4 flex-wrap">
+            {displayImgs.map((imgUrl, idx) => (
+              <div key={idx} className="w-40 h-40 bg-zinc-950 rounded-2xl border border-zinc-800 p-4 flex items-center justify-center overflow-hidden relative shadow-md">
+                <img src={imgUrl} alt={currentStep.title} className="max-w-full max-h-full object-contain relative z-10" />
+              </div>
+            ))}
           </div>
         )}
 
         <div className="bg-zinc-950 p-6 rounded-2xl border border-zinc-800 space-y-4">
           <p className="text-zinc-400 font-medium">{currentStep.instruction}</p>
-          <div className="flex items-center justify-center gap-4 text-white py-4 border-y border-zinc-800">
-            <div className="text-5xl font-black italic tracking-widest text-center">
-              {currentStep.sound}
+          {currentStep.sound ? (
+            <div className="flex items-center justify-center gap-4 text-white py-4 border-y border-zinc-800">
+              <div className="text-5xl font-black italic tracking-widest text-center">
+                {currentStep.sound}
+              </div>
+              <button
+                type="button"
+                onClick={() => speakCurrentText(currentStep.sound)}
+                className="p-3 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white transition-all"
+              >
+                <Volume2 className="w-5 h-5" />
+              </button>
+              <span className="w-2 h-2 bg-indigo-600 rounded-full animate-pulse" />
+              <span className="text-zinc-400 italic text-sm">{currentStep.tip}</span>
             </div>
-            <button
-              type="button"
-              onClick={() => speakCurrentText(currentStep.sound)}
-              className="p-3 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white transition-all"
-            >
-              <Volume2 className="w-5 h-5" />
-            </button>
-            <span className="w-2 h-2 bg-indigo-600 rounded-full animate-pulse" />
-            <span className="text-zinc-400 italic text-sm">{currentStep.tip}</span>
-          </div>
+          ) : currentStep.tip ? (
+            <div className="py-2 border-t border-zinc-800 flex items-center justify-center gap-2">
+              <span className="w-2 h-2 bg-indigo-600 rounded-full animate-pulse" />
+              <span className="text-zinc-400 italic text-sm">{currentStep.tip}</span>
+            </div>
+          ) : null}
         </div>
 
         <div className="flex gap-4">
@@ -122,6 +185,7 @@ export const Taller: React.FC<TallerProps> = ({
               if (phoneme === 'R') msg = "¡Cuidado! Lengua arriba para que el sonido salga bien ⚠️";
               if (phoneme === 'S') msg = "¡Cuidado! No saques la lengua, mantenla detrás de los dientes ⚠️";
               if (phoneme === 'Z') msg = "¡Cuidado! Saca un poquito la lengua entre los dientes ⚠️";
+              if (phoneme === 'L') msg = "¡Cuidado! Sube la punta de la lengua detrás de los dientes de arriba ⚠️";
               setFeedback({ type: 'error', message: msg });
             }}
             className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-white font-bold py-4 rounded-xl transition-all flex items-center justify-center gap-2"

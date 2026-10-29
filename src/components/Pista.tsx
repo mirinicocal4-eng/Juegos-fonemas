@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { Volume2, Sparkles, ChevronRight, Mic } from 'lucide-react';
 import { Phoneme, PistaDecirItem, GameImage } from '../types';
 import { VisualContent } from './VisualContent';
-import { setupSpeechVoices, speakText } from '../utils/speech';
+import { setupSpeechVoices, speakText, startListening } from '../utils';
 
 interface PistaProps {
   phoneme: Phoneme;
@@ -39,6 +39,42 @@ export const Pista: React.FC<PistaProps> = ({
   const [activePlayer, setActivePlayer] = React.useState(0);
   const [completarIndex, setCompletarIndex] = React.useState(0);
   const [completedIndices, setCompletedIndices] = React.useState<number[]>([]);
+  const [listeningKey, setListeningKey] = React.useState<string | null>(null);
+  const [voiceResults, setVoiceResults] = React.useState<Record<string, 'success' | 'error'>>({});
+  const cancelRecRef = React.useRef<(() => void) | null>(null);
+
+  const handleListenWord = (key: string, expectedWord: string) => {
+    if (listeningKey === key) {
+      if (cancelRecRef.current) cancelRecRef.current();
+      setListeningKey(null);
+      return;
+    }
+
+    if (cancelRecRef.current) cancelRecRef.current();
+    setListeningKey(key);
+    setFeedback({ type: 'info', message: `🎙️ Escuchando "${expectedWord}"... ¡Habla ahora!` });
+
+    cancelRecRef.current = startListening(
+      expectedWord,
+      (isMatch, recognizedText) => {
+        setListeningKey(null);
+        if (isMatch) {
+          setVoiceResults((prev) => ({ ...prev, [key]: 'success' }));
+          setFeedback({ type: 'success', message: `¡Excelente pronunciación! Has dicho "${recognizedText}" ✨` });
+        } else {
+          setVoiceResults((prev) => ({ ...prev, [key]: 'error' }));
+          setFeedback({ type: 'error', message: `He oído "${recognizedText}". ¡Inténtalo de nuevo! ❌` });
+        }
+      },
+      (error) => {
+        setListeningKey(null);
+        setFeedback({ type: 'error', message: error });
+      },
+      () => {
+        setListeningKey(null);
+      }
+    );
+  };
 
   React.useEffect(() => {
     const cleanup = setupSpeechVoices(setVoices);

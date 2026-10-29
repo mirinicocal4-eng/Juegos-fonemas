@@ -1,5 +1,5 @@
 export type World = 'PHONEME_SELECT' | 'PLAYER_COUNT' | 'MENU' | 'TALLER' | 'SEMAFORO' | 'PISTA' | 'COMPLETAR' | 'GRAN_PREMIO' | 'MEMORY' | 'BINGO' | 'LINCE' | 'DOMINO' | 'DOBBLE' | 'LIBRARY' | 'SIMULATOR';
-export type Phoneme = 'R' | 'RR' | 'S' | 'Z' | 'SINFONES';
+export type Phoneme = 'R' | 'RR' | 'L' | 'S' | 'Z' | 'SINFONES';
 
 export interface FraseLoca {
   id: number;
@@ -17,7 +17,7 @@ export interface TallerStep {
   instruction: string;
   sound: string;
   tip: string;
-  img?: string;
+  img?: string | string[];
 }
 
 export interface SemaforoPair {

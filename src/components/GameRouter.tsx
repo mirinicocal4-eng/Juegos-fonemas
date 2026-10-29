@@ -107,13 +107,14 @@ export const GameRouter: React.FC<GameRouterProps> = ({ game, onUpload, onDelete
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                {(['R', 'RR', 'S', 'Z', 'SINFONES'] as Phoneme[]).map((p) => (
+                {(['R', 'RR', 'L', 'S', 'Z', 'SINFONES'] as Phoneme[]).map((p) => (
                   <button
                     key={p}
                     onClick={() => selectPhoneme(p)}
                     className={`p-6 rounded-3xl border-4 transition-all hover:scale-105 flex flex-col items-center justify-center relative ${
                       p === 'R' ? 'bg-red-600/10 border-red-600 text-red-500' :
                       p === 'RR' ? 'bg-rose-600/10 border-rose-600 text-rose-500' :
+                      p === 'L' ? 'bg-teal-600/10 border-teal-600 text-teal-400' :
                       p === 'S' ? 'bg-blue-600/10 border-blue-600 text-blue-500' :
                       p === 'Z' ? 'bg-emerald-600/10 border-emerald-600 text-emerald-500' :
                       'bg-orange-600/10 border-orange-600 text-orange-500'
